@@ -10,39 +10,44 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-import { GraphQLClient, graphQLHttpClient, graphQLWebSocketClient } from '@eclipse-sirius/sirius-components';
-import { ApolloProvider } from '@apollo/client';
-import { ApolloGraphQLClient } from 'ApolloGraphQLClient';
-import { Main } from 'main/Main';
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
+
+import { ApolloProvider } from '@apollo/client';
+import { GraphQLClient, graphQLHttpClient, graphQLWebSocketClient } from '@eclipse-sirius/sirius-components';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import purple from '@material-ui/core/colors/purple';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { ApolloGraphQLClient } from 'ApolloGraphQLClient';
+import { Main } from 'main/Main';
+
 import styles from './index.module.css';
+
 import './fonts.css';
 import './reset.css';
 import './variables.css';
 import './Sprotty.css';
 
-/**
- * Entry point of the frontend, defines the main layout of the application.
- *
- * @author sbegaudeau
- */
-export const App = () => {
-  return (
-    <div className={styles.app}>
-      <Main />
-    </div>
-  );
-};
+const theme = createMuiTheme({
+  palette: {
+    type: 'light',
+    primary: purple
+  }
+});
 
 ReactDOM.render(
   <ApolloProvider client={ApolloGraphQLClient}>
     <GraphQLClient.Provider value={{ graphQLHttpClient, graphQLWebSocketClient }}>
       <BrowserRouter>
-        <StrictMode>
-          <App />
-        </StrictMode>
+        <ThemeProvider theme={theme}>
+          <StrictMode>
+            <CssBaseline />
+            <div className={styles.app}>
+              <Main />
+            </div>
+          </StrictMode>
+        </ThemeProvider>
       </BrowserRouter>
     </GraphQLClient.Provider>
   </ApolloProvider>,
