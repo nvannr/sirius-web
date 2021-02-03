@@ -32,12 +32,19 @@ CREATE TABLE idmapping (
     externalid text NOT NULL
 );
 
+CREATE TABLE editingcontext (
+    id UUID DEFAULT gen_random_uuid() NOT NULL,
+    CONSTRAINT pk_editingcontext_id PRIMARY KEY (id)
+);
+
 CREATE TABLE project (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     name text NOT NULL,
     owner_id uuid NOT NULL,
     visibility visibility DEFAULT 'PUBLIC'::visibility NOT NULL,
-    CONSTRAINT project_name_length CHECK (((char_length(name) > 0) AND (char_length(name) <= 50)))
+    currenteditingcontext_id uuid NOT NULL,
+    CONSTRAINT project_name_length CHECK (((char_length(name) > 0) AND (char_length(name) <= 50))),
+    CONSTRAINT fk_project_currenteditingcontextid_id FOREIGN KEY (currenteditingcontext_id) REFERENCES editingcontext(id)
 );
 
 CREATE TABLE representation (
@@ -93,7 +100,7 @@ CREATE TABLE Modeler (
     CONSTRAINT pk_modeler_id PRIMARY KEY (id),
     CONSTRAINT fk_modeler_project_id_id FOREIGN KEY (project_id) REFERENCES project(id)
 );
- 
+
 -- password is "012345678910" encrypted using Spring's BCryptPasswordEncoder
 INSERT INTO Account
 VALUES ('7d345191-8c47-4387-aac9-6e125d7cee60', 'system', '$2a$10$T99K83wmZ7BBwuh7JrZ8o.1n.J30ciaRPfUZzo2yLEWQ/cXBtFVPK', 'ADMIN'); 
