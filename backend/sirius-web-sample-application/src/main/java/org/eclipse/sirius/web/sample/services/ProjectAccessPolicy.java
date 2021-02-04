@@ -19,7 +19,7 @@ import org.eclipse.sirius.web.services.api.projects.IProjectAccessPolicy;
 import org.springframework.stereotype.Service;
 
 /**
- * The access policy of Sirius Web.
+ * The project access policy of Sirius Web.
  *
  * @author sbegaudeau
  */
@@ -29,16 +29,6 @@ public class ProjectAccessPolicy implements IProjectAccessPolicy {
     @Override
     public AccessLevel getAccessLevel(String username, UUID projectId) {
         return AccessLevel.ADMIN;
-    }
-
-    @Override
-    public boolean canEdit(String username, UUID projectId) {
-        return true;
-    }
-
-    @Override
-    public boolean canAdmin(String username, UUID projectId) {
-        return true;
     }
 
 }
