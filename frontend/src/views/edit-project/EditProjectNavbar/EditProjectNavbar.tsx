@@ -81,7 +81,7 @@ export const EditProjectNavbar = ({ project }: EditProjectNavbarProps) => {
       type: HANDLE_REDIRECTING__ACTION,
       to: '/projects',
       modalDisplayed: null,
-      proprojectMenuAnchor: null,
+      projectMenuAnchor: null,
     });
   };
 
