@@ -38,6 +38,7 @@ import {
   ShowToastEvent,
 } from 'views/edit-project/EditProjectViewMachine';
 import { Representation, Workbench } from '@eclipse-sirius/sirius-components';
+import { NavigationBar } from 'navigationBar/NavigationBar';
 
 const getProjectQuery = gql`
   query getRepresentation($projectId: ID!, $representationId: ID!, $includeRepresentation: Boolean!) {
@@ -140,10 +141,17 @@ export const EditProjectView = () => {
     );
   }
 
+  let navbar = null;
+  if (editProjectView === 'missing' || editProjectView === 'loading') {
+    navbar = <NavigationBar />;
+  } else if (editProjectView === 'loaded') {
+    navbar = <EditProjectNavbar project={project} />;
+  }
+
   return (
     <>
       <div className={classes.editProjectView}>
-        <EditProjectNavbar project={project} />
+        {navbar}
         {main}
       </div>
       <Snackbar
