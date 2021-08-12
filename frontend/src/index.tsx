@@ -12,7 +12,7 @@
  *******************************************************************************/
 import { ApolloProvider } from '@apollo/client';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { ApolloGraphQLClient } from 'ApolloGraphQLClient';
 import { Main } from 'main/Main';
 import ReactDOM from 'react-dom';
@@ -23,7 +23,7 @@ import './reset.css';
 import './Sprotty.css';
 import './variables.css';
 
-const baseTheme = createMuiTheme({
+const baseTheme = createTheme({
   ...theme,
   palette: {
     type: 'light',
@@ -63,7 +63,7 @@ const baseTheme = createMuiTheme({
   },
 });
 
-const siriusWebTheme = createMuiTheme(
+const siriusWebTheme = createTheme(
   {
     overrides: {
       MuiAvatar: {

@@ -18,18 +18,18 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.5.2</version>
+		<version>2.5.3</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>org.eclipse.sirius.web</groupId>
 	<artifactId>sirius-web-graphql</artifactId>
-	<version>0.4.2</version>
+	<version>0.4.3</version>
 	<name>sirius-web-graphql</name>
 	<description>Sirius Web GraphQL</description>
 
 	<properties>
 		<java.version>11</java.version>
-		<sirius.components.version>0.4.2</sirius.components.version>
+		<sirius.components.version>0.4.3</sirius.components.version>
 	</properties>
 
 	<repositories>
@@ -67,12 +67,12 @@
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
 			<artifactId>sirius-web-graphql-schema</artifactId>
-			<version>0.4.2</version>
+			<version>0.4.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
 			<artifactId>sirius-web-services-api</artifactId>
-			<version>0.4.2</version>
+			<version>0.4.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
@@ -123,7 +123,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.6</version>
+				<version>0.8.7</version>
 				<executions>
 					<execution>
 						<goals>
