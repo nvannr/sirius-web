@@ -11,20 +11,27 @@
  Contributors:
      Obeo - initial API and implementation
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.eclipse.sirius.web</groupId>
 	<artifactId>sirius-web</artifactId>
-	<version>0.4.0</version>
+	<version>0.4.2</version>
 
 	<name>Sirius Web</name>
 	<description>Sirius Web</description>
 	<packaging>pom</packaging>
 
 	<modules>
-          <module>sirius-web-frontend</module>
-          <module>sirius-web-sample-application</module>
+		<module>sirius-web-frontend</module>
+		<module>sirius-web-persistence</module>
+		<module>sirius-web-services-api</module>
+		<module>sirius-web-services</module>
+		<module>sirius-web-graphql-schema</module>
+		<module>sirius-web-graphql</module>
+		<module>sirius-web-spring</module>
+		<module>sirius-web-sample-application</module>
 	</modules>
 </project>

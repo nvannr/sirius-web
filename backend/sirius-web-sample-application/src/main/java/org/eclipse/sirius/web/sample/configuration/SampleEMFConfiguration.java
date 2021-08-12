@@ -12,15 +12,15 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.sample.configuration;
 
+import fr.obeo.dsl.designer.sample.flow.FlowPackage;
+import fr.obeo.dsl.designer.sample.flow.provider.FlowItemProviderAdapterFactory;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.sirius.web.emf.services.ILabelFeatureProvider;
 import org.eclipse.sirius.web.emf.services.LabelFeatureProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import fr.obeo.dsl.designer.sample.flow.FlowPackage;
-import fr.obeo.dsl.designer.sample.flow.provider.FlowItemProviderAdapterFactory;
 
 /**
  * Configuration of the EMF support for Sirius Web.
