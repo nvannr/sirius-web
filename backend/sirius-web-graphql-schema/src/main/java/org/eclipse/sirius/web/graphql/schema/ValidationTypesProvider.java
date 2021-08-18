@@ -20,6 +20,7 @@ import org.eclipse.sirius.web.graphql.utils.providers.GraphQLObjectTypeProvider;
 import org.eclipse.sirius.web.graphql.utils.schema.ITypeProvider;
 import org.eclipse.sirius.web.validation.Diagnostic;
 import org.eclipse.sirius.web.validation.Validation;
+import org.eclipse.sirius.web.validation.description.ValidationDescription;
 import org.springframework.stereotype.Service;
 
 import graphql.schema.GraphQLType;
@@ -42,7 +43,8 @@ public class ValidationTypesProvider implements ITypeProvider {
         // @formatter:off
         List<Class<?>> objectClasses = List.of(
             Validation.class,
-            Diagnostic.class
+            Diagnostic.class,
+            ValidationDescription.class
         );
 
         return objectClasses.stream()
