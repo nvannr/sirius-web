@@ -47,7 +47,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider {
 
-    private static final String DOCUMENT_KIND = "Document"; //$NON-NLS-1$
+    private static final String DOCUMENT_KIND = "Model"; //$NON-NLS-1$
 
     private final IObjectService objectService;
 
@@ -74,8 +74,9 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
                 .treeItemIdProvider(this::getTreeItemId)
                 .kindProvider(this::getKind)
                 .labelProvider(this::getLabel)
-                .editableProvider(this::isEditable)
                 .imageURLProvider(this::getImageURL)
+                .editableProvider(this::isEditable)
+                .deletableProvider(this::isDeletable)
                 .elementsProvider(this::getElements)
                 .hasChildrenProvider(this::hasChildren)
                 .childrenProvider(this::getChildren)
@@ -131,6 +132,9 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
             // @formatter:on
         } else if (self instanceof EObject) {
             label = this.objectService.getLabel(self);
+            if (label.isBlank()) {
+                label = this.objectService.getKind(self).replaceAll("^.*::", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            }
         }
         return label;
     }
@@ -148,6 +152,10 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
         }
         return editable;
 
+    }
+
+    private boolean isDeletable(VariableManager variableManager) {
+        return true;
     }
 
     private String getImageURL(VariableManager variableManager) {
