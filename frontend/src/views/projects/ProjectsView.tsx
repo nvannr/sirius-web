@@ -191,7 +191,7 @@ export const ProjectsView = () => {
         <NavigationBar />
         <main className={classes.main}>
           <Container maxWidth="xl">
-            <Grid container justify="center">
+            <Grid container justifyContent="center">
               <Grid item xs={8}>
                 <div className={classes.projectsViewContainer}>
                   <div className={classes.header}>
@@ -253,7 +253,7 @@ interface MessageProps {
 
 const Message = ({ content }: MessageProps) => {
   return (
-    <Grid container justify="center">
+    <Grid container justifyContent="center">
       <Grid item xs={6}>
         <Typography variant="h4" align="center" gutterBottom>
           {content}

@@ -133,7 +133,7 @@ export const EditProjectView = () => {
     );
   } else if (editProjectView === 'missing') {
     main = (
-      <Grid container justify="center" alignItems="center">
+      <Grid container justifyContent="center" alignItems="center">
         <Typography variant="h4" align="center" gutterBottom>
           The project does not exist
         </Typography>
