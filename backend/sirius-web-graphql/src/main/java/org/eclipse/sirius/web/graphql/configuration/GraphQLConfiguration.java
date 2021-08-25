@@ -26,6 +26,8 @@ import org.eclipse.sirius.web.graphql.utils.schema.ITypeCustomizer;
 import org.eclipse.sirius.web.graphql.utils.schema.ITypeProvider;
 import org.eclipse.sirius.web.graphql.utils.typeresolvers.ReflectiveTypeResolver;
 import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -41,6 +43,8 @@ import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.GraphQLType;
 import graphql.schema.GraphQLUnionType;
+import graphql.schema.idl.SchemaPrinter;
+import graphql.schema.idl.SchemaPrinter.Options;
 
 /**
  * Spring Configuration used to create everything necessary to run GraphQL queries.
@@ -54,6 +58,9 @@ import graphql.schema.GraphQLUnionType;
  */
 @Configuration
 public class GraphQLConfiguration {
+
+    private final Logger logger = LoggerFactory.getLogger(GraphQLConfiguration.class);
+
     /**
      * Creates the GraphQL configuration used to execute GraphQL queries.
      *
@@ -64,6 +71,11 @@ public class GraphQLConfiguration {
      */
     @Bean
     public GraphQL graphQL(GraphQLSchema graphQLSchema) {
+        var options = Options.defaultOptions();
+        String schema = new SchemaPrinter(options).print(graphQLSchema);
+
+        this.logger.trace(schema);
+
         DataFetcherExceptionHandler exceptionHandler = new GraphQLDataFetcherExceptionHandler();
         ExecutionStrategy queryExecutionStrategy = new AsyncExecutionStrategy(exceptionHandler);
         // @see https://www.graphql-java.com/documentation/v11/execution/ The graphql specification says that mutations
