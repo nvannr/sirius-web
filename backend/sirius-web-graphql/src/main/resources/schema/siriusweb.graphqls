@@ -1,0 +1,87 @@
+extend interface Viewer {
+  project(projectId: ID!): Project
+  projects: [Project!]!
+}
+
+type Project {
+  id: ID!
+  name: String!
+  currentEditingContext: EditingContext!
+  owner: Profile!
+  visibility: Visibility!
+}
+
+type Profile {
+  id: ID!
+  username: String!
+}
+
+enum Visibility {
+  PRIVATE
+  PUBLIC
+}
+
+type User implements Viewer {
+  id: ID!
+  username: String!
+  editingContext(editingContextId: ID!): EditingContext
+  project(projectId: ID!): Project
+  projects: [Project!]!
+}
+
+extend type Mutation {
+  createProject(input: CreateProjectInput!): CreateProjectPayload!
+  deleteProject(input: DeleteProjectInput!): DeleteProjectPayload!
+  renameProject(input: RenameProjectInput!): RenameProjectPayload!
+  uploadProject(input: UploadProjectInput!): UploadProjectPayload!
+}
+
+input CreateProjectInput {
+  id: ID!
+  name: String!
+  visibility: Visibility!
+}
+
+union CreateProjectPayload = ErrorPayload | CreateProjectSuccessPayload
+
+type CreateProjectSuccessPayload {
+  id: ID!
+  project: Project!
+}
+
+input DeleteProjectInput {
+  id: ID!
+  projectId: ID!
+}
+
+union DeleteProjectPayload = ErrorPayload|DeleteProjectSuccessPayload
+
+type DeleteProjectSuccessPayload {
+  id: ID!
+  viewer: Viewer!
+}
+
+input RenameProjectInput {
+  id: ID!
+  projectId: ID!
+  newName: String!
+}
+
+union RenameProjectPayload = ErrorPayload | RenameProjectSuccessPayload
+
+type RenameProjectSuccessPayload {
+  id: ID!
+  project: Project!
+}
+
+input UploadProjectInput {
+  id: ID!
+  file: Upload!
+}
+
+union UploadProjectPayload = ErrorPayload | UploadProjectSuccessPayload
+
+type UploadProjectSuccessPayload {
+  id: ID!
+  project: Project!
+}

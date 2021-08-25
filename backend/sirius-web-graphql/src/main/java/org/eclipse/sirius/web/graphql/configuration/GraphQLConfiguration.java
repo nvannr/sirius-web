@@ -12,24 +12,18 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.configuration;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.io.IOException;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.eclipse.sirius.web.graphql.datafetchers.GraphQLDataFetcherExceptionHandler;
-import org.eclipse.sirius.web.graphql.utils.schema.IMutationTypeProvider;
-import org.eclipse.sirius.web.graphql.utils.schema.IQueryTypeProvider;
-import org.eclipse.sirius.web.graphql.utils.schema.ISubscriptionTypeProvider;
-import org.eclipse.sirius.web.graphql.utils.schema.ITypeCustomizer;
-import org.eclipse.sirius.web.graphql.utils.schema.ITypeProvider;
-import org.eclipse.sirius.web.graphql.utils.typeresolvers.ReflectiveTypeResolver;
+import org.eclipse.sirius.web.graphql.utils.types.UploadScalarType;
 import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourcePatternResolver;
 
 import graphql.GraphQL;
 import graphql.execution.AsyncExecutionStrategy;
@@ -37,14 +31,13 @@ import graphql.execution.AsyncSerialExecutionStrategy;
 import graphql.execution.DataFetcherExceptionHandler;
 import graphql.execution.ExecutionStrategy;
 import graphql.schema.GraphQLCodeRegistry;
-import graphql.schema.GraphQLInterfaceType;
-import graphql.schema.GraphQLNamedType;
-import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLSchema;
-import graphql.schema.GraphQLType;
-import graphql.schema.GraphQLUnionType;
+import graphql.schema.idl.RuntimeWiring;
+import graphql.schema.idl.SchemaGenerator;
+import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.SchemaPrinter;
 import graphql.schema.idl.SchemaPrinter.Options;
+import graphql.schema.idl.TypeDefinitionRegistry;
 
 /**
  * Spring Configuration used to create everything necessary to run GraphQL queries.
@@ -90,80 +83,43 @@ public class GraphQLConfiguration {
     }
 
     @Bean
-    public GraphQLSchema graphQLSchema(List<IDataFetcherWithFieldCoordinates<?>> dataFetchersWithCoordinates, IQueryTypeProvider queryTypeProvider, IMutationTypeProvider mutationTypeProvider,
-            ISubscriptionTypeProvider subscriptionTypeProvider, List<ITypeProvider> typeProviders, List<ITypeCustomizer> typeCustomizers) {
-        Set<GraphQLType> types = new LinkedHashSet<>();
-
-        // @formatter:off
-        var additionalTypes = typeProviders.stream()
-                .map(ITypeProvider::getTypes)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toSet());
-        // @formatter:on
-
-        types.addAll(additionalTypes);
-        types.addAll(queryTypeProvider.getAdditionalTypes());
-        types.addAll(mutationTypeProvider.getAdditionalTypes());
-        types.addAll(subscriptionTypeProvider.getAdditionalTypes());
-
-        Set<GraphQLType> customizedTypes = new LinkedHashSet<>();
-        for (GraphQLType graphQLType : types) {
-            GraphQLType type = graphQLType;
-            for (ITypeCustomizer typeCustomizer : typeCustomizers) {
-                type = typeCustomizer.customize(type);
-            }
-            customizedTypes.add(type);
-        }
-
+    public GraphQLSchema graphQLSchema(ResourcePatternResolver resourcePatternResolver, GraphQLWiringFactory graphQLWiringFactory,
+            List<IDataFetcherWithFieldCoordinates<?>> dataFetchersWithCoordinates) {
         GraphQLCodeRegistry.Builder builder = GraphQLCodeRegistry.newCodeRegistry();
-        // @formatter:off
-        customizedTypes.stream()
-            .filter(graphQLType -> GraphQLUnionType.class.isInstance(graphQLType) || GraphQLInterfaceType.class.isInstance(graphQLType))
-            .filter(GraphQLNamedType.class::isInstance)
-            .map(GraphQLNamedType.class::cast)
-            .forEach(graphQLType -> builder.typeResolver(graphQLType.getName(), new ReflectiveTypeResolver()));
-        // @formatter:on
-
         dataFetchersWithCoordinates.forEach(dataFetcherWithCoordinates -> {
-            dataFetcherWithCoordinates.getFieldCoordinates().forEach(fieldCoordinates -> {
-                builder.dataFetcher(fieldCoordinates, dataFetcherWithCoordinates);
-            });
+            dataFetcherWithCoordinates.getFieldCoordinates().forEach(fieldCoordinates -> builder.dataFetcher(fieldCoordinates, dataFetcherWithCoordinates));
         });
         var graphQLCodeRegistry = builder.build();
 
-        GraphQLObjectType queryType = queryTypeProvider.getType();
-        for (ITypeCustomizer typeCustomizer : typeCustomizers) {
-            GraphQLType customizedGraphQLType = typeCustomizer.customize(queryType);
-            if (customizedGraphQLType instanceof GraphQLObjectType) {
-                queryType = (GraphQLObjectType) customizedGraphQLType;
+        try {
+            TypeDefinitionRegistry typeRegistry = new TypeDefinitionRegistry();
+
+            SchemaParser schemaParser = new SchemaParser();
+            SchemaGenerator schemaGenerator = new SchemaGenerator();
+
+            Resource[] resources = resourcePatternResolver.getResources("classpath*:/schema/**/*.graphqls"); //$NON-NLS-1$
+            this.logger.info("{} GraphQL schemas found", resources.length); //$NON-NLS-1$
+            for (Resource resource : resources) {
+                if (this.logger.isInfoEnabled()) {
+                    this.logger.info("Processing the GraphQL schema: {}", resource.getURL()); //$NON-NLS-1$
+                }
+                TypeDefinitionRegistry childTypeDefinitionRegistry = schemaParser.parse(resource.getInputStream());
+                typeRegistry.merge(childTypeDefinitionRegistry);
             }
+
+            // @formatter:off
+            var runtimeWiring = RuntimeWiring.newRuntimeWiring()
+                    .codeRegistry(graphQLCodeRegistry)
+                    .wiringFactory(graphQLWiringFactory)
+                    .scalar(UploadScalarType.INSTANCE)
+                    .build();
+            // @formatter:on
+
+            GraphQLSchema graphQLSchema = schemaGenerator.makeExecutableSchema(typeRegistry, runtimeWiring);
+            return graphQLSchema;
+        } catch (IOException exception) {
+            this.logger.warn(exception.getMessage(), exception);
         }
-
-        GraphQLObjectType mutationType = mutationTypeProvider.getType();
-        for (ITypeCustomizer typeCustomizer : typeCustomizers) {
-            GraphQLType customizedGraphQLType = typeCustomizer.customize(mutationType);
-            if (customizedGraphQLType instanceof GraphQLObjectType) {
-                mutationType = (GraphQLObjectType) customizedGraphQLType;
-            }
-        }
-
-        GraphQLObjectType subscriptionType = subscriptionTypeProvider.getType();
-        for (ITypeCustomizer typeCustomizer : typeCustomizers) {
-            GraphQLType customizedGraphQLType = typeCustomizer.customize(subscriptionType);
-            if (customizedGraphQLType instanceof GraphQLObjectType) {
-                subscriptionType = (GraphQLObjectType) customizedGraphQLType;
-            }
-        }
-
-        // @formatter:off
-        return GraphQLSchema.newSchema()
-                .query(queryType)
-                .mutation(mutationType)
-                .subscription(subscriptionType)
-                .additionalTypes(customizedTypes)
-                .codeRegistry(graphQLCodeRegistry)
-                .build();
-        // @formatter:on
-
+        return null;
     }
 }
