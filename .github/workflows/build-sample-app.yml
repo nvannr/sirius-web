@@ -2,17 +2,20 @@ name: Build and Publish Sample Application
 
 on:
   push:
+    paths-ignore:
+      - 'doc/**'
     branches:
       - '**'
+    tags:
+      - '*'
   pull_request:
-    branches:
-      - '**:**'
   workflow_dispatch:
 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
     steps:
       - name: Checkout
         uses: actions/checkout@v2
