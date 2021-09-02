@@ -17,6 +17,7 @@ import java.util.UUID;
 
 import org.eclipse.sirius.web.annotations.Immutable;
 import org.eclipse.sirius.web.representations.IRepresentation;
+import org.eclipse.sirius.web.representations.ISemanticRepresentationMetadata;
 
 /**
  * The representation descriptor.
@@ -24,8 +25,8 @@ import org.eclipse.sirius.web.representations.IRepresentation;
  * @author gcoutable
  */
 @Immutable
-public final class RepresentationDescriptor {
-    private UUID id;
+public final class RepresentationDescriptor implements ISemanticRepresentationMetadata {
+    private String id;
 
     private UUID projectId;
 
@@ -35,13 +36,16 @@ public final class RepresentationDescriptor {
 
     private String label;
 
+    private String kind;
+
     private IRepresentation representation;
 
     private RepresentationDescriptor() {
         // Prevent instantiation
     }
 
-    public UUID getId() {
+    @Override
+    public String getId() {
         return this.id;
     }
 
@@ -49,23 +53,31 @@ public final class RepresentationDescriptor {
         return this.projectId;
     }
 
+    @Override
     public UUID getDescriptionId() {
         return this.descriptionId;
     }
 
+    @Override
     public String getTargetObjectId() {
         return this.targetObjectId;
     }
 
+    @Override
     public String getLabel() {
         return this.label;
+    }
+
+    @Override
+    public String getKind() {
+        return this.kind;
     }
 
     public IRepresentation getRepresentation() {
         return this.representation;
     }
 
-    public static Builder newRepresentationDescriptor(UUID id) {
+    public static Builder newRepresentationDescriptor(String id) {
         return new Builder(id);
     }
 
@@ -76,7 +88,7 @@ public final class RepresentationDescriptor {
      */
     @SuppressWarnings("checkstyle:HiddenField")
     public static final class Builder {
-        private UUID id;
+        private String id;
 
         private UUID projectId;
 
@@ -86,9 +98,11 @@ public final class RepresentationDescriptor {
 
         private String label;
 
+        private String kind;
+
         private IRepresentation representation;
 
-        public Builder(UUID id) {
+        public Builder(String id) {
             this.id = Objects.requireNonNull(id);
         }
 
@@ -112,6 +126,11 @@ public final class RepresentationDescriptor {
             return this;
         }
 
+        public Builder kind(String kind) {
+            this.kind = Objects.requireNonNull(kind);
+            return this;
+        }
+
         public Builder representation(IRepresentation representation) {
             this.representation = Objects.requireNonNull(representation);
             return this;
@@ -124,6 +143,7 @@ public final class RepresentationDescriptor {
             representationDescriptor.descriptionId = Objects.requireNonNull(this.descriptionId);
             representationDescriptor.targetObjectId = Objects.requireNonNull(this.targetObjectId);
             representationDescriptor.label = Objects.requireNonNull(this.label);
+            representationDescriptor.kind = Objects.requireNonNull(this.kind);
             representationDescriptor.representation = Objects.requireNonNull(this.representation);
             return representationDescriptor;
         }

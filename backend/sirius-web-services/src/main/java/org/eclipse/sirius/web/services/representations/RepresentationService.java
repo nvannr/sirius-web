@@ -28,12 +28,14 @@ import org.eclipse.sirius.web.persistence.entities.RepresentationEntity;
 import org.eclipse.sirius.web.persistence.repositories.IProjectRepository;
 import org.eclipse.sirius.web.persistence.repositories.IRepresentationRepository;
 import org.eclipse.sirius.web.representations.IRepresentation;
-import org.eclipse.sirius.web.representations.ISemanticRepresentation;
+import org.eclipse.sirius.web.representations.IRepresentationMetadata;
+import org.eclipse.sirius.web.representations.ISemanticRepresentationMetadata;
 import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.eclipse.sirius.web.services.api.representations.IRepresentationService;
 import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
 import org.eclipse.sirius.web.spring.collaborative.api.IDanglingRepresentationDeletionService;
 import org.eclipse.sirius.web.spring.collaborative.api.IRepresentationPersistenceService;
+import org.eclipse.sirius.web.spring.collaborative.api.IStdDeserializerProvider;
 import org.springframework.stereotype.Service;
 
 import io.micrometer.core.instrument.MeterRegistry;
@@ -55,17 +57,19 @@ public class RepresentationService implements IRepresentationService, IRepresent
 
     private final IRepresentationRepository representationRepository;
 
+    private final IStdDeserializerProvider<IRepresentation> representationDeserializerProvider;
+
     private final ObjectMapper objectMapper;
 
     private final Timer timer;
 
     public RepresentationService(IObjectService objectService, IProjectRepository projectRepository, IRepresentationRepository representationRepository, ObjectMapper objectMapper,
-            MeterRegistry meterRegistry) {
+            IStdDeserializerProvider<IRepresentation> representationDeserializerProvider, MeterRegistry meterRegistry) {
         this.objectService = Objects.requireNonNull(objectService);
         this.projectRepository = Objects.requireNonNull(projectRepository);
         this.representationRepository = Objects.requireNonNull(representationRepository);
         this.objectMapper = Objects.requireNonNull(objectMapper);
-
+        this.representationDeserializerProvider = Objects.requireNonNull(representationDeserializerProvider);
         this.timer = Timer.builder(TIMER_NAME).register(meterRegistry);
     }
 
@@ -75,12 +79,12 @@ public class RepresentationService implements IRepresentationService, IRepresent
     }
 
     @Override
-    public Optional<RepresentationDescriptor> getRepresentationDescriptorForProjectId(String projectId, String representationId) {
+    public Optional<IRepresentationMetadata> getRepresentationDescriptorForProjectId(String projectId, String representationId) {
         var projectUUID = new IDParser().parse(projectId);
         var representationUUID = new IDParser().parse(representationId);
 
         if (projectUUID.isPresent() && representationUUID.isPresent()) {
-            return this.representationRepository.findByIdAndProjectId(representationUUID.get(), projectUUID.get()).map(new RepresentationMapper(this.objectMapper)::toDTO);
+            return this.representationRepository.findByIdAndProjectId(representationUUID.get(), projectUUID.get()).map(new RepresentationMapper(this.objectMapper)::toRepresentationMetadataDTO);
         }
 
         return Optional.empty();
@@ -93,35 +97,38 @@ public class RepresentationService implements IRepresentationService, IRepresent
                 .map(this.representationRepository::findAllByProjectId)
                 .orElseGet(List::of)
                 .stream()
-                .map(new RepresentationMapper(this.objectMapper)::toDTO)
+                .map(representationEntity -> {
+                    String kind = representationEntity.getKind();
+                    Optional<Class<? extends IRepresentation>> implementationType = this.representationDeserializerProvider.getImplementationClass(kind);
+                    return new RepresentationMapper(this.objectMapper).toDTO(representationEntity, implementationType.get());
+                })
                 .collect(Collectors.toUnmodifiableList());
         // @formatter:on
     }
 
     @Override
-    public List<RepresentationDescriptor> getRepresentationDescriptorsForObjectId(String objectId) {
+    public List<IRepresentationMetadata> getRepresentationDescriptorsForObjectId(String objectId) {
         // @formatter:off
         return this.representationRepository.findAllByTargetObjectId(objectId).stream()
-                .map(new RepresentationMapper(this.objectMapper)::toDTO)
+                .map(new RepresentationMapper(this.objectMapper)::toRepresentationMetadataDTO)
                 .collect(Collectors.toUnmodifiableList());
         // @formatter:on
     }
 
     @Override
-    public void save(IEditingContext editingContext, ISemanticRepresentation representation) {
+    public void save(IEditingContext editingContext, ISemanticRepresentationMetadata representationMetadata, IRepresentation representation) {
         long start = System.currentTimeMillis();
 
         var editingContextId = new IDParser().parse(editingContext.getId());
-        var representationId = new IDParser().parse(representation.getId());
-
-        if (editingContextId.isPresent() && representationId.isPresent()) {
-         // @formatter:off
-            var representationDescriptor = RepresentationDescriptor.newRepresentationDescriptor(representationId.get())
+        if (editingContextId.isPresent()) {
+            // @formatter:off
+            var representationDescriptor = RepresentationDescriptor.newRepresentationDescriptor(representationMetadata.getId())
                     .projectId(editingContextId.get())
-                    .descriptionId(representation.getDescriptionId())
-                    .targetObjectId(representation.getTargetObjectId())
-                    .label(representation.getLabel())
+                    .descriptionId(representationMetadata.getDescriptionId())
+                    .targetObjectId(representationMetadata.getTargetObjectId())
+                    .label(representationMetadata.getLabel())
                     .representation(representation)
+                    .kind(representationMetadata.getKind())
                     .build();
             // @formatter:on
 
@@ -138,10 +145,10 @@ public class RepresentationService implements IRepresentationService, IRepresent
     }
 
     @Override
-    public Optional<RepresentationDescriptor> getRepresentation(UUID representationId) {
+    public Optional<IRepresentationMetadata> getRepresentation(UUID representationId) {
         // @formatter:off
         return this.representationRepository.findById(representationId)
-                .map(new RepresentationMapper(this.objectMapper)::toDTO);
+                .map(new RepresentationMapper(this.objectMapper)::toRepresentationMetadataDTO);
         // @formatter:off
     }
 
@@ -156,10 +163,10 @@ public class RepresentationService implements IRepresentationService, IRepresent
     }
 
     @Override
-    public boolean isDangling(IEditingContext editingContext, IRepresentation representation) {
-        if (representation instanceof ISemanticRepresentation) {
-            ISemanticRepresentation semanticRepresentation = (ISemanticRepresentation) representation;
-            String targetObjectId = semanticRepresentation.getTargetObjectId();
+    public boolean isDangling(IEditingContext editingContext, IRepresentationMetadata representationMetadata) {
+        if (representationMetadata instanceof ISemanticRepresentationMetadata) {
+            ISemanticRepresentationMetadata semanticRepresentationMetadata = (ISemanticRepresentationMetadata) representationMetadata;
+            String targetObjectId = semanticRepresentationMetadata.getTargetObjectId();
             Optional<Object> optionalObject = this.objectService.getObject(editingContext, targetObjectId);
             return optionalObject.isEmpty();
         }

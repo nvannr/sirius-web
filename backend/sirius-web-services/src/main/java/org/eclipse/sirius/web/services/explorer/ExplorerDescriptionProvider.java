@@ -29,11 +29,10 @@ import org.eclipse.sirius.web.core.api.IObjectService;
 import org.eclipse.sirius.web.emf.services.EditingContext;
 import org.eclipse.sirius.web.representations.Failure;
 import org.eclipse.sirius.web.representations.GetOrCreateRandomIdProvider;
-import org.eclipse.sirius.web.representations.IRepresentation;
+import org.eclipse.sirius.web.representations.IRepresentationMetadata;
 import org.eclipse.sirius.web.representations.IStatus;
 import org.eclipse.sirius.web.representations.VariableManager;
 import org.eclipse.sirius.web.services.api.representations.IRepresentationService;
-import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
 import org.eclipse.sirius.web.services.documents.DocumentMetadataAdapter;
 import org.eclipse.sirius.web.services.explorer.api.IDeleteTreeItemHandler;
 import org.eclipse.sirius.web.services.explorer.api.IRenameTreeItemHandler;
@@ -103,8 +102,8 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
         Object self = variableManager.getVariables().get(VariableManager.SELF);
 
         String id = null;
-        if (self instanceof RepresentationDescriptor) {
-            id = ((RepresentationDescriptor) self).getId().toString();
+        if (self instanceof IRepresentationMetadata) {
+            id = ((IRepresentationMetadata) self).getId().toString();
         } else if (self instanceof Resource) {
             Resource resource = (Resource) self;
             id = resource.getURI().toString();
@@ -117,9 +116,8 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
     private String getKind(VariableManager variableManager) {
         String kind = ""; //$NON-NLS-1$
         Object self = variableManager.getVariables().get(VariableManager.SELF);
-        if (self instanceof RepresentationDescriptor) {
-            IRepresentation representation = ((RepresentationDescriptor) self).getRepresentation();
-            kind = representation.getKind();
+        if (self instanceof IRepresentationMetadata) {
+            kind = ((IRepresentationMetadata) self).getKind();
         } else if (self instanceof Resource) {
             kind = DOCUMENT_KIND;
         } else {
@@ -132,8 +130,8 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
         Object self = variableManager.getVariables().get(VariableManager.SELF);
 
         String label = ""; //$NON-NLS-1$
-        if (self instanceof RepresentationDescriptor) {
-            label = ((RepresentationDescriptor) self).getLabel();
+        if (self instanceof IRepresentationMetadata) {
+            label = ((IRepresentationMetadata) self).getLabel();
         } else if (self instanceof Resource) {
             Resource resource = (Resource) self;
             // @formatter:off
@@ -157,7 +155,7 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
         Object self = variableManager.getVariables().get(VariableManager.SELF);
 
         boolean editable = false;
-        if (self instanceof RepresentationDescriptor) {
+        if (self instanceof IRepresentationMetadata) {
             editable = true;
         } else if (self instanceof Resource) {
             editable = true;
@@ -178,12 +176,12 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
         String imageURL = null;
         if (self instanceof EObject) {
             imageURL = this.objectService.getImagePath(self);
-        } else if (self instanceof RepresentationDescriptor) {
-            RepresentationDescriptor representationDescriptor = (RepresentationDescriptor) self;
+        } else if (self instanceof IRepresentationMetadata) {
+            IRepresentationMetadata representationMetadata = (IRepresentationMetadata) self;
 
             // @formatter:off
             imageURL = this.representationImageProviders.stream()
-                    .map(representationImageProvider -> representationImageProvider.getImageURL(representationDescriptor.getRepresentation()))
+                    .map(representationImageProvider -> representationImageProvider.getImageURL(representationMetadata))
                     .flatMap(Optional::stream)
                     .findFirst()
                     .orElse(ImageConstants.RESOURCE_SVG);

@@ -19,37 +19,34 @@ import java.util.Optional;
 
 import org.eclipse.sirius.web.core.api.IEditingContext;
 import org.eclipse.sirius.web.persistence.repositories.IRepresentationRepository;
-import org.eclipse.sirius.web.representations.IRepresentation;
+import org.eclipse.sirius.web.representations.IRepresentationMetadata;
 import org.eclipse.sirius.web.services.api.id.IDParser;
-import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
-import org.eclipse.sirius.web.spring.collaborative.api.IRepresentationSearchService;
+import org.eclipse.sirius.web.spring.collaborative.api.IRepresentationMetadataSearchService;
 import org.springframework.stereotype.Service;
 
 /**
- * Used to retrieve representations.
+ * Used to retrieve representation metadata.
  *
- * @author sbegaudeau
+ * @author pcdavid
  */
 @Service
-public class RepresentationSearchService implements IRepresentationSearchService {
+public class RepresentationMetadataSearchService implements IRepresentationMetadataSearchService {
     private final IRepresentationRepository representationRepository;
 
     private final ObjectMapper objectMapper;
 
-    public RepresentationSearchService(IRepresentationRepository representationRepository, ObjectMapper objectMapper) {
+    public RepresentationMetadataSearchService(IRepresentationRepository representationRepository, ObjectMapper objectMapper) {
         this.representationRepository = Objects.requireNonNull(representationRepository);
         this.objectMapper = Objects.requireNonNull(objectMapper);
     }
 
     @Override
-    public <T extends IRepresentation> Optional<T> findById(IEditingContext editingContext, String representationId, Class<T> representationClass) {
+    public Optional<IRepresentationMetadata> findById(IEditingContext editingContext, String representationId) {
         // @formatter:off
         return new IDParser().parse(representationId)
                 .flatMap(this.representationRepository::findById)
-                .map(representationEntity -> new RepresentationMapper(this.objectMapper).toDTO(representationEntity, representationClass))
-                .map(RepresentationDescriptor::getRepresentation)
-                .filter(representationClass::isInstance)
-                .map(representationClass::cast);
+                .map(new RepresentationMapper(this.objectMapper)::toRepresentationMetadataDTO);
         // @formatter:on
     }
+
 }

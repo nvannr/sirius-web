@@ -16,9 +16,8 @@ import java.util.Objects;
 
 import org.eclipse.sirius.web.annotations.spring.graphql.QueryDataFetcher;
 import org.eclipse.sirius.web.graphql.schema.EditingContextTypeProvider;
-import org.eclipse.sirius.web.representations.IRepresentation;
+import org.eclipse.sirius.web.representations.IRepresentationMetadata;
 import org.eclipse.sirius.web.services.api.representations.IRepresentationService;
-import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
 import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,14 +32,14 @@ import graphql.schema.DataFetchingEnvironment;
  *
  * <pre>
  * type EditingContext {
- *   representation(representationId: ID!): Representation
+ *   representation(representationId: ID!): RepresentationMetadata
  * }
  * </pre>
  *
  * @author sbegaudeau
  */
 @QueryDataFetcher(type = EditingContextTypeProvider.TYPE, field = EditingContextTypeProvider.REPRESENTATION_FIELD)
-public class EditingContextRepresentationDataFetcher implements IDataFetcherWithFieldCoordinates<IRepresentation> {
+public class EditingContextRepresentationDataFetcher implements IDataFetcherWithFieldCoordinates<IRepresentationMetadata> {
 
     private final IRepresentationService representationService;
 
@@ -51,15 +50,11 @@ public class EditingContextRepresentationDataFetcher implements IDataFetcherWith
     }
 
     @Override
-    public IRepresentation get(DataFetchingEnvironment environment) throws Exception {
+    public IRepresentationMetadata get(DataFetchingEnvironment environment) throws Exception {
         String editingContextId = environment.getSource();
         String representationId = environment.getArgument(EditingContextTypeProvider.REPRESENTATION_ID_ARGUMENT);
         try {
-            // @formatter:off
-            return this.representationService.getRepresentationDescriptorForProjectId(editingContextId, representationId)
-                    .map(RepresentationDescriptor::getRepresentation)
-                    .orElse(null);
-            // @formatter:on
+            return this.representationService.getRepresentationDescriptorForProjectId(editingContextId, representationId).orElse(null);
         } catch (IllegalArgumentException exception) {
             this.logger.warn(exception.getMessage(), exception);
         }

@@ -80,7 +80,7 @@ public class RepresentationDescriptionService implements IRepresentationDescript
     }
 
     @Override
-    public Optional<IRepresentationDescription> findById(IEditingContext editingContext, UUID representationDescriptionId) {
+    public Optional<IRepresentationDescription> findById(IEditingContext editingContext, String representationDescriptionId) {
         return Optional.ofNullable(this.getAllRepresentationDescriptions(Optional.ofNullable(editingContext)).get(representationDescriptionId));
     }
 

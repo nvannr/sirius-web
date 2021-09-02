@@ -33,12 +33,11 @@ import org.eclipse.sirius.web.forms.description.ListDescription;
 import org.eclipse.sirius.web.forms.description.PageDescription;
 import org.eclipse.sirius.web.representations.Failure;
 import org.eclipse.sirius.web.representations.GetOrCreateRandomIdProvider;
-import org.eclipse.sirius.web.representations.IRepresentation;
+import org.eclipse.sirius.web.representations.IRepresentationMetadata;
 import org.eclipse.sirius.web.representations.IStatus;
 import org.eclipse.sirius.web.representations.Success;
 import org.eclipse.sirius.web.representations.VariableManager;
 import org.eclipse.sirius.web.services.api.representations.IRepresentationService;
-import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
 import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
 import org.eclipse.sirius.web.spring.collaborative.api.IRepresentationImageProvider;
 import org.eclipse.sirius.web.spring.collaborative.forms.api.IRepresentationsDescriptionProvider;
@@ -148,9 +147,8 @@ public class RepresentationsDescriptionProvider implements IRepresentationsDescr
     private Function<VariableManager, IStatus> getItemDeleteHandlerProvider() {
         return variableManager -> {
             // @formatter:off
-            return variableManager.get(ListComponent.CANDIDATE_VARIABLE, RepresentationDescriptor.class)
-                    .map(RepresentationDescriptor::getId)
-                    .map(UUID::toString)
+            return variableManager.get(ListComponent.CANDIDATE_VARIABLE, IRepresentationMetadata.class)
+                    .map(IRepresentationMetadata::getId)
                     .map(this::getSuccessStatus)
                     .orElse(new Failure("")); //$NON-NLS-1$
             // @formatter:on
@@ -171,13 +169,13 @@ public class RepresentationsDescriptionProvider implements IRepresentationsDescr
 
     private Function<VariableManager, String> getItemImageURLProvider() {
         return variableManager -> {
-            Optional<RepresentationDescriptor> optionalRepresentationDescriptor = variableManager.get(ListComponent.CANDIDATE_VARIABLE, RepresentationDescriptor.class);
-            if (optionalRepresentationDescriptor.isPresent()) {
-                RepresentationDescriptor representationDescriptor = optionalRepresentationDescriptor.get();
+            Optional<IRepresentationMetadata> optionalRepresentationMetadata = variableManager.get(ListComponent.CANDIDATE_VARIABLE, IRepresentationMetadata.class);
+            if (optionalRepresentationMetadata.isPresent()) {
+                IRepresentationMetadata representationMetadata = optionalRepresentationMetadata.get();
 
                 // @formatter:off
                 return this.representationImageProviders.stream()
-                        .map(representationImageProvider -> representationImageProvider.getImageURL(representationDescriptor.getRepresentation()))
+                        .map(representationImageProvider -> representationImageProvider.getImageURL(representationMetadata))
                         .flatMap(Optional::stream)
                         .findFirst()
                         .orElse(ImageConstants.RESOURCE_SVG);
@@ -190,8 +188,8 @@ public class RepresentationsDescriptionProvider implements IRepresentationsDescr
     private Function<VariableManager, String> getItemLabelProvider() {
         return variableManager -> {
             // @formatter:off
-            return variableManager.get(ListComponent.CANDIDATE_VARIABLE, RepresentationDescriptor.class)
-                    .map(RepresentationDescriptor::getLabel)
+            return variableManager.get(ListComponent.CANDIDATE_VARIABLE, IRepresentationMetadata.class)
+                    .map(IRepresentationMetadata::getLabel)
                     .orElse(null);
             // @formatter:on
         };
@@ -200,9 +198,8 @@ public class RepresentationsDescriptionProvider implements IRepresentationsDescr
     private Function<VariableManager, String> getItemKindProvider() {
         return variableManager -> {
             // @formatter:off
-            return variableManager.get(ListComponent.CANDIDATE_VARIABLE, RepresentationDescriptor.class)
-                    .map(RepresentationDescriptor::getRepresentation)
-                    .map(IRepresentation::getKind)
+            return variableManager.get(ListComponent.CANDIDATE_VARIABLE, IRepresentationMetadata.class)
+                    .map(IRepresentationMetadata::getKind)
                     .orElse(null);
             // @formatter:on
         };
@@ -211,9 +208,8 @@ public class RepresentationsDescriptionProvider implements IRepresentationsDescr
     private Function<VariableManager, String> getItemIdProvider() {
         return variableManager -> {
             // @formatter:off
-            return variableManager.get(ListComponent.CANDIDATE_VARIABLE, RepresentationDescriptor.class)
-                    .map(RepresentationDescriptor::getId)
-                    .map(UUID::toString)
+            return variableManager.get(ListComponent.CANDIDATE_VARIABLE, IRepresentationMetadata.class)
+                    .map(IRepresentationMetadata::getId)
                     .orElse(null);
             // @formatter:on
         };
