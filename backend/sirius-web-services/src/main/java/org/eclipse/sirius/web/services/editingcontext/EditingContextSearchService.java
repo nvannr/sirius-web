@@ -25,7 +25,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EPackageRegistryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -93,7 +92,10 @@ public class EditingContextSearchService implements IEditingContextSearchService
         long start = System.currentTimeMillis();
 
         this.logger.debug("Loading the editing context {}", editingContextId); //$NON-NLS-1$
-        ResourceSet resourceSet = new ResourceSetImpl();
+
+        AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(this.composedAdapterFactory, new BasicCommandStack());
+
+        ResourceSet resourceSet = editingDomain.getResourceSet();
         resourceSet.eAdapters().add(new ECrossReferenceAdapter());
 
         EPackageRegistryImpl ePackageRegistry = new EPackageRegistryImpl();
@@ -117,7 +119,6 @@ public class EditingContextSearchService implements IEditingContextSearchService
             }
         }
 
-        AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(this.composedAdapterFactory, new BasicCommandStack(), resourceSet);
         this.logger.debug("{} documents loaded for the editing context {}", resourceSet.getResources().size(), editingContextId); //$NON-NLS-1$
 
         long end = System.currentTimeMillis();
