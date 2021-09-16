@@ -17,17 +17,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EPackage.Registry;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.sirius.emfjson.resource.JsonResource;
 import org.eclipse.sirius.web.core.api.IEditService;
+import org.eclipse.sirius.web.core.api.IEditingContext;
 import org.eclipse.sirius.web.core.api.IObjectService;
+import org.eclipse.sirius.web.emf.services.EditingContext;
 import org.eclipse.sirius.web.emf.services.SiriusWebJSONResourceFactoryImpl;
 import org.eclipse.sirius.web.emf.view.IJavaServiceProvider;
 import org.eclipse.sirius.web.emf.view.ViewConverter;
@@ -65,17 +69,36 @@ public class DynamicRepresentationDescriptionService implements IDynamicRepresen
     }
 
     @Override
-    public List<IRepresentationDescription> findDynamicRepresentationDescriptions(UUID editingContextId) {
+    public List<IRepresentationDescription> findDynamicRepresentationDescriptions(Optional<IEditingContext> optionalEditingContext) {
         List<IRepresentationDescription> dynamicRepresentationDescriptions = new ArrayList<>();
+        List<EPackage> accessibleEPackages = optionalEditingContext.map(this::getAccessibleEPackages).orElse(List.of());
         this.documentRepository.findAllByType(ViewPackage.eNAME, ViewPackage.eNS_URI).forEach(documentEntity -> {
-            Resource res = this.loadDocumentAsEMF(documentEntity);
-            this.getViewDefinitions(res).forEach(view -> this.viewConverter.convert(view).stream().filter(Objects::nonNull).forEach(dynamicRepresentationDescriptions::add));
+            Resource resource = this.loadDocumentAsEMF(documentEntity);
+            // @formatter:off
+            this.getViewDefinitions(resource).forEach(view -> this.viewConverter.convert(view, accessibleEPackages).stream()
+                    .filter(Objects::nonNull)
+                    .forEach(dynamicRepresentationDescriptions::add));
+            // @formatter:on
         });
         return dynamicRepresentationDescriptions;
     }
 
-    private Stream<View> getViewDefinitions(Resource res) {
-        return res.getContents().stream().filter(View.class::isInstance).map(View.class::cast);
+    private List<EPackage> getAccessibleEPackages(IEditingContext editingContext) {
+        if (editingContext instanceof EditingContext) {
+            Registry packageRegistry = ((EditingContext) editingContext).getDomain().getResourceSet().getPackageRegistry();
+            // @formatter:off
+            return packageRegistry.values().stream()
+                                  .filter(EPackage.class::isInstance)
+                                  .map(EPackage.class::cast)
+                                  .collect(Collectors.toList());
+            // @formatter:on
+        } else {
+            return List.of();
+        }
+    }
+
+    private Stream<View> getViewDefinitions(Resource resource) {
+        return resource.getContents().stream().filter(View.class::isInstance).map(View.class::cast);
     }
 
     private Resource loadDocumentAsEMF(DocumentEntity documentEntity) {

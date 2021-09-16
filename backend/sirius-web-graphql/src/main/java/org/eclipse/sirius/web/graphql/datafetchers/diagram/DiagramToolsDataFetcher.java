@@ -50,6 +50,7 @@ public class DiagramToolsDataFetcher implements IDataFetcherWithFieldCoordinates
     @Override
     public List<ToolSection> get(DataFetchingEnvironment environment) throws Exception {
         Diagram diagram = environment.getSource();
-        return this.toolService.getToolSections(diagram);
+        return this.toolService.getToolSections(null, diagram); // It's OK to pass null for now, the whole class will
+                                                                // disappear soon.
     }
 }

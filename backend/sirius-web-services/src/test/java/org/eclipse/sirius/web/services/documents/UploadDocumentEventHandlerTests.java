@@ -175,8 +175,6 @@ public class UploadDocumentEventHandlerTests {
         UploadFile file = new UploadFile(FILE_NAME, inputstream);
         var input = new UploadDocumentInput(UUID.randomUUID(), UUID.randomUUID(), file);
 
-        assertThat(handler.canHandle(input)).isTrue();
-
         AdapterFactoryEditingDomain editingDomain = new EditingDomainFactory().create();
 
         IEditingContext editingContext = new EditingContext(UUID.randomUUID(), editingDomain);
@@ -184,6 +182,7 @@ public class UploadDocumentEventHandlerTests {
         Many<ChangeDescription> changeDescriptionSink = Sinks.many().unicast().onBackpressureBuffer();
         One<IPayload> payloadSink = Sinks.one();
 
+        assertThat(handler.canHandle(editingContext, input)).isTrue();
         handler.handle(payloadSink, changeDescriptionSink, editingContext, input);
 
         ChangeDescription changeDescription = changeDescriptionSink.asFlux().blockFirst();
@@ -255,12 +254,12 @@ public class UploadDocumentEventHandlerTests {
 
         var input = new UploadDocumentInput(UUID.randomUUID(), UUID.randomUUID(), file);
 
-        assertThat(handler.canHandle(input)).isTrue();
         IEditingContext editingContext = new EditingContext(UUID.randomUUID(), editingDomain);
 
         Many<ChangeDescription> changeDescriptionSink = Sinks.many().unicast().onBackpressureBuffer();
         One<IPayload> payloadSink = Sinks.one();
 
+        assertThat(handler.canHandle(editingContext, input)).isTrue();
         handler.handle(payloadSink, changeDescriptionSink, editingContext, input);
 
         ChangeDescription changeDescription = changeDescriptionSink.asFlux().blockFirst();

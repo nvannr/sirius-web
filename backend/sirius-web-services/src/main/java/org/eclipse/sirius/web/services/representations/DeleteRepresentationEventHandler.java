@@ -59,7 +59,7 @@ public class DeleteRepresentationEventHandler implements IEditingContextEventHan
     }
 
     @Override
-    public boolean canHandle(IInput input) {
+    public boolean canHandle(IEditingContext editingContext, IInput input) {
         return input instanceof DeleteRepresentationInput;
     }
 

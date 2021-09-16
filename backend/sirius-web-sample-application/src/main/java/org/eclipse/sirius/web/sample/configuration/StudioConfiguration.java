@@ -107,7 +107,6 @@ public class StudioConfiguration {
     private String getEmptyDomainContent() {
         Domain domain = DomainFactory.eINSTANCE.createDomain();
         domain.setName("SampleDomain"); //$NON-NLS-1$
-        domain.setUri("domain://sample"); //$NON-NLS-1$
         return this.stereotypeBuilder.getStereotypeBody(domain);
     }
 

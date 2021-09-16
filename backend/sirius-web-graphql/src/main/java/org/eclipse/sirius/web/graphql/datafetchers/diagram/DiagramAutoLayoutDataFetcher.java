@@ -48,7 +48,7 @@ public class DiagramAutoLayoutDataFetcher implements IDataFetcherWithFieldCoordi
         Diagram diagram = environment.getSource();
         // @formatter:off
         return this.representationDescriptionSearchService
-                   .findById(diagram.getDescriptionId())
+                   .findById(null, diagram.getDescriptionId())  // It's OK to pass null for now, the whole class will disappear soon.
                    .filter(DiagramDescription.class::isInstance)
                    .map(DiagramDescription.class::cast)
                    .map(DiagramDescription::isAutoLayout)

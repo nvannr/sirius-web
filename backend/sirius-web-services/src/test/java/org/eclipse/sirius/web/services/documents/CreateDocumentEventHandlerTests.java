@@ -102,14 +102,13 @@ public class CreateDocumentEventHandlerTests {
         CreateDocumentEventHandler handler = new CreateDocumentEventHandler(documentService, stereotypeDescriptionService, messageService, new SimpleMeterRegistry());
         var input = new CreateDocumentInput(UUID.randomUUID(), UUID.randomUUID(), DOCUMENT_NAME, STEREOTYPE_DESCRIPTION_ID);
 
-        assertThat(handler.canHandle(input)).isTrue();
-
         AdapterFactoryEditingDomain editingDomain = new EditingDomainFactory().create();
         EditingContext editingContext = new EditingContext(UUID.randomUUID(), editingDomain);
 
         Many<ChangeDescription> changeDescriptionSink = Sinks.many().unicast().onBackpressureBuffer();
         One<IPayload> payloadSink = Sinks.one();
 
+        assertThat(handler.canHandle(editingContext, input)).isTrue();
         handler.handle(payloadSink, changeDescriptionSink, editingContext, input);
 
         ChangeDescription changeDescription = changeDescriptionSink.asFlux().blockFirst();
@@ -149,7 +148,7 @@ public class CreateDocumentEventHandlerTests {
         });
 
         var firstCreateInput = new CreateDocumentInput(UUID.randomUUID(), editingContext.getId(), DOCUMENT_NAME, STEREOTYPE_DESCRIPTION_ID);
-        assertThat(handler.canHandle(firstCreateInput)).isTrue();
+        assertThat(handler.canHandle(editingContext, firstCreateInput)).isTrue();
         One<IPayload> firstPayloadSink = Sinks.one();
         handler.handle(firstPayloadSink, changeDescriptionSink, editingContext, firstCreateInput);
 
@@ -157,7 +156,7 @@ public class CreateDocumentEventHandlerTests {
         assertThat(firstPayload).isInstanceOf(CreateDocumentSuccessPayload.class);
 
         var secondCreatedInput = new CreateDocumentInput(UUID.randomUUID(), editingContext.getId(), DOCUMENT_NAME, STEREOTYPE_DESCRIPTION_ID);
-        assertThat(handler.canHandle(secondCreatedInput)).isTrue();
+        assertThat(handler.canHandle(editingContext, secondCreatedInput)).isTrue();
         One<IPayload> secondPayloadSink = Sinks.one();
         handler.handle(secondPayloadSink, changeDescriptionSink, editingContext, secondCreatedInput);
 

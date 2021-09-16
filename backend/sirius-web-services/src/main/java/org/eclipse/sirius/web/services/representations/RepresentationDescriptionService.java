@@ -22,6 +22,7 @@ import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.eclipse.sirius.web.core.api.IEditingContext;
 import org.eclipse.sirius.web.core.api.IRepresentationDescriptionSearchService;
 import org.eclipse.sirius.web.representations.IRepresentationDescription;
 import org.eclipse.sirius.web.representations.VariableManager;
@@ -48,7 +49,7 @@ public class RepresentationDescriptionService implements IRepresentationDescript
     @Override
     public List<IRepresentationDescription> getRepresentationDescriptions(Object clazz) {
         List<IRepresentationDescription> result = new ArrayList<>();
-        Map<UUID, IRepresentationDescription> allRepresentationDescriptions = this.getAllRepresentationDescriptions();
+        Map<UUID, IRepresentationDescription> allRepresentationDescriptions = this.getAllRepresentationDescriptions(Optional.empty());
         for (IRepresentationDescription description : allRepresentationDescriptions.values()) {
             VariableManager variableManager = new VariableManager();
             variableManager.put(IRepresentationDescription.CLASS, clazz);
@@ -61,12 +62,12 @@ public class RepresentationDescriptionService implements IRepresentationDescript
         return result;
     }
 
-    private Map<UUID, IRepresentationDescription> getAllRepresentationDescriptions() {
+    private Map<UUID, IRepresentationDescription> getAllRepresentationDescriptions(Optional<IEditingContext> optionalEditingContext) {
         Map<UUID, IRepresentationDescription> allRepresentationDescriptions = new LinkedHashMap<>();
         this.registry.getRepresentationDescriptions().forEach(representationDescription -> {
             allRepresentationDescriptions.put(representationDescription.getId(), representationDescription);
         });
-        this.dynamicRepresentationDescriptionService.findDynamicRepresentationDescriptions(UUID.randomUUID()).forEach(representationDescription -> {
+        this.dynamicRepresentationDescriptionService.findDynamicRepresentationDescriptions(optionalEditingContext).forEach(representationDescription -> {
             // The dynamically discovered version wins over the version discovered on startup.
             allRepresentationDescriptions.put(representationDescription.getId(), representationDescription);
         });
@@ -75,12 +76,12 @@ public class RepresentationDescriptionService implements IRepresentationDescript
 
     @Override
     public List<IRepresentationDescription> getRepresentationDescriptions() {
-        return this.getAllRepresentationDescriptions().values().stream().collect(Collectors.toList());
+        return this.getAllRepresentationDescriptions(Optional.empty()).values().stream().collect(Collectors.toList());
     }
 
     @Override
-    public Optional<IRepresentationDescription> findById(UUID id) {
-        return Optional.ofNullable(this.getAllRepresentationDescriptions().get(id));
+    public Optional<IRepresentationDescription> findById(IEditingContext editingContext, UUID representationDescriptionId) {
+        return Optional.ofNullable(this.getAllRepresentationDescriptions(Optional.ofNullable(editingContext)).get(representationDescriptionId));
     }
 
 }

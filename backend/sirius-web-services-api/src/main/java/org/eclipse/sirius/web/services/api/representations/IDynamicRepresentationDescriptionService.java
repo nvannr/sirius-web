@@ -13,8 +13,9 @@
 package org.eclipse.sirius.web.services.api.representations;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
+import org.eclipse.sirius.web.core.api.IEditingContext;
 import org.eclipse.sirius.web.representations.IRepresentationDescription;
 
 /**
@@ -23,5 +24,5 @@ import org.eclipse.sirius.web.representations.IRepresentationDescription;
  * @author pcdavid
  */
 public interface IDynamicRepresentationDescriptionService {
-    List<IRepresentationDescription> findDynamicRepresentationDescriptions(UUID editingContextId);
+    List<IRepresentationDescription> findDynamicRepresentationDescriptions(Optional<IEditingContext> optionalEditingContext);
 }

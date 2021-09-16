@@ -61,8 +61,6 @@ public class DeleteDocumentEventHandlerTests {
 
         var input = new DeleteDocumentInput(UUID.randomUUID(), document.getId());
 
-        assertThat(handler.canHandle(input)).isTrue();
-
         AdapterFactoryEditingDomain editingDomain = new EditingDomainFactory().create();
 
         Resource resource = new SiriusWebJSONResourceFactoryImpl().createResource(URI.createURI(document.getId().toString()));
@@ -72,7 +70,9 @@ public class DeleteDocumentEventHandlerTests {
         Many<ChangeDescription> changeDescriptionSink = Sinks.many().unicast().onBackpressureBuffer();
         One<IPayload> payloadSink = Sinks.one();
 
+        assertThat(handler.canHandle(editingContext, input)).isTrue();
         handler.handle(payloadSink, changeDescriptionSink, editingContext, input);
+
         assertThat(editingDomain.getResourceSet().getResources().size()).isEqualTo(0);
 
         ChangeDescription changeDescription = changeDescriptionSink.asFlux().blockFirst();

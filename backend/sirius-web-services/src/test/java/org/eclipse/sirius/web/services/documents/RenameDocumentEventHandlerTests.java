@@ -65,8 +65,6 @@ public class RenameDocumentEventHandlerTests {
         UUID documentId = UUID.randomUUID();
         IInput input = new RenameDocumentInput(UUID.randomUUID(), documentId, NEW_NAME);
 
-        assertThat(handler.canHandle(input)).isTrue();
-
         AdapterFactoryEditingDomain editingDomain = new EditingDomainFactory().create();
 
         DocumentMetadataAdapter adapter = new DocumentMetadataAdapter(OLD_NAME);
@@ -82,7 +80,9 @@ public class RenameDocumentEventHandlerTests {
         Many<ChangeDescription> changeDescriptionSink = Sinks.many().unicast().onBackpressureBuffer();
         One<IPayload> payloadSink = Sinks.one();
 
+        assertThat(handler.canHandle(editingContext, input)).isTrue();
         handler.handle(payloadSink, changeDescriptionSink, editingContext, input);
+
         assertThat(editingDomain.getResourceSet().getResources().size()).isEqualTo(1);
         assertThat(adapter.getName()).isEqualTo(NEW_NAME);
 
