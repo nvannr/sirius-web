@@ -35,7 +35,6 @@ import org.eclipse.sirius.web.services.api.stereotypes.IStereotypeDescriptionSer
 import org.eclipse.sirius.web.services.messages.IServicesMessageService;
 import org.eclipse.sirius.web.spring.collaborative.api.ChangeDescription;
 import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
-import org.eclipse.sirius.web.spring.collaborative.api.EventHandlerResponse;
 import org.eclipse.sirius.web.spring.collaborative.api.IEditingContextEventHandler;
 import org.eclipse.sirius.web.spring.collaborative.api.Monitoring;
 import org.eclipse.sirius.web.spring.collaborative.dto.CreateDocumentInput;
@@ -46,6 +45,8 @@ import org.springframework.stereotype.Service;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
+import reactor.core.publisher.Sinks.Many;
+import reactor.core.publisher.Sinks.One;
 
 /**
  * Event handler used to create a new document from a stereotype.
@@ -84,11 +85,11 @@ public class CreateDocumentEventHandler implements IEditingContextEventHandler {
     }
 
     @Override
-    public EventHandlerResponse handle(IEditingContext editingContext, IInput input) {
+    public void handle(One<IPayload> payloadSink, Many<ChangeDescription> changeDescriptionSink, IEditingContext editingContext, IInput input) {
         this.counter.increment();
 
-        EventHandlerResponse response = new EventHandlerResponse(new ChangeDescription(ChangeKind.NOTHING, editingContext.getId()),
-                new ErrorPayload(input.getId(), this.messageService.unexpectedError()));
+        IPayload payload = new ErrorPayload(input.getId(), this.messageService.unexpectedError());
+        ChangeDescription changeDescription = new ChangeDescription(ChangeKind.NOTHING, editingContext.getId(), input);
 
         if (input instanceof CreateDocumentInput) {
             CreateDocumentInput createDocumentInput = (CreateDocumentInput) input;
@@ -100,21 +101,27 @@ public class CreateDocumentEventHandler implements IEditingContextEventHandler {
             Optional<StereotypeDescription> optionalStereotypeDescription = this.stereotypeDescriptionService.getStereotypeDescriptionById(editingContextId, stereotypeDescriptionId);
 
             if (name.isBlank()) {
-                IPayload payload = new ErrorPayload(input.getId(), this.messageService.invalidDocumentName(name));
-                response = new EventHandlerResponse(new ChangeDescription(ChangeKind.NOTHING, editingContext.getId()), payload);
+                payload = new ErrorPayload(input.getId(), this.messageService.invalidDocumentName(name));
+                payloadSink.tryEmitValue(payload);
+                changeDescriptionSink.tryEmitNext(changeDescription);
             } else if (optionalStereotypeDescription.isEmpty()) {
-                IPayload payload = new ErrorPayload(input.getId(), this.messageService.stereotypeDescriptionNotFound(stereotypeDescriptionId));
-                response = new EventHandlerResponse(new ChangeDescription(ChangeKind.NOTHING, editingContext.getId()), payload);
+                payload = new ErrorPayload(input.getId(), this.messageService.stereotypeDescriptionNotFound(stereotypeDescriptionId));
+                payloadSink.tryEmitValue(payload);
+                changeDescriptionSink.tryEmitNext(changeDescription);
             } else {
                 StereotypeDescription stereotypeDescription = optionalStereotypeDescription.get();
-                response = this.createDocument(createDocumentInput.getId(), editingContext, editingContextId, name, stereotypeDescription);
+                this.createDocument(payloadSink, changeDescriptionSink, createDocumentInput, editingContext, editingContextId, name, stereotypeDescription);
             }
         }
 
-        return response;
     }
 
-    private EventHandlerResponse createDocument(UUID inputId, IEditingContext editingContext, UUID editingContextId, String name, StereotypeDescription stereotypeDescription) {
+    private void createDocument(One<IPayload> payloadSink, Many<ChangeDescription> changeDescriptionSink, IInput input, IEditingContext editingContext, UUID editingContextId, String name,
+            StereotypeDescription stereotypeDescription) {
+
+        IPayload payload = new ErrorPayload(input.getId(), this.messageService.unexpectedError());
+        ChangeDescription changeDescription = new ChangeDescription(ChangeKind.NOTHING, editingContext.getId(), input);
+
         // @formatter:off
         Optional<AdapterFactoryEditingDomain> optionalEditingDomain = Optional.of(editingContext)
                 .filter(EditingContext.class::isInstance)
@@ -142,11 +149,13 @@ public class CreateDocumentEventHandler implements IEditingContextEventHandler {
 
                 resourceSet.getResources().add(resource);
 
-                return new EventHandlerResponse(new ChangeDescription(ChangeKind.SEMANTIC_CHANGE, editingContext.getId()), new CreateDocumentSuccessPayload(inputId));
+                payload = new CreateDocumentSuccessPayload(input.getId());
+                changeDescription = new ChangeDescription(ChangeKind.SEMANTIC_CHANGE, editingContext.getId(), input);
             }
         }
 
-        return new EventHandlerResponse(new ChangeDescription(ChangeKind.NOTHING, editingContext.getId()), new ErrorPayload(inputId, this.messageService.unexpectedError()));
+        payloadSink.tryEmitValue(payload);
+        changeDescriptionSink.tryEmitNext(changeDescription);
     }
 
 }

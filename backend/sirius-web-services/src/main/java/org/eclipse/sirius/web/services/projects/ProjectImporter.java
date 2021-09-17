@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2020 Obeo.
+ * Copyright (c) 2019, 2021 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -121,6 +121,7 @@ public class ProjectImporter {
                     .filter(CreateRepresentationSuccessPayload.class::isInstance)
                     .map(CreateRepresentationSuccessPayload.class::cast)
                     .map(CreateRepresentationSuccessPayload::getRepresentation)
+                    .blockOptional()
                     .isPresent();
             // @formatter:on
 
@@ -154,6 +155,7 @@ public class ProjectImporter {
                     .filter(UploadDocumentSuccessPayload.class::isInstance)
                     .map(UploadDocumentSuccessPayload.class::cast)
                     .map(UploadDocumentSuccessPayload::getDocument)
+                    .blockOptional()
                     .orElse(null);
             // @formatter:on
             if (document == null) {

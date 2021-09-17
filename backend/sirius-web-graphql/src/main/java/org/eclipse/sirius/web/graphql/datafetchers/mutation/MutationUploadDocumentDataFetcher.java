@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.sirius.web.annotations.graphql.GraphQLMutationTypes;
 import org.eclipse.sirius.web.annotations.spring.graphql.MutationDataFetcher;
@@ -54,7 +55,7 @@ import graphql.schema.DataFetchingEnvironment;
 )
 @MutationDataFetcher(type = MutationTypeProvider.TYPE, field = MutationUploadDocumentDataFetcher.UPLOAD_DOCUMENT_FIELD)
 // @formatter:on
-public class MutationUploadDocumentDataFetcher implements IDataFetcherWithFieldCoordinates<IPayload> {
+public class MutationUploadDocumentDataFetcher implements IDataFetcherWithFieldCoordinates<CompletableFuture<IPayload>> {
 
     public static final String UPLOAD_DOCUMENT_FIELD = "uploadDocument"; //$NON-NLS-1$
 
@@ -74,7 +75,7 @@ public class MutationUploadDocumentDataFetcher implements IDataFetcherWithFieldC
     }
 
     @Override
-    public IPayload get(DataFetchingEnvironment environment) throws Exception {
+    public CompletableFuture<IPayload> get(DataFetchingEnvironment environment) throws Exception {
         Map<Object, Object> inputArgument = environment.getArgument(MutationTypeProvider.INPUT_ARGUMENT);
 
         // We cannot use directly UploadDocumentInput, the objectMapper cannot handle the file stream.
@@ -101,8 +102,9 @@ public class MutationUploadDocumentDataFetcher implements IDataFetcherWithFieldC
         UploadDocumentInput input = new UploadDocumentInput(id, editingContextId, file);
 
         // @formatter:off
-        return this.editingContextEventProcessorRegistry.dispatchEvent(editingContextId, input)
-                .orElse(new ErrorPayload(input.getId(), this.messageService.unexpectedError()));
+        return this.editingContextEventProcessorRegistry.dispatchEvent(input.getEditingContextId(), input)
+                .defaultIfEmpty(new ErrorPayload(input.getId(), this.messageService.unexpectedError()))
+                .toFuture();
         // @formatter:on
     }
 

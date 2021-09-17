@@ -15,6 +15,7 @@ package org.eclipse.sirius.web.graphql.datafetchers.mutation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.sirius.web.annotations.graphql.GraphQLMutationTypes;
 import org.eclipse.sirius.web.annotations.spring.graphql.MutationDataFetcher;
@@ -53,7 +54,7 @@ import graphql.schema.DataFetchingEnvironment;
 )
 @MutationDataFetcher(type = MutationTypeProvider.TYPE, field = MutationArrangeAllDataFetcher.ARRANGE_ALL_FIELD)
 // @formatter:on
-public class MutationArrangeAllDataFetcher implements IDataFetcherWithFieldCoordinates<IPayload> {
+public class MutationArrangeAllDataFetcher implements IDataFetcherWithFieldCoordinates<CompletableFuture<IPayload>> {
     public static final String ARRANGE_ALL_FIELD = "arrangeAll"; //$NON-NLS-1$
 
     private final ObjectMapper objectMapper;
@@ -69,13 +70,14 @@ public class MutationArrangeAllDataFetcher implements IDataFetcherWithFieldCoord
     }
 
     @Override
-    public IPayload get(DataFetchingEnvironment environment) throws Exception {
+    public CompletableFuture<IPayload> get(DataFetchingEnvironment environment) throws Exception {
         Object argument = environment.getArgument(MutationTypeProvider.INPUT_ARGUMENT);
         var input = this.objectMapper.convertValue(argument, ArrangeAllInput.class);
 
         // @formatter:off
         return this.editingContextEventProcessorRegistry.dispatchEvent(input.getEditingContextId(), input)
-                .orElse(new ErrorPayload(input.getId(), this.messageService.unexpectedError()));
+                .defaultIfEmpty(new ErrorPayload(input.getId(), this.messageService.unexpectedError()))
+                .toFuture();
         // @formatter:on
     }
 }

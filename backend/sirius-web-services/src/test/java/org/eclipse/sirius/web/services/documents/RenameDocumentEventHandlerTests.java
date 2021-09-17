@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.sirius.web.core.api.IEditingContext;
 import org.eclipse.sirius.web.core.api.IInput;
+import org.eclipse.sirius.web.core.api.IPayload;
 import org.eclipse.sirius.web.emf.services.EditingContext;
 import org.eclipse.sirius.web.emf.services.SiriusWebJSONResourceFactoryImpl;
 import org.eclipse.sirius.web.services.api.accounts.Profile;
@@ -30,10 +31,16 @@ import org.eclipse.sirius.web.services.api.document.IDocumentService;
 import org.eclipse.sirius.web.services.api.projects.Project;
 import org.eclipse.sirius.web.services.api.projects.Visibility;
 import org.eclipse.sirius.web.services.projects.NoOpServicesMessageService;
+import org.eclipse.sirius.web.spring.collaborative.api.ChangeDescription;
+import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
 import org.eclipse.sirius.web.spring.collaborative.dto.RenameDocumentInput;
+import org.eclipse.sirius.web.spring.collaborative.dto.RenameDocumentSuccessPayload;
 import org.junit.jupiter.api.Test;
 
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import reactor.core.publisher.Sinks;
+import reactor.core.publisher.Sinks.Many;
+import reactor.core.publisher.Sinks.One;
 
 /**
  * Unit tests of the rename document event handler.
@@ -72,9 +79,17 @@ public class RenameDocumentEventHandlerTests {
 
         IEditingContext editingContext = new EditingContext(UUID.randomUUID(), editingDomain);
 
-        handler.handle(editingContext, input);
+        Many<ChangeDescription> changeDescriptionSink = Sinks.many().unicast().onBackpressureBuffer();
+        One<IPayload> payloadSink = Sinks.one();
 
+        handler.handle(payloadSink, changeDescriptionSink, editingContext, input);
         assertThat(editingDomain.getResourceSet().getResources().size()).isEqualTo(1);
         assertThat(adapter.getName()).isEqualTo(NEW_NAME);
+
+        ChangeDescription changeDescription = changeDescriptionSink.asFlux().blockFirst();
+        assertThat(changeDescription.getKind()).isEqualTo(ChangeKind.SEMANTIC_CHANGE);
+
+        IPayload payload = payloadSink.asMono().block();
+        assertThat(payload).isInstanceOf(RenameDocumentSuccessPayload.class);
     }
 }

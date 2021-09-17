@@ -20,6 +20,7 @@ import java.util.UUID;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.sirius.web.core.api.IPayload;
 import org.eclipse.sirius.web.emf.services.EditingContext;
 import org.eclipse.sirius.web.emf.services.SiriusWebJSONResourceFactoryImpl;
 import org.eclipse.sirius.web.services.api.accounts.Profile;
@@ -28,10 +29,16 @@ import org.eclipse.sirius.web.services.api.document.IDocumentService;
 import org.eclipse.sirius.web.services.api.projects.Project;
 import org.eclipse.sirius.web.services.api.projects.Visibility;
 import org.eclipse.sirius.web.services.projects.NoOpServicesMessageService;
+import org.eclipse.sirius.web.spring.collaborative.api.ChangeDescription;
+import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
 import org.eclipse.sirius.web.spring.collaborative.dto.DeleteDocumentInput;
+import org.eclipse.sirius.web.spring.collaborative.dto.DeleteDocumentSuccessPayload;
 import org.junit.jupiter.api.Test;
 
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import reactor.core.publisher.Sinks;
+import reactor.core.publisher.Sinks.Many;
+import reactor.core.publisher.Sinks.One;
 
 /**
  * Unit tests of the delete document event handler.
@@ -62,7 +69,17 @@ public class DeleteDocumentEventHandlerTests {
         editingDomain.getResourceSet().getResources().add(resource);
         EditingContext editingContext = new EditingContext(UUID.randomUUID(), editingDomain);
 
-        handler.handle(editingContext, input);
+        Many<ChangeDescription> changeDescriptionSink = Sinks.many().unicast().onBackpressureBuffer();
+        One<IPayload> payloadSink = Sinks.one();
+
+        handler.handle(payloadSink, changeDescriptionSink, editingContext, input);
         assertThat(editingDomain.getResourceSet().getResources().size()).isEqualTo(0);
+
+        ChangeDescription changeDescription = changeDescriptionSink.asFlux().blockFirst();
+        assertThat(changeDescription.getKind()).isEqualTo(ChangeKind.SEMANTIC_CHANGE);
+
+        IPayload payload = payloadSink.asMono().block();
+        assertThat(payload).isInstanceOf(DeleteDocumentSuccessPayload.class);
+
     }
 }

@@ -15,7 +15,7 @@ package org.eclipse.sirius.web.graphql.datafetchers.mutation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Objects;
-import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.sirius.web.annotations.graphql.GraphQLMutationTypes;
 import org.eclipse.sirius.web.annotations.spring.graphql.MutationDataFetcher;
@@ -25,12 +25,14 @@ import org.eclipse.sirius.web.graphql.messages.IGraphQLMessageService;
 import org.eclipse.sirius.web.graphql.schema.MutationTypeProvider;
 import org.eclipse.sirius.web.services.api.document.Document;
 import org.eclipse.sirius.web.services.api.document.IDocumentService;
+import org.eclipse.sirius.web.services.api.projects.Project;
 import org.eclipse.sirius.web.spring.collaborative.api.IEditingContextEventProcessorRegistry;
 import org.eclipse.sirius.web.spring.collaborative.dto.RenameDocumentInput;
 import org.eclipse.sirius.web.spring.collaborative.dto.RenameDocumentSuccessPayload;
 import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
 
 import graphql.schema.DataFetchingEnvironment;
+import reactor.core.publisher.Mono;
 
 /**
  * The data fetcher used to rename a {@link Document}.
@@ -55,7 +57,7 @@ import graphql.schema.DataFetchingEnvironment;
 )
 @MutationDataFetcher(type = MutationTypeProvider.TYPE, field = MutationRenameDocumentDataFetcher.RENAME_DOCUMENT_FIELD)
 // @formatter:on
-public class MutationRenameDocumentDataFetcher implements IDataFetcherWithFieldCoordinates<IPayload> {
+public class MutationRenameDocumentDataFetcher implements IDataFetcherWithFieldCoordinates<CompletableFuture<IPayload>> {
 
     public static final String RENAME_DOCUMENT_FIELD = "renameDocument"; //$NON-NLS-1$
 
@@ -76,23 +78,19 @@ public class MutationRenameDocumentDataFetcher implements IDataFetcherWithFieldC
     }
 
     @Override
-    public IPayload get(DataFetchingEnvironment environment) throws Exception {
+    public CompletableFuture<IPayload> get(DataFetchingEnvironment environment) throws Exception {
         Object argument = environment.getArgument(MutationTypeProvider.INPUT_ARGUMENT);
         var input = this.objectMapper.convertValue(argument, RenameDocumentInput.class);
 
-        IPayload payload = new ErrorPayload(input.getId(), this.messageService.unexpectedError());
-
-        Optional<Document> optionalDocument = this.documentService.getDocument(input.getDocumentId());
-        if (optionalDocument.isPresent()) {
-            Document document = optionalDocument.get();
-
-            // @formatter:off
-            payload = this.editingContextEventProcessorRegistry.dispatchEvent(document.getProject().getId(), input)
-                    .orElse(new ErrorPayload(input.getId(), this.messageService.unexpectedError()));
-            // @formatter:on
-
-        }
-        return payload;
+        // @formatter:off
+        return this.documentService.getDocument(input.getDocumentId())
+                .map(Document::getProject)
+                .map(Project::getId)
+                .map(projectId -> this.editingContextEventProcessorRegistry.dispatchEvent(projectId, input))
+                .orElse(Mono.empty())
+                .defaultIfEmpty(new ErrorPayload(input.getId(), this.messageService.unexpectedError()))
+                .toFuture();
+        // @formatter:on
     }
 
 }

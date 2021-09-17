@@ -49,7 +49,6 @@ import org.eclipse.sirius.web.services.api.document.UploadDocumentSuccessPayload
 import org.eclipse.sirius.web.services.messages.IServicesMessageService;
 import org.eclipse.sirius.web.spring.collaborative.api.ChangeDescription;
 import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
-import org.eclipse.sirius.web.spring.collaborative.api.EventHandlerResponse;
 import org.eclipse.sirius.web.spring.collaborative.api.IEditingContextEventHandler;
 import org.eclipse.sirius.web.spring.collaborative.api.Monitoring;
 import org.eclipse.sirius.web.spring.graphql.api.UploadFile;
@@ -59,6 +58,8 @@ import org.springframework.stereotype.Service;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
+import reactor.core.publisher.Sinks.Many;
+import reactor.core.publisher.Sinks.One;
 
 /**
  * Event handler used to create a new document from a file upload.
@@ -93,18 +94,17 @@ public class UploadDocumentEventHandler implements IEditingContextEventHandler {
     }
 
     @Override
-    public EventHandlerResponse handle(IEditingContext editingContext, IInput input) {
+    public void handle(One<IPayload> payloadSink, Many<ChangeDescription> changeDescriptionSink, IEditingContext editingContext, IInput input) {
         this.counter.increment();
 
-        EventHandlerResponse response = new EventHandlerResponse(new ChangeDescription(ChangeKind.NOTHING, editingContext.getId()),
-                new ErrorPayload(input.getId(), this.messageService.unexpectedError()));
-        if (!(input instanceof UploadDocumentInput)) {
-            return response;
-        }
+        IPayload payload = new ErrorPayload(input.getId(), this.messageService.unexpectedError());
+        ChangeDescription changeDescription = new ChangeDescription(ChangeKind.NOTHING, editingContext.getId(), input);
 
-        UploadDocumentInput uploadDocumentInput = (UploadDocumentInput) input;
-        UUID projectId = uploadDocumentInput.getEditingContextId();
-        UploadFile file = uploadDocumentInput.getFile();
+        if (input instanceof UploadDocumentInput) {
+
+            UploadDocumentInput uploadDocumentInput = (UploadDocumentInput) input;
+            UUID projectId = uploadDocumentInput.getEditingContextId();
+            UploadFile file = uploadDocumentInput.getFile();
 
         // @formatter:off
         Optional<AdapterFactoryEditingDomain> optionalEditingDomain = Optional.of(editingContext)
@@ -113,40 +113,43 @@ public class UploadDocumentEventHandler implements IEditingContextEventHandler {
                 .map(EditingContext::getDomain);
         // @formatter:on
 
-        String name = file.getName().trim();
-        if (optionalEditingDomain.isPresent()) {
-            AdapterFactoryEditingDomain adapterFactoryEditingDomain = optionalEditingDomain.get();
+            String name = file.getName().trim();
+            if (optionalEditingDomain.isPresent()) {
+                AdapterFactoryEditingDomain adapterFactoryEditingDomain = optionalEditingDomain.get();
 
-            String content = this.getContent(adapterFactoryEditingDomain.getResourceSet().getPackageRegistry(), file);
-            var optionalDocument = this.documentService.createDocument(projectId, name, content);
+                String content = this.getContent(adapterFactoryEditingDomain.getResourceSet().getPackageRegistry(), file);
+                var optionalDocument = this.documentService.createDocument(projectId, name, content);
 
-            if (optionalDocument.isPresent()) {
-                Document document = optionalDocument.get();
-                ResourceSet resourceSet = adapterFactoryEditingDomain.getResourceSet();
-                URI uri = URI.createURI(document.getId().toString());
+                if (optionalDocument.isPresent()) {
+                    Document document = optionalDocument.get();
+                    ResourceSet resourceSet = adapterFactoryEditingDomain.getResourceSet();
+                    URI uri = URI.createURI(document.getId().toString());
 
-                if (resourceSet.getResource(uri, false) == null) {
+                    if (resourceSet.getResource(uri, false) == null) {
 
-                    ResourceSet loadingResourceSet = new ResourceSetImpl();
-                    loadingResourceSet.setPackageRegistry(resourceSet.getPackageRegistry());
+                        ResourceSet loadingResourceSet = new ResourceSetImpl();
+                        loadingResourceSet.setPackageRegistry(resourceSet.getPackageRegistry());
 
-                    JsonResource resource = new SiriusWebJSONResourceFactoryImpl().createResource(uri);
-                    loadingResourceSet.getResources().add(resource);
-                    try (var inputStream = new ByteArrayInputStream(document.getContent().getBytes())) {
-                        resource.load(inputStream, null);
-                    } catch (IOException exception) {
-                        this.logger.warn(exception.getMessage(), exception);
+                        JsonResource resource = new SiriusWebJSONResourceFactoryImpl().createResource(uri);
+                        loadingResourceSet.getResources().add(resource);
+                        try (var inputStream = new ByteArrayInputStream(document.getContent().getBytes())) {
+                            resource.load(inputStream, null);
+                        } catch (IOException exception) {
+                            this.logger.warn(exception.getMessage(), exception);
+                        }
+
+                        resource.eAdapters().add(new DocumentMetadataAdapter(name));
+                        resourceSet.getResources().add(resource);
+
+                        payload = new UploadDocumentSuccessPayload(input.getId(), document);
+                        changeDescription = new ChangeDescription(ChangeKind.SEMANTIC_CHANGE, editingContext.getId(), input);
                     }
-
-                    resource.eAdapters().add(new DocumentMetadataAdapter(name));
-                    resourceSet.getResources().add(resource);
-
-                    IPayload payload = new UploadDocumentSuccessPayload(input.getId(), document);
-                    response = new EventHandlerResponse(new ChangeDescription(ChangeKind.SEMANTIC_CHANGE, editingContext.getId()), payload);
                 }
             }
         }
-        return response;
+
+        payloadSink.tryEmitValue(payload);
+        changeDescriptionSink.tryEmitNext(changeDescription);
     }
 
     private String getContent(EPackage.Registry registry, UploadFile file) {

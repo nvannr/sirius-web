@@ -15,6 +15,7 @@ package org.eclipse.sirius.web.graphql.datafetchers.mutation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.sirius.web.annotations.graphql.GraphQLMutationTypes;
 import org.eclipse.sirius.web.annotations.spring.graphql.MutationDataFetcher;
@@ -52,7 +53,7 @@ import graphql.schema.DataFetchingEnvironment;
 )
 @MutationDataFetcher(type = MutationTypeProvider.TYPE, field = MutationInvokeNodeToolOnDiagramDataFetcher.INVOKE_NODE_TOOL_ON_DIAGRAM_FIELD)
 // @formatter:on
-public class MutationInvokeNodeToolOnDiagramDataFetcher implements IDataFetcherWithFieldCoordinates<IPayload> {
+public class MutationInvokeNodeToolOnDiagramDataFetcher implements IDataFetcherWithFieldCoordinates<CompletableFuture<IPayload>> {
 
     public static final String INVOKE_NODE_TOOL_ON_DIAGRAM_FIELD = "invokeNodeToolOnDiagram"; //$NON-NLS-1$
 
@@ -69,13 +70,14 @@ public class MutationInvokeNodeToolOnDiagramDataFetcher implements IDataFetcherW
     }
 
     @Override
-    public IPayload get(DataFetchingEnvironment environment) throws Exception {
+    public CompletableFuture<IPayload> get(DataFetchingEnvironment environment) throws Exception {
         Object argument = environment.getArgument(MutationTypeProvider.INPUT_ARGUMENT);
         var input = this.objectMapper.convertValue(argument, InvokeNodeToolOnDiagramInput.class);
 
         // @formatter:off
         return this.editingContextEventProcessorRegistry.dispatchEvent(input.getEditingContextId(), input)
-                .orElse(new ErrorPayload(input.getId(), this.messageService.unexpectedError()));
+                .defaultIfEmpty(new ErrorPayload(input.getId(), this.messageService.unexpectedError()))
+                .toFuture();
         // @formatter:on
     }
 

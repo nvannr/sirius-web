@@ -15,6 +15,7 @@ package org.eclipse.sirius.web.graphql.datafetchers.mutation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.sirius.web.annotations.graphql.GraphQLMutationTypes;
 import org.eclipse.sirius.web.annotations.spring.graphql.MutationDataFetcher;
@@ -54,7 +55,7 @@ import graphql.schema.DataFetchingEnvironment;
 )
 @MutationDataFetcher(type = MutationTypeProvider.TYPE, field = MutationDeleteFromDiagramDataFetcher.DELETE_FROM_DIAGRAM_FIELD)
 // @formatter:on
-public class MutationDeleteFromDiagramDataFetcher implements IDataFetcherWithFieldCoordinates<IPayload> {
+public class MutationDeleteFromDiagramDataFetcher implements IDataFetcherWithFieldCoordinates<CompletableFuture<IPayload>> {
 
     public static final String DELETE_FROM_DIAGRAM_FIELD = "deleteFromDiagram"; //$NON-NLS-1$
 
@@ -71,13 +72,14 @@ public class MutationDeleteFromDiagramDataFetcher implements IDataFetcherWithFie
     }
 
     @Override
-    public IPayload get(DataFetchingEnvironment environment) throws Exception {
+    public CompletableFuture<IPayload> get(DataFetchingEnvironment environment) throws Exception {
         Object argument = environment.getArgument(MutationTypeProvider.INPUT_ARGUMENT);
         var input = this.objectMapper.convertValue(argument, DeleteFromDiagramInput.class);
 
         // @formatter:off
         return this.editingContextEventProcessorRegistry.dispatchEvent(input.getEditingContextId(), input)
-                .orElse(new ErrorPayload(input.getId(), this.messageService.unexpectedError()));
+                .defaultIfEmpty(new ErrorPayload(input.getId(), this.messageService.unexpectedError()))
+                .toFuture();
         // @formatter:on
     }
 

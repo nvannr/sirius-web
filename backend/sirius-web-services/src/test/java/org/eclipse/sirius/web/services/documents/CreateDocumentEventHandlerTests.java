@@ -20,6 +20,7 @@ import java.util.UUID;
 import org.assertj.core.api.Condition;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.sirius.web.api.configuration.StereotypeDescription;
+import org.eclipse.sirius.web.core.api.IPayload;
 import org.eclipse.sirius.web.emf.services.EditingContext;
 import org.eclipse.sirius.web.services.api.accounts.Profile;
 import org.eclipse.sirius.web.services.api.document.Document;
@@ -29,11 +30,16 @@ import org.eclipse.sirius.web.services.api.projects.Visibility;
 import org.eclipse.sirius.web.services.api.stereotypes.IStereotypeDescriptionService;
 import org.eclipse.sirius.web.services.messages.IServicesMessageService;
 import org.eclipse.sirius.web.services.projects.NoOpServicesMessageService;
+import org.eclipse.sirius.web.spring.collaborative.api.ChangeDescription;
+import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
 import org.eclipse.sirius.web.spring.collaborative.dto.CreateDocumentInput;
 import org.eclipse.sirius.web.spring.collaborative.dto.CreateDocumentSuccessPayload;
 import org.junit.jupiter.api.Test;
 
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import reactor.core.publisher.Sinks;
+import reactor.core.publisher.Sinks.Many;
+import reactor.core.publisher.Sinks.One;
 
 /**
  * Unit tests of the create document from stereotype event handler.
@@ -101,7 +107,16 @@ public class CreateDocumentEventHandlerTests {
         AdapterFactoryEditingDomain editingDomain = new EditingDomainFactory().create();
         EditingContext editingContext = new EditingContext(UUID.randomUUID(), editingDomain);
 
-        handler.handle(editingContext, input);
+        Many<ChangeDescription> changeDescriptionSink = Sinks.many().unicast().onBackpressureBuffer();
+        One<IPayload> payloadSink = Sinks.one();
+
+        handler.handle(payloadSink, changeDescriptionSink, editingContext, input);
+
+        ChangeDescription changeDescription = changeDescriptionSink.asFlux().blockFirst();
+        assertThat(changeDescription.getKind()).isEqualTo(ChangeKind.SEMANTIC_CHANGE);
+
+        IPayload payload = payloadSink.asMono().block();
+        assertThat(payload).isInstanceOf(CreateDocumentSuccessPayload.class);
 
         assertThat(editingDomain.getResourceSet().getResources().size()).isEqualTo(1);
         Condition<Object> condition = new Condition<>(adapter -> adapter instanceof DocumentMetadataAdapter, "has an DocumentMetadataAdapter"); //$NON-NLS-1$
@@ -128,15 +143,25 @@ public class CreateDocumentEventHandlerTests {
         EditingContext editingContext = new EditingContext(UUID.randomUUID(), editingDomain);
 
         CreateDocumentEventHandler handler = new CreateDocumentEventHandler(documentService, stereotypeDescriptionService, messageService, new SimpleMeterRegistry());
+        Many<ChangeDescription> changeDescriptionSink = Sinks.many().unicast().onBackpressureBuffer();
+        changeDescriptionSink.asFlux().subscribe(changeDescription -> {
+            assertThat(changeDescription.getKind()).isEqualTo(ChangeKind.SEMANTIC_CHANGE);
+        });
 
         var firstCreateInput = new CreateDocumentInput(UUID.randomUUID(), editingContext.getId(), DOCUMENT_NAME, STEREOTYPE_DESCRIPTION_ID);
         assertThat(handler.canHandle(firstCreateInput)).isTrue();
-        Object firstPayload = handler.handle(editingContext, firstCreateInput).getPayload();
+        One<IPayload> firstPayloadSink = Sinks.one();
+        handler.handle(firstPayloadSink, changeDescriptionSink, editingContext, firstCreateInput);
+
+        IPayload firstPayload = firstPayloadSink.asMono().block();
         assertThat(firstPayload).isInstanceOf(CreateDocumentSuccessPayload.class);
 
         var secondCreatedInput = new CreateDocumentInput(UUID.randomUUID(), editingContext.getId(), DOCUMENT_NAME, STEREOTYPE_DESCRIPTION_ID);
         assertThat(handler.canHandle(secondCreatedInput)).isTrue();
-        Object secondPayload = handler.handle(editingContext, secondCreatedInput).getPayload();
+        One<IPayload> secondPayloadSink = Sinks.one();
+        handler.handle(secondPayloadSink, changeDescriptionSink, editingContext, secondCreatedInput);
+
+        IPayload secondPayload = firstPayloadSink.asMono().block();
         assertThat(secondPayload).isInstanceOf(CreateDocumentSuccessPayload.class);
     }
 }

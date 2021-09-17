@@ -19,10 +19,20 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.sirius.web.core.api.IEditingContext;
+import org.eclipse.sirius.web.core.api.IPayload;
+import org.eclipse.sirius.web.services.api.accounts.Profile;
 import org.eclipse.sirius.web.services.api.projects.IProjectService;
 import org.eclipse.sirius.web.services.api.projects.Project;
 import org.eclipse.sirius.web.services.api.projects.RenameProjectInput;
+import org.eclipse.sirius.web.services.api.projects.RenameProjectSuccessPayload;
+import org.eclipse.sirius.web.services.api.projects.Visibility;
+import org.eclipse.sirius.web.spring.collaborative.api.ChangeDescription;
+import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
 import org.junit.jupiter.api.Test;
+
+import reactor.core.publisher.Sinks;
+import reactor.core.publisher.Sinks.Many;
+import reactor.core.publisher.Sinks.One;
 
 /**
  * Unit tests of the rename project event handler.
@@ -31,13 +41,15 @@ import org.junit.jupiter.api.Test;
  */
 public class RenameProjectEventHandlerTests {
     @Test
-    public void testRenameObject() {
+    public void testRenameProject() {
+        Project project = new Project(UUID.randomUUID(), "newName", new Profile(UUID.randomUUID(), "system"), Visibility.PUBLIC); //$NON-NLS-1$ //$NON-NLS-2$
+
         AtomicBoolean hasBeenCalled = new AtomicBoolean();
         IProjectService projectService = new IProjectService.NoOp() {
             @Override
             public Optional<Project> renameProject(UUID projectId, String newName) {
                 hasBeenCalled.set(true);
-                return Optional.empty();
+                return Optional.of(project);
             }
         };
 
@@ -48,7 +60,16 @@ public class RenameProjectEventHandlerTests {
 
         IEditingContext editingContext = () -> UUID.randomUUID();
 
-        handler.handle(editingContext, input);
+        Many<ChangeDescription> changeDescriptionSink = Sinks.many().unicast().onBackpressureBuffer();
+        One<IPayload> payloadSink = Sinks.one();
+
+        handler.handle(payloadSink, changeDescriptionSink, editingContext, input);
         assertThat(hasBeenCalled.get()).isTrue();
+
+        ChangeDescription changeDescription = changeDescriptionSink.asFlux().blockFirst();
+        assertThat(changeDescription.getKind()).isEqualTo(ChangeKind.PROJECT_RENAMING);
+
+        IPayload payload = payloadSink.asMono().block();
+        assertThat(payload).isInstanceOf(RenameProjectSuccessPayload.class);
     }
 }

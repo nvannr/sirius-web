@@ -15,6 +15,7 @@ package org.eclipse.sirius.web.graphql.datafetchers.mutation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.sirius.web.annotations.graphql.GraphQLMutationTypes;
 import org.eclipse.sirius.web.annotations.spring.graphql.MutationDataFetcher;
@@ -30,6 +31,7 @@ import org.eclipse.sirius.web.spring.collaborative.dto.DeleteRepresentationSucce
 import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
 
 import graphql.schema.DataFetchingEnvironment;
+import reactor.core.publisher.Mono;
 
 /**
  * The data fetcher used to delete a representation.
@@ -55,7 +57,7 @@ import graphql.schema.DataFetchingEnvironment;
 )
 @MutationDataFetcher(type = MutationTypeProvider.TYPE, field = MutationDeleteRepresentationDataFetcher.DELETE_REPRESENTATION_FIELD)
 // @formatter:on
-public class MutationDeleteRepresentationDataFetcher implements IDataFetcherWithFieldCoordinates<IPayload> {
+public class MutationDeleteRepresentationDataFetcher implements IDataFetcherWithFieldCoordinates<CompletableFuture<IPayload>> {
 
     public static final String DELETE_REPRESENTATION_FIELD = "deleteRepresentation"; //$NON-NLS-1$
 
@@ -76,22 +78,18 @@ public class MutationDeleteRepresentationDataFetcher implements IDataFetcherWith
     }
 
     @Override
-    public IPayload get(DataFetchingEnvironment environment) throws Exception {
+    public CompletableFuture<IPayload> get(DataFetchingEnvironment environment) throws Exception {
         Object argument = environment.getArgument(MutationTypeProvider.INPUT_ARGUMENT);
         var input = this.objectMapper.convertValue(argument, DeleteRepresentationInput.class);
 
-        IPayload payload = new ErrorPayload(input.getId(), this.messageService.unexpectedError());
+        // @formatter:off
+        return this.representationService.getRepresentation(input.getRepresentationId())
+                .map(RepresentationDescriptor::getProjectId)
+                .map(projectId -> this.editingContextEventProcessorRegistry.dispatchEvent(projectId, input))
+                .orElse(Mono.empty())
+                .defaultIfEmpty(new ErrorPayload(input.getId(), this.messageService.unexpectedError()))
+                .toFuture();
+        // @formatter:on
 
-        var optionalRepresentation = this.representationService.getRepresentation(input.getRepresentationId());
-        if (optionalRepresentation.isPresent()) {
-            RepresentationDescriptor representation = optionalRepresentation.get();
-
-            // @formatter:off
-            payload = this.editingContextEventProcessorRegistry.dispatchEvent(representation.getProjectId(), input)
-                    .orElse(new ErrorPayload(input.getId(), this.messageService.unexpectedError()));
-            // @formatter:on
-        }
-
-        return payload;
     }
 }
