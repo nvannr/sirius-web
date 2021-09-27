@@ -17,8 +17,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
@@ -69,17 +69,13 @@ public class DynamicRepresentationDescriptionService implements IDynamicRepresen
         List<IRepresentationDescription> dynamicRepresentationDescriptions = new ArrayList<>();
         this.documentRepository.findAllByType(ViewPackage.eNAME, ViewPackage.eNS_URI).forEach(documentEntity -> {
             Resource res = this.loadDocumentAsEMF(documentEntity);
-            this.getViewDefinition(res).ifPresent(view -> this.viewConverter.convert(view).stream().filter(Objects::nonNull).forEach(dynamicRepresentationDescriptions::add));
+            this.getViewDefinitions(res).forEach(view -> this.viewConverter.convert(view).stream().filter(Objects::nonNull).forEach(dynamicRepresentationDescriptions::add));
         });
         return dynamicRepresentationDescriptions;
     }
 
-    private Optional<View> getViewDefinition(Resource res) {
-        if (!res.getContents().isEmpty() && res.getContents().get(0) instanceof View) {
-            return Optional.of((View) res.getContents().get(0));
-        } else {
-            return Optional.empty();
-        }
+    private Stream<View> getViewDefinitions(Resource res) {
+        return res.getContents().stream().filter(View.class::isInstance).map(View.class::cast);
     }
 
     private Resource loadDocumentAsEMF(DocumentEntity documentEntity) {
