@@ -22,10 +22,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.eclipse.sirius.web.core.api.IEditingContext;
+import org.eclipse.sirius.web.core.api.IObjectService;
 import org.eclipse.sirius.web.persistence.entities.ProjectEntity;
 import org.eclipse.sirius.web.persistence.entities.RepresentationEntity;
 import org.eclipse.sirius.web.persistence.repositories.IProjectRepository;
 import org.eclipse.sirius.web.persistence.repositories.IRepresentationRepository;
+import org.eclipse.sirius.web.representations.IRepresentation;
 import org.eclipse.sirius.web.representations.ISemanticRepresentation;
 import org.eclipse.sirius.web.services.api.representations.IRepresentationService;
 import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
@@ -46,6 +48,8 @@ public class RepresentationService implements IRepresentationService, IRepresent
 
     private static final String TIMER_NAME = "siriusweb_representation_save"; //$NON-NLS-1$
 
+    private final IObjectService objectService;
+
     private final IProjectRepository projectRepository;
 
     private final IRepresentationRepository representationRepository;
@@ -54,7 +58,9 @@ public class RepresentationService implements IRepresentationService, IRepresent
 
     private final Timer timer;
 
-    public RepresentationService(IProjectRepository projectRepository, IRepresentationRepository representationRepository, ObjectMapper objectMapper, MeterRegistry meterRegistry) {
+    public RepresentationService(IObjectService objectService, IProjectRepository projectRepository, IRepresentationRepository representationRepository, ObjectMapper objectMapper,
+            MeterRegistry meterRegistry) {
+        this.objectService = Objects.requireNonNull(objectService);
         this.projectRepository = Objects.requireNonNull(projectRepository);
         this.representationRepository = Objects.requireNonNull(representationRepository);
         this.objectMapper = Objects.requireNonNull(objectMapper);
@@ -134,6 +140,17 @@ public class RepresentationService implements IRepresentationService, IRepresent
     @Override
     public void delete(UUID representationId) {
         this.representationRepository.deleteById(representationId);
+    }
+
+    @Override
+    public boolean isDangling(IEditingContext editingContext, IRepresentation representation) {
+        if (representation instanceof ISemanticRepresentation) {
+            ISemanticRepresentation semanticRepresentation = (ISemanticRepresentation) representation;
+            String targetObjectId = semanticRepresentation.getTargetObjectId();
+            Optional<Object> optionalObject = this.objectService.getObject(editingContext, targetObjectId);
+            return optionalObject.isEmpty();
+        }
+        return false;
     }
 
     @Override
