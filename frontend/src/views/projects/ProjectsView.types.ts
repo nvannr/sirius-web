@@ -20,7 +20,21 @@ export interface GQLGetProjectsQueryData {
 }
 
 export interface GQLViewer {
-  projects: GQLProject[];
+  projects: GQLViewerProjectConnection;
+}
+
+export interface GQLViewerProjectConnection {
+  edges: GQLViewerProjectEdge[];
+  pageInfo: GQLPageInfo;
+}
+
+export interface GQLPageInfo {
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+  count: number;
+}
+export interface GQLViewerProjectEdge {
+  node: GQLProject;
 }
 
 export interface GQLProject {
@@ -28,7 +42,9 @@ export interface GQLProject {
   name: string;
 }
 
-export interface GQLGetProjectsQueryVariables {}
+export interface GQLGetProjectsQueryVariables {
+  page: number;
+}
 
 export interface ProjectsTableProps {
   projects: Project[];

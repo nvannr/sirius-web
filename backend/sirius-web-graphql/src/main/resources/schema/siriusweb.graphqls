@@ -1,6 +1,15 @@
 extend interface Viewer {
   project(projectId: ID!): Project
-  projects: [Project!]!
+  projects(page: Int): ViewerProjectConnection!
+}
+
+type ViewerProjectConnection {
+  edges: [ViewerProjectEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ViewerProjectEdge {
+  node: Project!
 }
 
 type Project {
@@ -26,7 +35,7 @@ type User implements Viewer {
   username: String!
   editingContext(editingContextId: ID!): EditingContext
   project(projectId: ID!): Project
-  projects: [Project!]!
+  projects(page: Int): ViewerProjectConnection!
 }
 
 extend type Mutation {

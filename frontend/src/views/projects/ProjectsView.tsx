@@ -67,9 +67,19 @@ import { Footer } from 'footer/Footer';
 const getProjectsQuery = gql`
   query getProjects {
     viewer {
-      projects {
-        id
-        name
+      projects(page: 0) {
+        edges {
+          node {
+            id
+            name
+            visibility
+          }
+        }
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          count
+        }
       }
     }
   }

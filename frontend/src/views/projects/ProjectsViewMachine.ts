@@ -157,14 +157,22 @@ export const projectsViewMachine = Machine<ProjectsViewContext, ProjectsViewStat
   {
     guards: {
       isEmpty: (_, event) => {
-        const { data } = event as FetchedProjectsEvent;
-        return data.viewer.projects.length === 0;
+        const {
+          data: {
+            viewer: { projects },
+          },
+        } = event as FetchedProjectsEvent;
+        return projects.edges.length === 0 && !projects.pageInfo.hasPreviousPage;
       },
     },
     actions: {
-      updateProjects: assign((_, event) => {
-        const { data } = event as FetchedProjectsEvent;
-        return { projects: data.viewer.projects };
+      updateProjects: assign((context, event) => {
+        const {
+          data: {
+            viewer: { projects },
+          },
+        } = event as FetchedProjectsEvent;
+        return { projects: projects.edges.map((edge) => edge.node) };
       }),
       openMenu: assign((_, event) => {
         const { menuAnchor, project } = event as OpenMenuEvent;
