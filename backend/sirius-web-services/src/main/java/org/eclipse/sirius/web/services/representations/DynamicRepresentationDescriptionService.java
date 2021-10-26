@@ -59,27 +59,39 @@ public class DynamicRepresentationDescriptionService implements IDynamicRepresen
 
     private final EPackage.Registry ePackageRegistry;
 
-    private final ViewConverter viewConverter;
+    private final List<IJavaServiceProvider> javaServiceProviders;
+
+    private final IObjectService objectService;
+
+    private final IEditService editService;
+
+    private final boolean isStudioDefinitionEnabled;
 
     public DynamicRepresentationDescriptionService(IDocumentRepository documentRepository, EPackage.Registry ePackageRegistry, IObjectService objectService, IEditService editService,
             List<IJavaServiceProvider> javaServiceProviders, @Value("${org.eclipse.sirius.web.features.studioDefinition:false}") boolean isStudioDefinitionEnabled) {
         this.documentRepository = Objects.requireNonNull(documentRepository);
         this.ePackageRegistry = Objects.requireNonNull(ePackageRegistry);
-        this.viewConverter = new ViewConverter(javaServiceProviders, objectService, editService, isStudioDefinitionEnabled);
+        this.javaServiceProviders = Objects.requireNonNull(javaServiceProviders);
+        this.objectService = Objects.requireNonNull(objectService);
+        this.editService = Objects.requireNonNull(editService);
+        this.isStudioDefinitionEnabled = isStudioDefinitionEnabled;
     }
 
     @Override
     public List<IRepresentationDescription> findDynamicRepresentationDescriptions(Optional<IEditingContext> optionalEditingContext) {
         List<IRepresentationDescription> dynamicRepresentationDescriptions = new ArrayList<>();
-        List<EPackage> accessibleEPackages = optionalEditingContext.map(this::getAccessibleEPackages).orElse(List.of());
-        this.documentRepository.findAllByType(ViewPackage.eNAME, ViewPackage.eNS_URI).forEach(documentEntity -> {
-            Resource resource = this.loadDocumentAsEMF(documentEntity);
-            // @formatter:off
-            this.getViewDefinitions(resource).forEach(view -> this.viewConverter.convert(view, accessibleEPackages).stream()
-                    .filter(Objects::nonNull)
-                    .forEach(dynamicRepresentationDescriptions::add));
-            // @formatter:on
-        });
+        if (this.isStudioDefinitionEnabled) {
+            List<EPackage> accessibleEPackages = optionalEditingContext.map(this::getAccessibleEPackages).orElse(List.of());
+            ViewConverter viewConverter = new ViewConverter(this.javaServiceProviders, this.objectService, this.editService, this.isStudioDefinitionEnabled);
+            this.documentRepository.findAllByType(ViewPackage.eNAME, ViewPackage.eNS_URI).forEach(documentEntity -> {
+                Resource resource = this.loadDocumentAsEMF(documentEntity);
+                // @formatter:off
+                this.getViewDefinitions(resource).forEach(view -> viewConverter.convert(view, accessibleEPackages).stream()
+                        .filter(Objects::nonNull)
+                        .forEach(dynamicRepresentationDescriptions::add));
+                // @formatter:on
+            });
+        }
         return dynamicRepresentationDescriptions;
     }
 
