@@ -23,7 +23,7 @@
 	</parent>
 	<groupId>org.eclipse.sirius.web</groupId>
 	<artifactId>sirius-web-graphql</artifactId>
-	<version>0.4.6</version>
+	<version>0.5.0</version>
 	<name>sirius-web-graphql</name>
 	<description>Sirius Web GraphQL</description>
 
@@ -67,12 +67,12 @@
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
 			<artifactId>sirius-web-graphql-schema</artifactId>
-			<version>0.4.6</version>
+			<version>0.5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
 			<artifactId>sirius-web-services-api</artifactId>
-			<version>0.4.6</version>
+			<version>0.5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
