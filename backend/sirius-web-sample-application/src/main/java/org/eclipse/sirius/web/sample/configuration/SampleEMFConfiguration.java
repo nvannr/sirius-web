@@ -17,8 +17,13 @@ import fr.obeo.dsl.designer.sample.flow.provider.FlowItemProviderAdapterFactory;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.sirius.web.domain.DomainPackage;
+import org.eclipse.sirius.web.domain.provider.DomainItemProviderAdapterFactory;
 import org.eclipse.sirius.web.emf.services.ILabelFeatureProvider;
 import org.eclipse.sirius.web.emf.services.LabelFeatureProvider;
+import org.eclipse.sirius.web.view.ViewPackage;
+import org.eclipse.sirius.web.view.provider.ViewItemProviderAdapterFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,19 +34,42 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class SampleEMFConfiguration {
-	@Bean
-	public AdapterFactory flowAdapterFactory() {
-		return new FlowItemProviderAdapterFactory();
-	}
+    @Bean
+    public AdapterFactory flowAdapterFactory() {
+        return new FlowItemProviderAdapterFactory();
+    }
 
-	@Bean
-	public EPackage flowEPackage() {
-		return FlowPackage.eINSTANCE;
-	}
+    @Bean
+    public EPackage flowEPackage() {
+        return FlowPackage.eINSTANCE;
+    }
 
-	@Bean
-	public ILabelFeatureProvider flowLabelFeatureProvider() {
-		return new LabelFeatureProvider(FlowPackage.eINSTANCE.getNsURI(), new FlowLabelFeatureSwitch(),
-				new FlowEditableSwitch());
-	}
+    @Bean
+    public ILabelFeatureProvider flowLabelFeatureProvider() {
+        return new LabelFeatureProvider(FlowPackage.eINSTANCE.getNsURI(), new FlowLabelFeatureSwitch(), new FlowEditableSwitch());
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "org.eclipse.sirius.web.features", name = "studioDefinition")
+    public EPackage domainEPackage() {
+        return DomainPackage.eINSTANCE;
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "org.eclipse.sirius.web.features", name = "studioDefinition")
+    public AdapterFactory domainAdapterFactory() {
+        return new DomainItemProviderAdapterFactory();
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "org.eclipse.sirius.web.features", name = "studioDefinition")
+    public EPackage viewEPackage() {
+        return ViewPackage.eINSTANCE;
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "org.eclipse.sirius.web.features", name = "studioDefinition")
+    public AdapterFactory viewAdapterFactory() {
+        return new ViewItemProviderAdapterFactory();
+    }
 }
