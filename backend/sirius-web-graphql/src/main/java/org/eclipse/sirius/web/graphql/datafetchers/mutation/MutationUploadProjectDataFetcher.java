@@ -23,6 +23,7 @@ import org.eclipse.sirius.web.core.api.ErrorPayload;
 import org.eclipse.sirius.web.core.api.IPayload;
 import org.eclipse.sirius.web.graphql.messages.IGraphQLMessageService;
 import org.eclipse.sirius.web.graphql.schema.MutationTypeProvider;
+import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.eclipse.sirius.web.services.api.projects.IProjectImportService;
 import org.eclipse.sirius.web.services.api.projects.Project;
 import org.eclipse.sirius.web.services.api.projects.UploadProjectInput;
@@ -79,7 +80,7 @@ public class MutationUploadProjectDataFetcher implements IDataFetcherWithFieldCo
         UUID id = Optional.of(input.get(ID))
                 .filter(String.class::isInstance)
                 .map(String.class::cast)
-                .map(UUID::fromString)
+                .flatMap(new IDParser()::parse)
                 .orElse(null);
 
         return Optional.of(input.get(FILE))

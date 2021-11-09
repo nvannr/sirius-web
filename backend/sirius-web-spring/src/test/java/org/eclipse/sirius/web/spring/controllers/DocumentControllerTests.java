@@ -53,8 +53,8 @@ public class DocumentControllerTests {
 
         IDocumentService documentService = new IDocumentService.NoOp() {
             @Override
-            public Optional<Document> getDocument(UUID projectId, UUID documentId) {
-                return Optional.of(new Document(documentId, new Project(projectId, "", new Profile(UUID.randomUUID(), "username"), Visibility.PUBLIC), name, null)); //$NON-NLS-1$ //$NON-NLS-2$
+            public Optional<Document> getDocument(String projectId, UUID documentId) {
+                return Optional.of(new Document(documentId, new Project(UUID.fromString(projectId), "", new Profile(UUID.randomUUID(), "username"), Visibility.PUBLIC), name, null)); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             @Override

@@ -15,7 +15,6 @@ package org.eclipse.sirius.web.graphql.datafetchers.editingcontext;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.eclipse.sirius.web.annotations.spring.graphql.QueryDataFetcher;
@@ -59,7 +58,7 @@ public class EditingContextStereotypeDescriptionsDataFetcher implements IDataFet
 
     @Override
     public Connection<StereotypeDescription> get(DataFetchingEnvironment environment) throws Exception {
-        UUID editingContextId = environment.getSource();
+        String editingContextId = environment.getSource();
         var stereotypeDescriptions = this.stereotypeDescriptionService.getStereotypeDescriptions(editingContextId);
 
         // @formatter:off

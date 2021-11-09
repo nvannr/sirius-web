@@ -25,6 +25,7 @@ import org.eclipse.sirius.web.persistence.repositories.IIdMappingRepository;
 import org.eclipse.sirius.web.services.api.document.Document;
 import org.eclipse.sirius.web.services.api.document.UploadDocumentInput;
 import org.eclipse.sirius.web.services.api.document.UploadDocumentSuccessPayload;
+import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.eclipse.sirius.web.services.api.projects.ProjectManifest;
 import org.eclipse.sirius.web.services.api.projects.RepresentationManifest;
 import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
@@ -35,6 +36,8 @@ import org.eclipse.sirius.web.spring.graphql.api.UploadFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import reactor.core.publisher.Mono;
+
 /**
  * Class used to import a project.
  *
@@ -44,7 +47,7 @@ public class ProjectImporter {
 
     private final Logger logger = LoggerFactory.getLogger(ProjectImporter.class);
 
-    private final UUID projectId;
+    private final String projectId;
 
     private final IEditingContextEventProcessor editingContextEventProcessor;
 
@@ -58,7 +61,7 @@ public class ProjectImporter {
 
     private final IIdMappingRepository idMappingRepository;
 
-    public ProjectImporter(UUID projectId, IEditingContextEventProcessor editingContextEventProcessor, Map<String, UploadFile> documents, List<RepresentationDescriptor> representations,
+    public ProjectImporter(String projectId, IEditingContextEventProcessor editingContextEventProcessor, Map<String, UploadFile> documents, List<RepresentationDescriptor> representations,
             ProjectManifest projectManifest, IIdMappingRepository idMappingRepository) {
         this.projectId = Objects.requireNonNull(projectId);
         this.editingContextEventProcessor = Objects.requireNonNull(editingContextEventProcessor);
@@ -105,20 +108,18 @@ public class ProjectImporter {
             String descriptionURI = representationManifest.getDescriptionURI();
 
             // @formatter:off
-            UUID representationDescriptionId = this.idMappingRepository.findByExternalId(descriptionURI)
+            var inputHandle = this.idMappingRepository.findByExternalId(descriptionURI)
                 .map(IdMappingEntity::getId)
                 /*
                  * If the given descriptionURI does not match with an existing IdMappingEntity, the current representation is
                  * based on a custom description. We use the descriptionURI as representationDescriptionId.
                  */
-                .orElseGet(() -> UUID.fromString(descriptionURI));
-            // @formatter:on
+                .or(() -> new IDParser().parse(descriptionURI))
+                .map(representationDescriptionId -> new CreateRepresentationInput(inputId, this.projectId.toString(), representationDescriptionId, objectId, representationDescriptor.getLabel()))
+                .map(this.editingContextEventProcessor::handle)
+                .orElseGet(Mono::empty);
 
-            CreateRepresentationInput input = new CreateRepresentationInput(inputId, this.projectId, representationDescriptionId, objectId, representationDescriptor.getLabel());
-
-            // @formatter:off
-            representationCreated = this.editingContextEventProcessor.handle(input)
-                    .filter(CreateRepresentationSuccessPayload.class::isInstance)
+            representationCreated = inputHandle.filter(CreateRepresentationSuccessPayload.class::isInstance)
                     .map(CreateRepresentationSuccessPayload.class::cast)
                     .map(CreateRepresentationSuccessPayload::getRepresentation)
                     .blockOptional()

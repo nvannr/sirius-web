@@ -25,9 +25,9 @@ public interface IRepresentationService {
 
     boolean hasRepresentations(String objectId);
 
-    Optional<RepresentationDescriptor> getRepresentationDescriptorForProjectId(UUID projectId, UUID representationId);
+    Optional<RepresentationDescriptor> getRepresentationDescriptorForProjectId(String projectId, String representationId);
 
-    List<RepresentationDescriptor> getRepresentationDescriptorsForProjectId(UUID projectId);
+    List<RepresentationDescriptor> getRepresentationDescriptorsForProjectId(String projectId);
 
     List<RepresentationDescriptor> getRepresentationDescriptorsForObjectId(String objectId);
 

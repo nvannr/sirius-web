@@ -34,12 +34,12 @@ import graphql.schema.DataFetchingEnvironment;
  * @author sbegaudeau
  */
 @QueryDataFetcher(type = ProjectTypeProvider.TYPE, field = ProjectTypeProvider.CURRENT_EDITING_CONTEXT_FIELD)
-public class ProjectCurrentEditingContextDataFetcher implements IDataFetcherWithFieldCoordinates<Object> {
+public class ProjectCurrentEditingContextDataFetcher implements IDataFetcherWithFieldCoordinates<String> {
 
     @Override
-    public Object get(DataFetchingEnvironment environment) throws Exception {
+    public String get(DataFetchingEnvironment environment) throws Exception {
         Project project = environment.getSource();
-        return project.getId();
+        return project.getId().toString();
     }
 
 }

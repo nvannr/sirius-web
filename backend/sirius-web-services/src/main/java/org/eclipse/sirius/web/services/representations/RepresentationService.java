@@ -29,6 +29,7 @@ import org.eclipse.sirius.web.persistence.repositories.IProjectRepository;
 import org.eclipse.sirius.web.persistence.repositories.IRepresentationRepository;
 import org.eclipse.sirius.web.representations.IRepresentation;
 import org.eclipse.sirius.web.representations.ISemanticRepresentation;
+import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.eclipse.sirius.web.services.api.representations.IRepresentationService;
 import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
 import org.eclipse.sirius.web.spring.collaborative.api.IDanglingRepresentationDeletionService;
@@ -74,14 +75,24 @@ public class RepresentationService implements IRepresentationService, IRepresent
     }
 
     @Override
-    public Optional<RepresentationDescriptor> getRepresentationDescriptorForProjectId(UUID projectId, UUID representationId) {
-        return this.representationRepository.findByIdAndProjectId(representationId, projectId).map(new RepresentationMapper(this.objectMapper)::toDTO);
+    public Optional<RepresentationDescriptor> getRepresentationDescriptorForProjectId(String projectId, String representationId) {
+        var projectUUID = new IDParser().parse(projectId);
+        var representationUUID = new IDParser().parse(representationId);
+
+        if (projectUUID.isPresent() && representationUUID.isPresent()) {
+            return this.representationRepository.findByIdAndProjectId(representationUUID.get(), projectUUID.get()).map(new RepresentationMapper(this.objectMapper)::toDTO);
+        }
+
+        return Optional.empty();
     }
 
     @Override
-    public List<RepresentationDescriptor> getRepresentationDescriptorsForProjectId(UUID projectId) {
+    public List<RepresentationDescriptor> getRepresentationDescriptorsForProjectId(String projectId) {
         // @formatter:off
-        return this.representationRepository.findAllByProjectId(projectId).stream()
+        return new IDParser().parse(projectId)
+                .map(this.representationRepository::findAllByProjectId)
+                .orElseGet(List::of)
+                .stream()
                 .map(new RepresentationMapper(this.objectMapper)::toDTO)
                 .collect(Collectors.toUnmodifiableList());
         // @formatter:on
@@ -99,29 +110,31 @@ public class RepresentationService implements IRepresentationService, IRepresent
     @Override
     public void save(IEditingContext editingContext, ISemanticRepresentation representation) {
         long start = System.currentTimeMillis();
-        RepresentationDescriptor representationDescriptor = this.getRepresentationDescriptor(editingContext.getId(), representation);
 
-        var optionalProjectEntity = this.projectRepository.findById(representationDescriptor.getProjectId());
-        if (optionalProjectEntity.isPresent()) {
-            ProjectEntity projectEntity = optionalProjectEntity.get();
-            RepresentationEntity representationEntity = new RepresentationMapper(this.objectMapper).toEntity(representationDescriptor, projectEntity);
-            this.representationRepository.save(representationEntity);
+        var editingContextId = new IDParser().parse(editingContext.getId());
+        var representationId = new IDParser().parse(representation.getId());
+
+        if (editingContextId.isPresent() && representationId.isPresent()) {
+         // @formatter:off
+            var representationDescriptor = RepresentationDescriptor.newRepresentationDescriptor(representationId.get())
+                    .projectId(editingContextId.get())
+                    .descriptionId(representation.getDescriptionId())
+                    .targetObjectId(representation.getTargetObjectId())
+                    .label(representation.getLabel())
+                    .representation(representation)
+                    .build();
+            // @formatter:on
+
+            var optionalProjectEntity = this.projectRepository.findById(representationDescriptor.getProjectId());
+            if (optionalProjectEntity.isPresent()) {
+                ProjectEntity projectEntity = optionalProjectEntity.get();
+                RepresentationEntity representationEntity = new RepresentationMapper(this.objectMapper).toEntity(representationDescriptor, projectEntity);
+                this.representationRepository.save(representationEntity);
+            }
         }
 
         long end = System.currentTimeMillis();
         this.timer.record(end - start, TimeUnit.MILLISECONDS);
-    }
-
-    private RepresentationDescriptor getRepresentationDescriptor(UUID editingContextId, ISemanticRepresentation representation) {
-        // @formatter:off
-        return RepresentationDescriptor.newRepresentationDescriptor(representation.getId())
-                .projectId(editingContextId)
-                .descriptionId(representation.getDescriptionId())
-                .targetObjectId(representation.getTargetObjectId())
-                .label(representation.getLabel())
-                .representation(representation)
-                .build();
-        // @formatter:on
     }
 
     @Override
@@ -154,7 +167,7 @@ public class RepresentationService implements IRepresentationService, IRepresent
     }
 
     @Override
-    public void deleteDanglingRepresentations(UUID editingContextId) {
-        this.representationRepository.deleteDanglingRepresentations(editingContextId);
+    public void deleteDanglingRepresentations(String editingContextId) {
+        new IDParser().parse(editingContextId).ifPresent(this.representationRepository::deleteDanglingRepresentations);
     }
 }

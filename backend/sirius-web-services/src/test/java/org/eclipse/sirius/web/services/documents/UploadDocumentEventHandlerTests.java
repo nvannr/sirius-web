@@ -164,8 +164,8 @@ public class UploadDocumentEventHandlerTests {
     private EditingDomain uploadDocument(InputStream inputstream) {
         IDocumentService documentService = new IDocumentService.NoOp() {
             @Override
-            public Optional<Document> createDocument(UUID projectId, String name, String content) {
-                return Optional.of(new Document(UUID.randomUUID(), new Project(projectId, "", new Profile(UUID.randomUUID(), "username"), Visibility.PUBLIC), name, content)); //$NON-NLS-1$ //$NON-NLS-2$
+            public Optional<Document> createDocument(String projectId, String name, String content) {
+                return Optional.of(new Document(UUID.randomUUID(), new Project(UUID.fromString(projectId), "", new Profile(UUID.randomUUID(), "username"), Visibility.PUBLIC), name, content)); //$NON-NLS-1$ //$NON-NLS-2$
             }
         };
         IServicesMessageService messageService = new NoOpServicesMessageService();
@@ -173,11 +173,11 @@ public class UploadDocumentEventHandlerTests {
         UploadDocumentEventHandler handler = new UploadDocumentEventHandler(documentService, messageService, new SimpleMeterRegistry());
 
         UploadFile file = new UploadFile(FILE_NAME, inputstream);
-        var input = new UploadDocumentInput(UUID.randomUUID(), UUID.randomUUID(), file);
+        var input = new UploadDocumentInput(UUID.randomUUID(), UUID.randomUUID().toString(), file);
 
         AdapterFactoryEditingDomain editingDomain = new EditingDomainFactory().create();
 
-        IEditingContext editingContext = new EditingContext(UUID.randomUUID(), editingDomain);
+        IEditingContext editingContext = new EditingContext(UUID.randomUUID().toString(), editingDomain);
 
         Many<ChangeDescription> changeDescriptionSink = Sinks.many().unicast().onBackpressureBuffer();
         One<IPayload> payloadSink = Sinks.one();
@@ -244,17 +244,17 @@ public class UploadDocumentEventHandlerTests {
         IDocumentService documentService = new IDocumentService.NoOp() {
 
             @Override
-            public Optional<Document> createDocument(UUID projectId, String name, String content) {
-                return Optional.of(new Document(documentId, new Project(projectId, "", new Profile(UUID.randomUUID(), "username"), Visibility.PUBLIC), name, content)); //$NON-NLS-1$ //$NON-NLS-2$
+            public Optional<Document> createDocument(String projectId, String name, String content) {
+                return Optional.of(new Document(documentId, new Project(UUID.fromString(projectId), "", new Profile(UUID.randomUUID(), "username"), Visibility.PUBLIC), name, content)); //$NON-NLS-1$ //$NON-NLS-2$
             }
         };
         IServicesMessageService messageService = new NoOpServicesMessageService();
         UploadDocumentEventHandler handler = new UploadDocumentEventHandler(documentService, messageService, new SimpleMeterRegistry());
         UploadFile file = new UploadFile(FILE_NAME, new ByteArrayInputStream(resourceBytes));
 
-        var input = new UploadDocumentInput(UUID.randomUUID(), UUID.randomUUID(), file);
+        var input = new UploadDocumentInput(UUID.randomUUID(), UUID.randomUUID().toString(), file);
 
-        IEditingContext editingContext = new EditingContext(UUID.randomUUID(), editingDomain);
+        IEditingContext editingContext = new EditingContext(UUID.randomUUID().toString(), editingDomain);
 
         Many<ChangeDescription> changeDescriptionSink = Sinks.many().unicast().onBackpressureBuffer();
         One<IPayload> payloadSink = Sinks.one();

@@ -39,6 +39,7 @@ import org.eclipse.sirius.web.persistence.repositories.IDocumentRepository;
 import org.eclipse.sirius.web.persistence.repositories.IProjectRepository;
 import org.eclipse.sirius.web.services.api.document.Document;
 import org.eclipse.sirius.web.services.api.document.IDocumentService;
+import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -66,20 +67,22 @@ public class DocumentService implements IDocumentService {
     }
 
     @Override
-    public Optional<Document> createDocument(UUID projectId, String name, String content) {
-        var optionalProjectEntity = this.projectRepository.findById(projectId);
-        return optionalProjectEntity.map(projectEntity -> {
-            DocumentEntity documentEntity = new DocumentEntity();
-            documentEntity.setProject(projectEntity);
-            documentEntity.setName(name);
-            documentEntity.setContent(content);
+    public Optional<Document> createDocument(String projectId, String name, String content) {
+        // @formatter:off
+        return new IDParser().parse(projectId)
+                .flatMap(this.projectRepository::findById)
+                .map(projectEntity -> {
+                    DocumentEntity documentEntity = new DocumentEntity();
+                    documentEntity.setProject(projectEntity);
+                    documentEntity.setName(name);
+                    documentEntity.setContent(content);
 
-            documentEntity = this.documentRepository.save(documentEntity);
+                    documentEntity = this.documentRepository.save(documentEntity);
 
-            Document document = new DocumentMapper().toDTO(documentEntity);
-            return document;
-        });
-
+                    Document document = new DocumentMapper().toDTO(documentEntity);
+                    return document;
+                });
+        // @formatter:on
     }
 
     @Override
@@ -88,14 +91,21 @@ public class DocumentService implements IDocumentService {
     }
 
     @Override
-    public Optional<Document> getDocument(UUID projectId, UUID documentId) {
-        return this.documentRepository.findByProjectIdAndId(projectId, documentId).map(new DocumentMapper()::toDTO);
+    public Optional<Document> getDocument(String projectId, UUID documentId) {
+        // @formatter:off
+        return new IDParser().parse(projectId)
+                .flatMap(projectUUID -> this.documentRepository.findByProjectIdAndId(projectUUID, documentId))
+                .map(new DocumentMapper()::toDTO);
+        // @formatter:on
     }
 
     @Override
-    public List<Document> getDocuments(UUID projectId) {
+    public List<Document> getDocuments(String projectId) {
         // @formatter:off
-        return this.documentRepository.findAllByProjectId(projectId).stream()
+        return new IDParser().parse(projectId)
+                .map(this.documentRepository::findAllByProjectId)
+                .orElseGet(List::of)
+                .stream()
                 .map(new DocumentMapper()::toDTO)
                 .collect(Collectors.toUnmodifiableList());
         // @formatter:on
@@ -137,7 +147,7 @@ public class DocumentService implements IDocumentService {
         }
 
         EPackageRegistryImpl ePackageRegistryImpl = new EPackageRegistryImpl();
-        List<EPackage> ePackages = this.editingContextEPackageService.getEPackages(document.getProject().getId());
+        List<EPackage> ePackages = this.editingContextEPackageService.getEPackages(document.getProject().getId().toString());
         ePackages.forEach(ePackage -> ePackageRegistryImpl.put(ePackage.getNsURI(), ePackage));
         ResourceSet resourceSet = new ResourceSetImpl();
         resourceSet.setPackageRegistry(ePackageRegistryImpl);

@@ -33,12 +33,12 @@ public class StereotypeDescriptionService implements IStereotypeDescriptionServi
     }
 
     @Override
-    public List<StereotypeDescription> getStereotypeDescriptions(UUID editingContextId) {
+    public List<StereotypeDescription> getStereotypeDescriptions(String editingContextId) {
         return this.registry.getStereotypeDescriptions();
     }
 
     @Override
-    public Optional<StereotypeDescription> getStereotypeDescriptionById(UUID editingContextId, UUID id) {
+    public Optional<StereotypeDescription> getStereotypeDescriptionById(String editingContextId, UUID id) {
         return this.registry.getStereotypeDescription(id);
     }
 }

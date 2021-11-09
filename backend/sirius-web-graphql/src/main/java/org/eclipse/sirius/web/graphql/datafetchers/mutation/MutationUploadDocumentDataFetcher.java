@@ -26,6 +26,7 @@ import org.eclipse.sirius.web.graphql.messages.IGraphQLMessageService;
 import org.eclipse.sirius.web.graphql.schema.MutationTypeProvider;
 import org.eclipse.sirius.web.services.api.document.UploadDocumentInput;
 import org.eclipse.sirius.web.services.api.document.UploadDocumentSuccessPayload;
+import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.eclipse.sirius.web.spring.collaborative.api.IEditingContextEventProcessorRegistry;
 import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
 import org.eclipse.sirius.web.spring.graphql.api.UploadFile;
@@ -84,13 +85,12 @@ public class MutationUploadDocumentDataFetcher implements IDataFetcherWithFieldC
         UUID id = Optional.of(inputArgument.get(ID))
                 .filter(String.class::isInstance)
                 .map(String.class::cast)
-                .map(UUID::fromString)
+                .flatMap(new IDParser()::parse)
                 .orElse(null);
 
-        UUID editingContextId = Optional.of(inputArgument.get(EDITING_CONTEXT_ID))
+        String editingContextId = Optional.of(inputArgument.get(EDITING_CONTEXT_ID))
                 .filter(String.class::isInstance)
                 .map(String.class::cast)
-                .map(UUID::fromString)
                 .orElse(null);
 
         UploadFile file = Optional.of(inputArgument.get(FILE))

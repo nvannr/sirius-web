@@ -95,7 +95,7 @@ public class CreateDocumentEventHandler implements IEditingContextEventHandler {
             CreateDocumentInput createDocumentInput = (CreateDocumentInput) input;
 
             String name = createDocumentInput.getName().trim();
-            UUID editingContextId = createDocumentInput.getEditingContextId();
+            String editingContextId = createDocumentInput.getEditingContextId();
             UUID stereotypeDescriptionId = createDocumentInput.getStereotypeDescriptionId();
 
             Optional<StereotypeDescription> optionalStereotypeDescription = this.stereotypeDescriptionService.getStereotypeDescriptionById(editingContextId, stereotypeDescriptionId);
@@ -116,7 +116,7 @@ public class CreateDocumentEventHandler implements IEditingContextEventHandler {
 
     }
 
-    private void createDocument(One<IPayload> payloadSink, Many<ChangeDescription> changeDescriptionSink, IInput input, IEditingContext editingContext, UUID editingContextId, String name,
+    private void createDocument(One<IPayload> payloadSink, Many<ChangeDescription> changeDescriptionSink, IInput input, IEditingContext editingContext, String editingContextId, String name,
             StereotypeDescription stereotypeDescription) {
 
         IPayload payload = new ErrorPayload(input.getId(), this.messageService.unexpectedError());

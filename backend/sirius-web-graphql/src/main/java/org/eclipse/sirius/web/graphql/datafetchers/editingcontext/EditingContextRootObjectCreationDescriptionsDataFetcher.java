@@ -14,7 +14,6 @@ package org.eclipse.sirius.web.graphql.datafetchers.editingcontext;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 import org.eclipse.sirius.web.annotations.spring.graphql.QueryDataFetcher;
 import org.eclipse.sirius.web.core.api.ChildCreationDescription;
@@ -48,7 +47,7 @@ public class EditingContextRootObjectCreationDescriptionsDataFetcher implements 
 
     @Override
     public List<ChildCreationDescription> get(DataFetchingEnvironment environment) throws Exception {
-        UUID editingContextId = environment.getSource();
+        String editingContextId = environment.getSource();
         String domainId = environment.getArgument(EditingContextTypeProvider.DOMAIN_ID_ARGUMENT);
         Boolean suggested = environment.getArgument(EditingContextTypeProvider.SUGGESTED_ARGUMENT);
 

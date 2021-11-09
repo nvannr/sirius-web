@@ -18,6 +18,7 @@ import org.eclipse.sirius.web.core.api.ErrorPayload;
 import org.eclipse.sirius.web.core.api.IEditingContext;
 import org.eclipse.sirius.web.core.api.IInput;
 import org.eclipse.sirius.web.core.api.IPayload;
+import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.eclipse.sirius.web.services.api.representations.IRepresentationService;
 import org.eclipse.sirius.web.services.messages.IServicesMessageService;
 import org.eclipse.sirius.web.spring.collaborative.api.ChangeDescription;
@@ -74,8 +75,9 @@ public class DeleteRepresentationEventHandler implements IEditingContextEventHan
         if (input instanceof DeleteRepresentationInput) {
             DeleteRepresentationInput deleteRepresentationInput = (DeleteRepresentationInput) input;
 
-            if (this.representationService.existsById(deleteRepresentationInput.getRepresentationId())) {
-                this.representationService.delete(deleteRepresentationInput.getRepresentationId());
+            var representationId = new IDParser().parse(deleteRepresentationInput.getRepresentationId());
+            if (representationId.isPresent() && this.representationService.existsById(representationId.get())) {
+                this.representationService.delete(representationId.get());
 
                 payload = new DeleteRepresentationSuccessPayload(input.getId(), deleteRepresentationInput.getRepresentationId());
                 changeDescription = new ChangeDescription(ChangeKind.REPRESENTATION_DELETION, editingContext.getId(), input);

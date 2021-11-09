@@ -100,17 +100,18 @@ public class ProjectImportService implements IProjectImportService {
         IPayload createProjectPayload = this.projectService.createProject(createProjectInput);
         if (createProjectPayload instanceof CreateProjectSuccessPayload) {
             Project project = ((CreateProjectSuccessPayload) createProjectPayload).getProject();
-            Optional<IEditingContextEventProcessor> optionalEditingContextEventProcessor = this.editingContextEventProcessorRegistry.getOrCreateEditingContextEventProcessor(project.getId());
+            Optional<IEditingContextEventProcessor> optionalEditingContextEventProcessor = this.editingContextEventProcessorRegistry
+                    .getOrCreateEditingContextEventProcessor(project.getId().toString());
             if (optionalEditingContextEventProcessor.isPresent()) {
                 IEditingContextEventProcessor editingContextEventProcessor = optionalEditingContextEventProcessor.get();
                 Map<String, UploadFile> documents = unzippedProject.getDocumentIdToUploadFile();
                 List<RepresentationDescriptor> representations = unzippedProject.getRepresentationDescriptors();
 
-                ProjectImporter projectImporter = new ProjectImporter(project.getId(), editingContextEventProcessor, documents, representations, manifest, this.idMappingRepository);
+                ProjectImporter projectImporter = new ProjectImporter(project.getId().toString(), editingContextEventProcessor, documents, representations, manifest, this.idMappingRepository);
                 boolean hasBeenImported = projectImporter.importProject(inputId);
 
                 if (!hasBeenImported) {
-                    this.editingContextEventProcessorRegistry.disposeEditingContextEventProcessor(project.getId());
+                    this.editingContextEventProcessorRegistry.disposeEditingContextEventProcessor(project.getId().toString());
                     this.projectService.delete(project.getId());
                 } else {
                     payload = new UploadProjectSuccessPayload(inputId, project);

@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -34,6 +33,7 @@ import org.eclipse.sirius.web.persistence.entities.DocumentEntity;
 import org.eclipse.sirius.web.persistence.repositories.IDocumentRepository;
 import org.eclipse.sirius.web.services.api.document.Document;
 import org.eclipse.sirius.web.services.api.events.DocumentsModifiedEvent;
+import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.eclipse.sirius.web.services.documents.DocumentMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,7 +76,11 @@ public class EditingContextPersistenceService implements IEditingContextPersiste
             EditingDomain editingDomain = ((EditingContext) editingContext).getDomain();
             List<DocumentEntity> documentEntities = this.persist(editingDomain);
             List<Document> documents = documentEntities.stream().map(new DocumentMapper()::toDTO).collect(Collectors.toList());
-            this.applicationEventPublisher.publishEvent(new DocumentsModifiedEvent(editingContext.getId(), documents));
+            // @formatter:off
+            new IDParser().parse(editingContext.getId())
+                .map(editingContextId -> new DocumentsModifiedEvent(editingContextId, documents))
+                .ifPresent(this.applicationEventPublisher::publishEvent);
+            // @formatter:on
         }
 
         long end = System.currentTimeMillis();
@@ -110,11 +114,15 @@ public class EditingContextPersistenceService implements IEditingContextPersiste
             byte[] bytes = outputStream.toByteArray();
             String content = new String(bytes);
 
-            UUID id = UUID.fromString(resource.getURI().toString());
-            result = this.documentRepository.findById(id).map(entity -> {
-                entity.setContent(content);
-                return this.documentRepository.save(entity);
-            });
+            // @formatter:off
+            result = new IDParser().parse(resource.getURI().toString())
+                    .flatMap(this.documentRepository::findById)
+                    .map(entity -> {
+                        entity.setContent(content);
+                        return this.documentRepository.save(entity);
+                    });
+            // @formatter:on
+
         } catch (IllegalArgumentException | IOException exception) {
             this.logger.warn(exception.getMessage(), exception);
         }

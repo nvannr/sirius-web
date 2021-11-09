@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
@@ -103,7 +102,7 @@ public class UploadDocumentEventHandler implements IEditingContextEventHandler {
         if (input instanceof UploadDocumentInput) {
 
             UploadDocumentInput uploadDocumentInput = (UploadDocumentInput) input;
-            UUID projectId = uploadDocumentInput.getEditingContextId();
+            String projectId = uploadDocumentInput.getEditingContextId();
             UploadFile file = uploadDocumentInput.getFile();
 
         // @formatter:off

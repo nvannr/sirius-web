@@ -16,11 +16,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.eclipse.sirius.web.core.api.IEditingContext;
 import org.eclipse.sirius.web.persistence.repositories.IRepresentationRepository;
 import org.eclipse.sirius.web.representations.IRepresentation;
+import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
 import org.eclipse.sirius.web.spring.collaborative.api.IRepresentationSearchService;
 import org.springframework.stereotype.Service;
@@ -42,9 +42,10 @@ public class RepresentationSearchService implements IRepresentationSearchService
     }
 
     @Override
-    public <T extends IRepresentation> Optional<T> findById(IEditingContext editingContext, UUID representationId, Class<T> representationClass) {
+    public <T extends IRepresentation> Optional<T> findById(IEditingContext editingContext, String representationId, Class<T> representationClass) {
         // @formatter:off
-        return this.representationRepository.findById(representationId)
+        return new IDParser().parse(representationId)
+                .flatMap(this.representationRepository::findById)
                 .map(new RepresentationMapper(this.objectMapper)::toDTO)
                 .map(RepresentationDescriptor::getRepresentation)
                 .filter(representationClass::isInstance)

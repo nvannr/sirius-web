@@ -13,15 +13,13 @@
 package org.eclipse.sirius.web.graphql.datafetchers.user;
 
 import java.util.Objects;
-import java.util.UUID;
 
 import org.eclipse.sirius.web.annotations.spring.graphql.QueryDataFetcher;
 import org.eclipse.sirius.web.graphql.schema.ViewerTypeProvider;
+import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.eclipse.sirius.web.services.api.projects.IProjectService;
 import org.eclipse.sirius.web.services.api.projects.Project;
 import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import graphql.schema.DataFetchingEnvironment;
 
@@ -44,8 +42,6 @@ public class UserProjectDataFetcher implements IDataFetcherWithFieldCoordinates<
 
     private final IProjectService projectService;
 
-    private final Logger logger = LoggerFactory.getLogger(UserProjectDataFetcher.class);
-
     public UserProjectDataFetcher(IProjectService projectService) {
         this.projectService = Objects.requireNonNull(projectService);
     }
@@ -53,13 +49,7 @@ public class UserProjectDataFetcher implements IDataFetcherWithFieldCoordinates<
     @Override
     public Project get(DataFetchingEnvironment environment) throws Exception {
         String projectIdArgument = environment.getArgument(ViewerTypeProvider.PROJECT_ID_ARGUMENT);
-        try {
-            UUID projectId = UUID.fromString(projectIdArgument);
-            return this.projectService.getProject(projectId).orElse(null);
-        } catch (IllegalArgumentException exception) {
-            this.logger.warn(exception.getMessage(), exception);
-        }
-        return null;
+        return new IDParser().parse(projectIdArgument).flatMap(this.projectService::getProject).orElse(null);
     }
 
 }

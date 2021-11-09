@@ -13,7 +13,6 @@
 package org.eclipse.sirius.web.graphql.datafetchers.editingcontext;
 
 import java.util.Objects;
-import java.util.UUID;
 
 import org.eclipse.sirius.web.annotations.spring.graphql.QueryDataFetcher;
 import org.eclipse.sirius.web.graphql.schema.EditingContextTypeProvider;
@@ -53,11 +52,9 @@ public class EditingContextRepresentationDataFetcher implements IDataFetcherWith
 
     @Override
     public IRepresentation get(DataFetchingEnvironment environment) throws Exception {
-        UUID editingContextId = environment.getSource();
-        String representationIdArgument = environment.getArgument(EditingContextTypeProvider.REPRESENTATION_ID_ARGUMENT);
+        String editingContextId = environment.getSource();
+        String representationId = environment.getArgument(EditingContextTypeProvider.REPRESENTATION_ID_ARGUMENT);
         try {
-            UUID representationId = UUID.fromString(representationIdArgument);
-
             // @formatter:off
             return this.representationService.getRepresentationDescriptorForProjectId(editingContextId, representationId)
                     .map(RepresentationDescriptor::getRepresentation)

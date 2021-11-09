@@ -16,13 +16,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.sirius.web.api.services.IImagePathService;
+import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.eclipse.sirius.web.services.api.images.ICustomImageContentService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
@@ -121,10 +121,10 @@ public class ImagesController {
         } else if (imagePath.startsWith(CUSTOM_IMAGE_PREFIX)) {
             String[] imageDescriptor = imagePath.substring(CUSTOM_IMAGE_PREFIX.length()).split("/"); //$NON-NLS-1$
             if (imageDescriptor.length == 2) {
-                UUID editingContextId = UUID.fromString(imageDescriptor[0]);
-                UUID imageId = UUID.fromString(imageDescriptor[1]);
-                Optional<String> mediaType = this.customImageContentService.getImageContentTypeById(editingContextId, imageId);
-                Optional<byte[]> contents = this.customImageContentService.getImageContentById(editingContextId, imageId);
+                String editingContextId = imageDescriptor[0];
+                var optionalImageId = new IDParser().parse(imageDescriptor[1]);
+                Optional<String> mediaType = optionalImageId.flatMap(imageId -> this.customImageContentService.getImageContentTypeById(editingContextId, imageId));
+                Optional<byte[]> contents = optionalImageId.flatMap(imageId -> this.customImageContentService.getImageContentById(editingContextId, imageId));
                 if (mediaType.isPresent() && contents.isPresent()) {
                     HttpHeaders headers = new HttpHeaders();
                     headers.setContentType(MediaType.valueOf(mediaType.get()));

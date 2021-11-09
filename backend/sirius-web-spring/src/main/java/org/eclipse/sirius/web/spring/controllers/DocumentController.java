@@ -15,12 +15,10 @@ package org.eclipse.sirius.web.spring.controllers;
 import java.io.ByteArrayInputStream;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.eclipse.sirius.web.services.api.document.Document;
 import org.eclipse.sirius.web.services.api.document.IDocumentService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
@@ -65,8 +63,6 @@ public class DocumentController {
 
     private final IDocumentService documentService;
 
-    private final Logger logger = LoggerFactory.getLogger(DocumentController.class);
-
     public DocumentController(IDocumentService documentService) {
         this.documentService = Objects.requireNonNull(documentService);
     }
@@ -74,11 +70,7 @@ public class DocumentController {
     @GetMapping(path = "/{documentId}")
     @ResponseBody
     public ResponseEntity<Resource> getDocument(@PathVariable String editingContextId, @PathVariable String documentId) {
-        var optionalEditingContextId = this.convertToUUID(editingContextId);
-        var optionalDocumentId = this.convertToUUID(documentId);
-        Optional<Document> optionalDocument = optionalEditingContextId.flatMap(pId -> {
-            return optionalDocumentId.flatMap(dId -> this.documentService.getDocument(pId, dId));
-        });
+        Optional<Document> optionalDocument = new IDParser().parse(documentId).flatMap(documentUUID -> this.documentService.getDocument(editingContextId, documentUUID));
 
         if (optionalDocument.isPresent()) {
             Document document = optionalDocument.get();
@@ -102,15 +94,4 @@ public class DocumentController {
         }
         return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
-
-    private Optional<UUID> convertToUUID(String id) {
-        Optional<UUID> optionalId = Optional.empty();
-        try {
-            optionalId = Optional.of(UUID.fromString(id));
-        } catch (IllegalArgumentException exception) {
-            this.logger.warn(exception.getMessage(), exception);
-        }
-        return optionalId;
-    }
-
 }

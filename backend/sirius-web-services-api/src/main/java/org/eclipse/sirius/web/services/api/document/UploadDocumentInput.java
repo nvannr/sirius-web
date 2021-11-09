@@ -34,11 +34,11 @@ public final class UploadDocumentInput implements IInput {
 
     private final UUID id;
 
-    private final UUID editingContextId;
+    private final String editingContextId;
 
     private final UploadFile file;
 
-    public UploadDocumentInput(UUID id, UUID editingContextId, UploadFile file) {
+    public UploadDocumentInput(UUID id, String editingContextId, UploadFile file) {
         this.id = Objects.requireNonNull(id);
         this.editingContextId = Objects.requireNonNull(editingContextId);
         this.file = Objects.requireNonNull(file);
@@ -55,7 +55,7 @@ public final class UploadDocumentInput implements IInput {
     @GraphQLID
     @GraphQLField
     @GraphQLNonNull
-    public UUID getEditingContextId() {
+    public String getEditingContextId() {
         return this.editingContextId;
     }
 

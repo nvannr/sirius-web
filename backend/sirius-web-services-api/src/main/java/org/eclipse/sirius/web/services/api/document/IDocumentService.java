@@ -27,13 +27,13 @@ public interface IDocumentService {
 
     String RESOURCE_KIND_XMI = "xmi"; //$NON-NLS-1$
 
-    Optional<Document> createDocument(UUID projectId, String name, String content);
+    Optional<Document> createDocument(String projectId, String name, String content);
 
     Optional<Document> getDocument(UUID documentId);
 
-    Optional<Document> getDocument(UUID projectId, UUID documentId);
+    Optional<Document> getDocument(String projectId, UUID documentId);
 
-    List<Document> getDocuments(UUID projectId);
+    List<Document> getDocuments(String projectId);
 
     void delete(UUID documentId);
 
@@ -49,7 +49,7 @@ public interface IDocumentService {
     class NoOp implements IDocumentService {
 
         @Override
-        public Optional<Document> createDocument(UUID projectId, String name, String content) {
+        public Optional<Document> createDocument(String projectId, String name, String content) {
             return Optional.empty();
         }
 
@@ -59,12 +59,12 @@ public interface IDocumentService {
         }
 
         @Override
-        public Optional<Document> getDocument(UUID projectId, UUID documentId) {
+        public Optional<Document> getDocument(String projectId, UUID documentId) {
             return Optional.empty();
         }
 
         @Override
-        public List<Document> getDocuments(UUID projectId) {
+        public List<Document> getDocuments(String projectId) {
             return List.of();
         }
 

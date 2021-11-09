@@ -113,7 +113,7 @@ public class ProjectExportService implements IProjectExportService {
 
     private byte[] toZip(Project project) {
         byte[] zip = new byte[0];
-        UUID projectId = project.getId();
+        String projectId = project.getId().toString();
         String projectName = project.getName();
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -159,7 +159,7 @@ public class ProjectExportService implements IProjectExportService {
      * @throws IOException
      *             if an I/O error occurred
      */
-    private Map<String, String> addDocuments(UUID projectId, String projectName, ZipOutputStream zippedOut) throws IOException {
+    private Map<String, String> addDocuments(String projectId, String projectName, ZipOutputStream zippedOut) throws IOException {
         List<Document> documents = this.documentService.getDocuments(projectId);
         Map<String, String> id2DocumentName = new HashMap<>();
         for (Document document : documents) {
@@ -202,7 +202,7 @@ public class ProjectExportService implements IProjectExportService {
      * @throws IOException
      *             if an I/O error occurred
      */
-    private Map<String, RepresentationManifest> addRepresentation(UUID projectId, String projectName, ZipOutputStream zippedout) throws IOException {
+    private Map<String, RepresentationManifest> addRepresentation(String projectId, String projectName, ZipOutputStream zippedout) throws IOException {
         List<RepresentationDescriptor> representationsDescriptor = this.representationService.getRepresentationDescriptorsForProjectId(projectId);
         Map<String, RepresentationManifest> representationManifests = new HashMap<>();
         ResourceSet resourceSet = this.loadAllDocuments(projectId);
@@ -274,7 +274,7 @@ public class ProjectExportService implements IProjectExportService {
      *            the ID of the project to export.
      * @return a {@link ResourceSet} containing all project documents.
      */
-    private ResourceSet loadAllDocuments(UUID projectId) {
+    private ResourceSet loadAllDocuments(String projectId) {
         List<Document> documents = this.documentService.getDocuments(projectId);
         EPackageRegistryImpl ePackageRegistry = new EPackageRegistryImpl();
         this.editingContextEPackageService.getEPackages(projectId).forEach(ePackage -> ePackageRegistry.put(ePackage.getNsURI(), ePackage));
@@ -319,7 +319,7 @@ public class ProjectExportService implements IProjectExportService {
      * @throws IOException
      *             if an I/O error occurred
      */
-    private void addManifest(UUID projectId, String projectName, Map<String, String> id2DocumentName, Map<String, RepresentationManifest> representationsManifests, ZipOutputStream zippedout)
+    private void addManifest(String projectId, String projectName, Map<String, String> id2DocumentName, Map<String, RepresentationManifest> representationsManifests, ZipOutputStream zippedout)
             throws IOException {
         // @formatter:off
         List<String> metamodels = this.editingContextEPackageService.getEPackages(projectId).stream()

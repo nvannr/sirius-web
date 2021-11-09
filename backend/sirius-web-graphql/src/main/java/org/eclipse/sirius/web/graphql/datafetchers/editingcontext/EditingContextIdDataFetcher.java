@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.datafetchers.editingcontext;
 
-import java.util.UUID;
-
 import org.eclipse.sirius.web.annotations.spring.graphql.QueryDataFetcher;
 import org.eclipse.sirius.web.graphql.schema.EditingContextTypeProvider;
 import org.eclipse.sirius.web.graphql.schema.IdFieldProvider;
@@ -36,11 +34,11 @@ import graphql.schema.DataFetchingEnvironment;
  * @author sbegaudeau
  */
 @QueryDataFetcher(type = EditingContextTypeProvider.TYPE, field = IdFieldProvider.ID_FIELD)
-public class EditingContextIdDataFetcher implements IDataFetcherWithFieldCoordinates<UUID> {
+public class EditingContextIdDataFetcher implements IDataFetcherWithFieldCoordinates<String> {
 
     @Override
-    public UUID get(DataFetchingEnvironment environment) throws Exception {
-        UUID editingContextId = environment.getSource();
+    public String get(DataFetchingEnvironment environment) throws Exception {
+        String editingContextId = environment.getSource();
         return editingContextId;
     }
 

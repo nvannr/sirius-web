@@ -15,7 +15,6 @@ package org.eclipse.sirius.web.services.explorer;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
@@ -26,12 +25,11 @@ import org.eclipse.sirius.web.persistence.repositories.IDocumentRepository;
 import org.eclipse.sirius.web.representations.Failure;
 import org.eclipse.sirius.web.representations.IStatus;
 import org.eclipse.sirius.web.representations.Success;
+import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.eclipse.sirius.web.services.documents.DocumentMetadataAdapter;
 import org.eclipse.sirius.web.services.explorer.api.IRenameTreeItemHandler;
 import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
 import org.eclipse.sirius.web.trees.TreeItem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -43,8 +41,6 @@ import org.springframework.stereotype.Service;
 public class RenameDocumentTreeItemHandler implements IRenameTreeItemHandler {
 
     private final IDocumentRepository documentRepository;
-
-    private final Logger logger = LoggerFactory.getLogger(RenameDocumentTreeItemHandler.class);
 
     public RenameDocumentTreeItemHandler(IDocumentRepository documentRepository) {
         this.documentRepository = Objects.requireNonNull(documentRepository);
@@ -64,7 +60,7 @@ public class RenameDocumentTreeItemHandler implements IRenameTreeItemHandler {
                 .map(EditingContext::getDomain);
         // @formatter:on
 
-        var optionalDocumentEntity = this.parse(treeItem.getId()).flatMap(this.documentRepository::findById);
+        var optionalDocumentEntity = new IDParser().parse(treeItem.getId()).flatMap(this.documentRepository::findById);
         if (optionalEditingDomain.isPresent() && optionalDocumentEntity.isPresent()) {
             DocumentEntity documentEntity = optionalDocumentEntity.get();
             documentEntity.setName(newLabel);
@@ -75,7 +71,7 @@ public class RenameDocumentTreeItemHandler implements IRenameTreeItemHandler {
 
             // @formatter:off
             resourceSet.getResources().stream()
-                    .filter(resource -> documentEntity.getId().equals(UUID.fromString(resource.getURI().toString())))
+                    .filter(resource -> documentEntity.getId().toString().equals(resource.getURI().toString()))
                     .findFirst()
                     .ifPresent(resource -> {
                         resource.eAdapters().stream()
@@ -89,15 +85,4 @@ public class RenameDocumentTreeItemHandler implements IRenameTreeItemHandler {
         }
         return new Failure(""); //$NON-NLS-1$
     }
-
-    private Optional<UUID> parse(String id) {
-        try {
-            UUID uuid = UUID.fromString(id);
-            return Optional.of(uuid);
-        } catch (IllegalArgumentException exception) {
-            this.logger.warn(exception.getMessage(), exception);
-        }
-        return Optional.empty();
-    }
-
 }

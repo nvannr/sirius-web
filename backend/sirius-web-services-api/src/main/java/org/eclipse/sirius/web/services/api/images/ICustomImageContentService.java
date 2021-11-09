@@ -22,9 +22,9 @@ import java.util.UUID;
  */
 public interface ICustomImageContentService {
 
-    Optional<byte[]> getImageContentById(UUID editingContextId, UUID imageId);
+    Optional<byte[]> getImageContentById(String editingContextId, UUID imageId);
 
-    Optional<String> getImageContentTypeById(UUID editingContextId, UUID imageId);
+    Optional<String> getImageContentTypeById(String editingContextId, UUID imageId);
 
     /**
      * Implementation which does nothing, used for mocks in unit tests.
@@ -34,12 +34,12 @@ public interface ICustomImageContentService {
     class NoOp implements ICustomImageContentService {
 
         @Override
-        public Optional<byte[]> getImageContentById(UUID editingContextId, UUID imageId) {
+        public Optional<byte[]> getImageContentById(String editingContextId, UUID imageId) {
             return Optional.empty();
         }
 
         @Override
-        public Optional<String> getImageContentTypeById(UUID editingContextId, UUID imageId) {
+        public Optional<String> getImageContentTypeById(String editingContextId, UUID imageId) {
             return Optional.empty();
         }
 

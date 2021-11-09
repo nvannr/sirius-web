@@ -150,13 +150,14 @@ public class RepresentationsDescriptionProvider implements IRepresentationsDescr
             // @formatter:off
             return variableManager.get(ListComponent.CANDIDATE_VARIABLE, RepresentationDescriptor.class)
                     .map(RepresentationDescriptor::getId)
+                    .map(UUID::toString)
                     .map(this::getSuccessStatus)
                     .orElse(new Failure("")); //$NON-NLS-1$
             // @formatter:on
         };
     }
 
-    private IStatus getSuccessStatus(UUID representationId) {
+    private IStatus getSuccessStatus(String representationId) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(EditingContextEventProcessor.REPRESENTATION_ID, representationId);
         return new Success(ChangeKind.REPRESENTATION_TO_DELETE, parameters);

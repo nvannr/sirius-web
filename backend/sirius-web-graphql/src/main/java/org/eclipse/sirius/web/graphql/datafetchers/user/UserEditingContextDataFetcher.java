@@ -12,13 +12,9 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.datafetchers.user;
 
-import java.util.UUID;
-
 import org.eclipse.sirius.web.annotations.spring.graphql.QueryDataFetcher;
 import org.eclipse.sirius.web.graphql.schema.ViewerTypeProvider;
 import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import graphql.schema.DataFetchingEnvironment;
 
@@ -37,20 +33,12 @@ import graphql.schema.DataFetchingEnvironment;
  * @author sbegaudeau
  */
 @QueryDataFetcher(type = ViewerTypeProvider.USER_TYPE, field = ViewerTypeProvider.EDITING_CONTEXT_FIELD)
-public class UserEditingContextDataFetcher implements IDataFetcherWithFieldCoordinates<UUID> {
-
-    private final Logger logger = LoggerFactory.getLogger(UserEditingContextDataFetcher.class);
+public class UserEditingContextDataFetcher implements IDataFetcherWithFieldCoordinates<String> {
 
     @Override
-    public UUID get(DataFetchingEnvironment environment) throws Exception {
-        String editingContextIdArgument = environment.getArgument(ViewerTypeProvider.EDITING_CONTEXT_ID_ARGUMENT);
-        try {
-            UUID editingContextId = UUID.fromString(editingContextIdArgument);
-            return editingContextId;
-        } catch (IllegalArgumentException exception) {
-            this.logger.warn(exception.getMessage(), exception);
-        }
-        return null;
+    public String get(DataFetchingEnvironment environment) throws Exception {
+        String editingContextId = environment.getArgument(ViewerTypeProvider.EDITING_CONTEXT_ID_ARGUMENT);
+        return editingContextId;
     }
 
 }

@@ -86,13 +86,13 @@ public class CreateDocumentEventHandlerTests {
     public void testCreateDocument() {
         IDocumentService documentService = new IDocumentService.NoOp() {
             @Override
-            public Optional<Document> createDocument(UUID projectId, String name, String content) {
-                return Optional.of(new Document(UUID.randomUUID(), new Project(projectId, "", new Profile(UUID.randomUUID(), "username"), Visibility.PUBLIC), name, content)); //$NON-NLS-1$ //$NON-NLS-2$
+            public Optional<Document> createDocument(String projectId, String name, String content) {
+                return Optional.of(new Document(UUID.randomUUID(), new Project(UUID.fromString(projectId), "", new Profile(UUID.randomUUID(), "username"), Visibility.PUBLIC), name, content)); //$NON-NLS-1$ //$NON-NLS-2$
             }
         };
         IStereotypeDescriptionService stereotypeDescriptionService = new IStereotypeDescriptionService.NoOp() {
             @Override
-            public Optional<StereotypeDescription> getStereotypeDescriptionById(UUID editingContextId, UUID stereotypeId) {
+            public Optional<StereotypeDescription> getStereotypeDescriptionById(String editingContextId, UUID stereotypeId) {
                 StereotypeDescription stereotypeDescription = new StereotypeDescription(stereotypeId, "label", () -> CONTENT); //$NON-NLS-1$
                 return Optional.of(stereotypeDescription);
             }
@@ -100,10 +100,10 @@ public class CreateDocumentEventHandlerTests {
         IServicesMessageService messageService = new NoOpServicesMessageService();
 
         CreateDocumentEventHandler handler = new CreateDocumentEventHandler(documentService, stereotypeDescriptionService, messageService, new SimpleMeterRegistry());
-        var input = new CreateDocumentInput(UUID.randomUUID(), UUID.randomUUID(), DOCUMENT_NAME, STEREOTYPE_DESCRIPTION_ID);
+        var input = new CreateDocumentInput(UUID.randomUUID(), UUID.randomUUID().toString(), DOCUMENT_NAME, STEREOTYPE_DESCRIPTION_ID);
 
         AdapterFactoryEditingDomain editingDomain = new EditingDomainFactory().create();
-        EditingContext editingContext = new EditingContext(UUID.randomUUID(), editingDomain);
+        EditingContext editingContext = new EditingContext(UUID.randomUUID().toString(), editingDomain);
 
         Many<ChangeDescription> changeDescriptionSink = Sinks.many().unicast().onBackpressureBuffer();
         One<IPayload> payloadSink = Sinks.one();
@@ -126,20 +126,20 @@ public class CreateDocumentEventHandlerTests {
     public void testCreateTwoDocumentWithSameName() {
         IDocumentService documentService = new IDocumentService.NoOp() {
             @Override
-            public Optional<Document> createDocument(UUID projectId, String name, String content) {
-                return Optional.of(new Document(UUID.randomUUID(), new Project(projectId, "", new Profile(UUID.randomUUID(), "username"), Visibility.PUBLIC), name, content)); //$NON-NLS-1$ //$NON-NLS-2$
+            public Optional<Document> createDocument(String projectId, String name, String content) {
+                return Optional.of(new Document(UUID.randomUUID(), new Project(UUID.fromString(projectId), "", new Profile(UUID.randomUUID(), "username"), Visibility.PUBLIC), name, content)); //$NON-NLS-1$ //$NON-NLS-2$
             }
         };
         IStereotypeDescriptionService stereotypeDescriptionService = new IStereotypeDescriptionService.NoOp() {
             @Override
-            public Optional<StereotypeDescription> getStereotypeDescriptionById(UUID editingContextId, UUID stereotypeId) {
+            public Optional<StereotypeDescription> getStereotypeDescriptionById(String editingContextId, UUID stereotypeId) {
                 StereotypeDescription stereotypeDescription = new StereotypeDescription(stereotypeId, "label", () -> CONTENT); //$NON-NLS-1$
                 return Optional.of(stereotypeDescription);
             }
         };
         IServicesMessageService messageService = new NoOpServicesMessageService();
         AdapterFactoryEditingDomain editingDomain = new EditingDomainFactory().create();
-        EditingContext editingContext = new EditingContext(UUID.randomUUID(), editingDomain);
+        EditingContext editingContext = new EditingContext(UUID.randomUUID().toString(), editingDomain);
 
         CreateDocumentEventHandler handler = new CreateDocumentEventHandler(documentService, stereotypeDescriptionService, messageService, new SimpleMeterRegistry());
         Many<ChangeDescription> changeDescriptionSink = Sinks.many().unicast().onBackpressureBuffer();
