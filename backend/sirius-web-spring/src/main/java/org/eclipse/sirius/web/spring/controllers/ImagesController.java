@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.spring.controllers;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -106,7 +108,7 @@ public class ImagesController {
         long start = System.currentTimeMillis();
 
         String requestURI = request.getRequestURI();
-        String imagePath = requestURI.substring(URLConstants.IMAGE_BASE_PATH.length());
+        String imagePath = URLDecoder.decode(requestURI.substring(URLConstants.IMAGE_BASE_PATH.length()), StandardCharsets.UTF_8);
 
         MediaType mediatype = this.getContentType(imagePath);
         if (mediatype != null) {
