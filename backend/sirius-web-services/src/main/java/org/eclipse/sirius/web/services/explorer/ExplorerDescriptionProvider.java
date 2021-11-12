@@ -27,14 +27,19 @@ import org.eclipse.sirius.web.compat.services.ImageConstants;
 import org.eclipse.sirius.web.core.api.IEditingContext;
 import org.eclipse.sirius.web.core.api.IObjectService;
 import org.eclipse.sirius.web.emf.services.EditingContext;
+import org.eclipse.sirius.web.representations.Failure;
 import org.eclipse.sirius.web.representations.GetOrCreateRandomIdProvider;
 import org.eclipse.sirius.web.representations.IRepresentation;
+import org.eclipse.sirius.web.representations.IStatus;
 import org.eclipse.sirius.web.representations.VariableManager;
 import org.eclipse.sirius.web.services.api.representations.IRepresentationService;
 import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
 import org.eclipse.sirius.web.services.documents.DocumentMetadataAdapter;
+import org.eclipse.sirius.web.services.explorer.api.IDeleteTreeItemHandler;
+import org.eclipse.sirius.web.services.explorer.api.IRenameTreeItemHandler;
 import org.eclipse.sirius.web.spring.collaborative.api.IRepresentationImageProvider;
 import org.eclipse.sirius.web.spring.collaborative.trees.api.IExplorerDescriptionProvider;
+import org.eclipse.sirius.web.trees.TreeItem;
 import org.eclipse.sirius.web.trees.description.TreeDescription;
 import org.eclipse.sirius.web.trees.renderer.TreeRenderer;
 import org.springframework.stereotype.Service;
@@ -47,7 +52,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider {
 
-    private static final String DOCUMENT_KIND = "Model"; //$NON-NLS-1$
+    public static final String DOCUMENT_KIND = "Document"; //$NON-NLS-1$
 
     private final IObjectService objectService;
 
@@ -55,10 +60,17 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
 
     private final List<IRepresentationImageProvider> representationImageProviders;
 
-    public ExplorerDescriptionProvider(IObjectService objectService, IRepresentationService representationService, List<IRepresentationImageProvider> representationImageProviders) {
+    private final List<IRenameTreeItemHandler> renameTreeItemHandlers;
+
+    private final List<IDeleteTreeItemHandler> deleteTreeItemHandlers;
+
+    public ExplorerDescriptionProvider(IObjectService objectService, IRepresentationService representationService, List<IRepresentationImageProvider> representationImageProviders,
+            List<IRenameTreeItemHandler> renameTreeItemHandlers, List<IDeleteTreeItemHandler> deleteTreeItemHandlers) {
         this.objectService = Objects.requireNonNull(objectService);
         this.representationService = Objects.requireNonNull(representationService);
         this.representationImageProviders = Objects.requireNonNull(representationImageProviders);
+        this.renameTreeItemHandlers = Objects.requireNonNull(renameTreeItemHandlers);
+        this.deleteTreeItemHandlers = Objects.requireNonNull(deleteTreeItemHandlers);
     }
 
     @Override
@@ -81,6 +93,8 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
                 .hasChildrenProvider(this::hasChildren)
                 .childrenProvider(this::getChildren)
                 .canCreatePredicate(canCreatePredicate)
+                .deleteHandler(this::getDeleteHandler)
+                .renameHandler(this::getRenameHandler)
                 .build();
         // @formatter:on
     }
@@ -248,5 +262,45 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
             }
         }
         return result;
+    }
+
+    private IStatus getDeleteHandler(VariableManager variableManager) {
+        var optionalEditingContext = variableManager.get(IEditingContext.EDITING_CONTEXT, IEditingContext.class);
+        var optionalTreeItem = variableManager.get(TreeItem.SELECTED_TREE_ITEM, TreeItem.class);
+        if (optionalEditingContext.isPresent() && optionalTreeItem.isPresent()) {
+            IEditingContext editingContext = optionalEditingContext.get();
+            TreeItem treeItem = optionalTreeItem.get();
+
+            // @formatter:off
+            var optionalHandler = this.deleteTreeItemHandlers.stream().filter(handler -> handler.canHandle(editingContext, treeItem))
+                    .findFirst();
+            // @formatter:on
+
+            if (optionalHandler.isPresent()) {
+                IDeleteTreeItemHandler renameTreeItemHandler = optionalHandler.get();
+                return renameTreeItemHandler.handle(editingContext, treeItem);
+            }
+        }
+        return new Failure(""); //$NON-NLS-1$
+    }
+
+    private IStatus getRenameHandler(VariableManager variableManager, String newLabel) {
+        var optionalEditingContext = variableManager.get(IEditingContext.EDITING_CONTEXT, IEditingContext.class);
+        var optionalTreeItem = variableManager.get(TreeItem.SELECTED_TREE_ITEM, TreeItem.class);
+        if (optionalEditingContext.isPresent() && optionalTreeItem.isPresent()) {
+            IEditingContext editingContext = optionalEditingContext.get();
+            TreeItem treeItem = optionalTreeItem.get();
+
+            // @formatter:off
+            var optionalHandler = this.renameTreeItemHandlers.stream().filter(handler -> handler.canHandle(editingContext, treeItem, newLabel))
+                    .findFirst();
+            // @formatter:on
+
+            if (optionalHandler.isPresent()) {
+                IRenameTreeItemHandler renameTreeItemHandler = optionalHandler.get();
+                return renameTreeItemHandler.handle(editingContext, treeItem, newLabel);
+            }
+        }
+        return new Failure(""); //$NON-NLS-1$
     }
 }

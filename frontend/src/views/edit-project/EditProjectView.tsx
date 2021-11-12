@@ -11,31 +11,19 @@
  *     Obeo - initial API and implementation
  *******************************************************************************/
 import { useQuery } from '@apollo/client';
-import {
-  httpOrigin,
-  NewObjectModal,
-  NewRepresentationModal,
-  NewRootObjectModal,
-  Representation,
-  TreeItemHandler,
-  TreeItemHandlersContext,
-  Workbench,
-} from '@eclipse-sirius/sirius-components';
-import { ListItemIcon, MenuItem } from '@material-ui/core';
+import { Representation, TreeItemContextMenuContribution, Workbench } from '@eclipse-sirius/sirius-components';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import ListItemText from '@material-ui/core/ListItemText';
 import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
-import GetAppIcon from '@material-ui/icons/GetApp';
 import { useMachine } from '@xstate/react';
 import gql from 'graphql-tag';
 import { NavigationBar } from 'navigationBar/NavigationBar';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { generatePath, useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import { DocumentTreeItemContextMenuContribution } from 'views/edit-project/DocumentTreeItemContextMenuContribution';
 import { EditProjectNavbar } from 'views/edit-project/EditProjectNavbar/EditProjectNavbar';
 import {
   EditProjectViewParams,
@@ -52,6 +40,7 @@ import {
   SelectRepresentationEvent,
   ShowToastEvent,
 } from 'views/edit-project/EditProjectViewMachine';
+import { ObjectTreeItemContextMenuContribution } from 'views/edit-project/ObjectTreeItemContextMenuContribution';
 
 const getProjectQuery = gql`
   query getRepresentation($projectId: ID!, $representationId: ID!, $includeRepresentation: Boolean!) {
@@ -82,85 +71,6 @@ const useEditProjectViewStyles = makeStyles((theme) => ({
   },
 }));
 
-const documentItemHandler: TreeItemHandler = {
-  handles: (treeItem) => treeItem.kind === 'Model',
-  getModal: (name) => {
-    if (name === 'CreateNewRootObject') {
-      return NewRootObjectModal;
-    }
-  },
-  getMenuEntries: (item, editingContextId, readOnly, openModal, closeContextMenu, classes) => {
-    return [
-      <MenuItem
-        key="new-object"
-        data-testid="new-object"
-        onClick={() => openModal('CreateNewRootObject')}
-        dense
-        className={classes.item}>
-        <ListItemIcon>
-          <AddIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText primary="New object" />
-      </MenuItem>,
-      <MenuItem
-        key="download"
-        divider
-        onClick={closeContextMenu}
-        component="a"
-        href={`${httpOrigin}/api/editingcontexts/${editingContextId}/documents/${item.id}`}
-        type="application/octet-stream"
-        data-testid="download"
-        disabled={readOnly}
-        dense
-        className={classes.item}>
-        <ListItemIcon>
-          <GetAppIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText primary="Download" />
-      </MenuItem>,
-    ];
-  },
-};
-
-const semanticObjectItemHandler: TreeItemHandler = {
-  handles: (treeItem) => treeItem.kind !== null && treeItem.kind.includes('::'),
-  getModal: (name) => {
-    if (name === 'CreateNewObject') {
-      return NewObjectModal;
-    } else if (name === 'CreateRepresentation') {
-      return NewRepresentationModal;
-    }
-  },
-  getMenuEntries: (item, editingContextId, readOnly, openModal, closeContextMenu, classes) => {
-    return [
-      <MenuItem
-        key="new-object"
-        onClick={() => openModal('CreateNewObject')}
-        data-testid="new-object"
-        dense
-        disabled={readOnly}
-        className={classes.item}>
-        <ListItemIcon>
-          <AddIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText primary="New object" />
-      </MenuItem>,
-      <MenuItem
-        key="new-representation"
-        onClick={() => openModal('CreateRepresentation')}
-        data-testid="new-representation"
-        dense
-        disabled={readOnly}
-        className={classes.item}>
-        <ListItemIcon>
-          <AddIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText primary="New representation" />
-      </MenuItem>,
-    ];
-  },
-};
-
 export const EditProjectView = () => {
   const history = useHistory();
   const routeMatch = useRouteMatch();
@@ -171,10 +81,6 @@ export const EditProjectView = () => {
   );
   const { toast, editProjectView } = value as SchemaValue;
   const { project, representation, message } = context;
-
-  const { registerTreeItemHandler } = useContext(TreeItemHandlersContext);
-  registerTreeItemHandler(documentItemHandler);
-  registerTreeItemHandler(semanticObjectItemHandler);
 
   const { loading, data, error } = useQuery<GQLGetProjectQueryData, GQLGetProjectQueryVariables>(getProjectQuery, {
     variables: {
@@ -224,8 +130,16 @@ export const EditProjectView = () => {
         editingContextId={project.currentEditingContext.id}
         initialRepresentationSelected={representation}
         onRepresentationSelected={onRepresentationSelected}
-        readOnly={false}
-      />
+        readOnly={false}>
+        <TreeItemContextMenuContribution
+          canHandle={(item) => item.kind === 'Document'}
+          component={DocumentTreeItemContextMenuContribution}
+        />
+        <TreeItemContextMenuContribution
+          canHandle={(item) => item.kind.includes('::')}
+          component={ObjectTreeItemContextMenuContribution}
+        />
+      </Workbench>
     );
   } else if (editProjectView === 'missing') {
     main = (

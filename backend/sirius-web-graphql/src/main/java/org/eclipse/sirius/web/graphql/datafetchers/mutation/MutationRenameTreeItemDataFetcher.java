@@ -24,8 +24,6 @@ import org.eclipse.sirius.web.core.api.IPayload;
 import org.eclipse.sirius.web.graphql.messages.IGraphQLMessageService;
 import org.eclipse.sirius.web.graphql.schema.MutationTypeProvider;
 import org.eclipse.sirius.web.spring.collaborative.api.IEditingContextEventProcessorRegistry;
-import org.eclipse.sirius.web.spring.collaborative.dto.RenameRepresentationInput;
-import org.eclipse.sirius.web.spring.collaborative.dto.RenameRepresentationSuccessPayload;
 import org.eclipse.sirius.web.spring.collaborative.trees.dto.RenameTreeItemInput;
 import org.eclipse.sirius.web.spring.collaborative.trees.dto.RenameTreeItemSuccessPayload;
 import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
@@ -44,8 +42,8 @@ import graphql.schema.DataFetchingEnvironment;
  * }
  * </pre>
  *
- * @author fbarbin
  * @author pcdavid
+ * @author sbegaudeau
  */
 // @formatter:off
 @GraphQLMutationTypes(
@@ -77,33 +75,10 @@ public class MutationRenameTreeItemDataFetcher implements IDataFetcherWithFieldC
         Object argument = environment.getArgument(MutationTypeProvider.INPUT_ARGUMENT);
         var input = this.objectMapper.convertValue(argument, RenameTreeItemInput.class);
 
-        String kind = input.getKind();
-        boolean isRepresentationRename = !this.isDomainObjectKind(kind) && !Objects.equals(kind, "Model"); //$NON-NLS-1$
-        if (isRepresentationRename) {
-            var renameRepresentationInput = new RenameRepresentationInput(input.getId(), input.getEditingContextId(), input.getTreeItemId(), input.getNewName());
-            // @formatter:off
-            return this.editingContextEventProcessorRegistry.dispatchEvent(renameRepresentationInput.getEditingContextId(), renameRepresentationInput)
-                       .map((IPayload payload) -> {
-                           if (payload instanceof RenameRepresentationSuccessPayload) {
-                               return new RenameTreeItemSuccessPayload(((RenameRepresentationSuccessPayload) payload).getId());
-                           } else {
-                               return payload;
-                           }
-                       })
-                       .defaultIfEmpty(new ErrorPayload(input.getId(), this.messageService.unexpectedError()))
-                       .toFuture();
-            // @formatter:on
-        } else {
-            // @formatter:off
-            return this.editingContextEventProcessorRegistry.dispatchEvent(input.getEditingContextId(), input)
-                       .defaultIfEmpty(new ErrorPayload(input.getId(), this.messageService.unexpectedError()))
-                       .toFuture();
-            // @formatter:on
-        }
-    }
-
-    private boolean isDomainObjectKind(String kind) {
-        // TODO There should really a better way to do this...
-        return kind != null && kind.contains("::"); //$NON-NLS-1$
+        // @formatter:off
+        return this.editingContextEventProcessorRegistry.dispatchEvent(input.getEditingContextId(), input)
+                .defaultIfEmpty(new ErrorPayload(input.getId(), this.messageService.unexpectedError()))
+                .toFuture();
+        // @formatter:on
     }
 }

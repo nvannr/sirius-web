@@ -21,7 +21,7 @@ import org.eclipse.sirius.web.core.api.IEditingContext;
 import org.eclipse.sirius.web.representations.Failure;
 import org.eclipse.sirius.web.representations.IStatus;
 import org.eclipse.sirius.web.representations.Success;
-import org.eclipse.sirius.web.services.explorer.api.IDeleteTreeItemHandler;
+import org.eclipse.sirius.web.services.explorer.api.IRenameTreeItemHandler;
 import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
 import org.eclipse.sirius.web.spring.collaborative.projects.EditingContextEventProcessor;
 import org.eclipse.sirius.web.trees.TreeItem;
@@ -30,28 +30,29 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
- * Handles representation deletion triggered via a tree item from the explorer.
+ * Handles representation renaming triggered via a tree item from the explorer.
  *
- * @author pcdavid
+ * @author sbegaudeau
  */
 @Service
-public class DeleteRepresentationTreeItemEventHandler implements IDeleteTreeItemHandler {
+public class RenameRepresentationTreeItemHandler implements IRenameTreeItemHandler {
 
-    private final Logger logger = LoggerFactory.getLogger(DeleteRepresentationTreeItemEventHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(RenameRepresentationTreeItemHandler.class);
 
     @Override
-    public boolean canHandle(IEditingContext editingContext, TreeItem treeItem) {
+    public boolean canHandle(IEditingContext editingContext, TreeItem treeItem, String newLabel) {
         return !ExplorerDescriptionProvider.DOCUMENT_KIND.equals(treeItem.getKind()) && !treeItem.getKind().contains("::"); //$NON-NLS-1$
     }
 
     @Override
-    public IStatus handle(IEditingContext editingContext, TreeItem treeItem) {
+    public IStatus handle(IEditingContext editingContext, TreeItem treeItem, String newLabel) {
         var optionalRepresentationId = this.parse(treeItem.getId());
         if (optionalRepresentationId.isPresent()) {
             UUID representationId = optionalRepresentationId.get();
             Map<String, Object> parameters = new HashMap<>();
             parameters.put(EditingContextEventProcessor.REPRESENTATION_ID, representationId);
-            return new Success(ChangeKind.REPRESENTATION_TO_DELETE, parameters);
+            parameters.put(EditingContextEventProcessor.REPRESENTATION_LABEL, newLabel);
+            return new Success(ChangeKind.REPRESENTATION_TO_RENAME, parameters);
         }
         return new Failure(""); //$NON-NLS-1$
     }
@@ -65,4 +66,5 @@ public class DeleteRepresentationTreeItemEventHandler implements IDeleteTreeItem
         }
         return Optional.empty();
     }
+
 }
