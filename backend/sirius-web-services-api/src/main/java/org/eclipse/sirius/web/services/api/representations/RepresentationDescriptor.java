@@ -24,7 +24,7 @@ import org.eclipse.sirius.web.representations.IRepresentation;
  * @author gcoutable
  */
 @Immutable
-public class RepresentationDescriptor {
+public final class RepresentationDescriptor {
     private UUID id;
 
     private UUID projectId;
@@ -36,6 +36,10 @@ public class RepresentationDescriptor {
     private String label;
 
     private IRepresentation representation;
+
+    private RepresentationDescriptor() {
+        // Prevent instantiation
+    }
 
     public UUID getId() {
         return this.id;

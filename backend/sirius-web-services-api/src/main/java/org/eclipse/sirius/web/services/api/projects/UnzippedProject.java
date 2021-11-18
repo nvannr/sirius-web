@@ -28,7 +28,7 @@ import org.eclipse.sirius.web.spring.graphql.api.UploadFile;
  * @author gcoutable
  */
 @Immutable
-public class UnzippedProject {
+public final class UnzippedProject {
 
     private String projectName;
 
@@ -36,7 +36,11 @@ public class UnzippedProject {
 
     private Map<String, UploadFile> documentIdToUploadFile = new HashMap<>();
 
-    private ProjectManifest manifest;
+    private ProjectManifest projectManifest;
+
+    private UnzippedProject() {
+        // Prevent instantiation
+    }
 
     public String getProjectName() {
         return this.projectName;
@@ -50,8 +54,8 @@ public class UnzippedProject {
         return this.documentIdToUploadFile;
     }
 
-    public ProjectManifest getManifest() {
-        return this.manifest;
+    public ProjectManifest getProjectManifest() {
+        return this.projectManifest;
     }
 
     public static Builder newUnzippedProject(String projectName) {
@@ -71,7 +75,7 @@ public class UnzippedProject {
 
         private Map<String, UploadFile> documentIdToUploadFile;
 
-        private ProjectManifest manifest;
+        private ProjectManifest projectManifest;
 
         private Builder(String projectName) {
             this.projectName = Objects.requireNonNull(projectName);
@@ -88,7 +92,7 @@ public class UnzippedProject {
         }
 
         public Builder projectManifest(ProjectManifest manifest) {
-            this.manifest = Objects.requireNonNull(manifest);
+            this.projectManifest = Objects.requireNonNull(manifest);
             return this;
         }
 
@@ -97,7 +101,7 @@ public class UnzippedProject {
             unzippedProject.projectName = Objects.requireNonNull(this.projectName);
             unzippedProject.representationDescriptors = Objects.requireNonNull(this.representationDescriptors);
             unzippedProject.documentIdToUploadFile = Objects.requireNonNull(this.documentIdToUploadFile);
-            unzippedProject.manifest = Objects.requireNonNull(this.manifest);
+            unzippedProject.projectManifest = Objects.requireNonNull(this.projectManifest);
             return unzippedProject;
         }
     }

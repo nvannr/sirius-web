@@ -93,7 +93,7 @@ public class ProjectImportService implements IProjectImportService {
             return new ErrorPayload(inputId, this.messageService.unexpectedError());
         }
         UnzippedProject unzippedProject = optionalUnzippedProject.get();
-        ProjectManifest manifest = unzippedProject.getManifest();
+        ProjectManifest manifest = unzippedProject.getProjectManifest();
         String projectName = unzippedProject.getProjectName();
 
         CreateProjectInput createProjectInput = new CreateProjectInput(inputId, projectName, Visibility.PRIVATE);
