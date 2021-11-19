@@ -50,7 +50,7 @@ If you do not have Docker or want to use an existing PostgreSQL installation, ad
 +
 [source,sh]
 ----
-java -jar sirius-web-sample-application.jar \
+java -Dorg.eclipse.sirius.web.features.studioDefinition=true -jar sirius-web-sample-application.jar \
           --spring.datasource.url=jdbc:postgresql://localhost:5433/sirius-web-db \
           --spring.datasource.username=dbuser \
           --spring.datasource.password=dbpwd \
