@@ -18,7 +18,7 @@ To test _Sirius Web_ you have two possible options:
 If you want a quick overview of how Sirius Web looks and feels like without building the sample application yourself, you will simply need:
 
 * Java 11 (Java 12 or later are currently not supported)
-* Docker, or an existing PostgreSQL installation with a DB user that has admin rights on the database (those are needed by the application to create its schema on first startup).
+* Docker, or an existing PostgreSQL 12 (or later) installation with a DB user that has admin rights on the database (those are needed by the application to create its schema on first startup).
 
 Then, download the latest pre-built JAR:
 
@@ -40,7 +40,7 @@ docker run -p 5433:5432 --rm --name sirius-web-postgres \
                              -e POSTGRES_USER=dbuser \
                              -e POSTGRES_PASSWORD=dbpwd \
                              -e POSTGRES_DB=sirius-web-db \
-                             -d postgres
+                             -d postgres:12
 ----
 +
 WARNING: This may take a while the first time you run this as Docker will first pull the PostgreSQL image.
