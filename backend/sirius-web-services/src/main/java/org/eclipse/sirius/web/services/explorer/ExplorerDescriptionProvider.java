@@ -277,8 +277,8 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
             // @formatter:on
 
             if (optionalHandler.isPresent()) {
-                IDeleteTreeItemHandler renameTreeItemHandler = optionalHandler.get();
-                return renameTreeItemHandler.handle(editingContext, treeItem);
+                IDeleteTreeItemHandler deleteTreeItemHandler = optionalHandler.get();
+                return deleteTreeItemHandler.handle(editingContext, treeItem);
             }
         }
         return new Failure(""); //$NON-NLS-1$
