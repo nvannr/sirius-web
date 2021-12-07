@@ -23,13 +23,13 @@
 	</parent>
 	<groupId>org.eclipse.sirius.web</groupId>
 	<artifactId>sirius-web-services</artifactId>
-	<version>0.5.0</version>
+	<version>2021.12.0</version>
 	<name>sirius-web-services</name>
 	<description>Sirius Web Services</description>
 
 	<properties>
 		<java.version>11</java.version>
-		<sirius.components.version>0.5.6</sirius.components.version>
+		<sirius.components.version>2021.12.0</sirius.components.version>
 	</properties>
 
 	<repositories>
@@ -55,7 +55,7 @@
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
 			<artifactId>sirius-web-services-api</artifactId>
-			<version>0.5.0</version>
+			<version>2021.12.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
@@ -70,7 +70,7 @@
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
 			<artifactId>sirius-web-persistence</artifactId>
-			<version>0.5.0</version>
+			<version>2021.12.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
