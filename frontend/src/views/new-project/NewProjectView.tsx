@@ -11,17 +11,18 @@
  *     Obeo - initial API and implementation
  *******************************************************************************/
 import { useMutation } from '@apollo/client';
+import { Form, FormContainer } from '@eclipse-sirius/sirius-components';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { NavigationBar } from 'navigationBar/NavigationBar';
 import CloseIcon from '@material-ui/icons/Close';
 import { useMachine } from '@xstate/react';
-import { Form, FormContainer } from '@eclipse-sirius/sirius-components';
+import { Footer } from 'footer/Footer';
 import gql from 'graphql-tag';
+import { NavigationBar } from 'navigationBar/NavigationBar';
 import { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
@@ -41,7 +42,6 @@ import {
   SchemaValue,
   ShowToastEvent,
 } from 'views/new-project/NewProjectViewMachine';
-import { Footer } from 'footer/Footer';
 
 const createProjectMutation = gql`
   mutation createProject($input: CreateProjectInput!) {
@@ -149,7 +149,7 @@ export const NewProjectView = () => {
                   name="name"
                   value={name}
                   placeholder="Enter the project name"
-                  data-testid="name"
+                  inputProps={{ 'data-testid': 'name' }}
                   autoFocus={true}
                   onChange={onNameChange}
                 />

@@ -11,6 +11,7 @@
  *     Obeo - initial API and implementation
  *******************************************************************************/
 import { useQuery } from '@apollo/client';
+import { DeleteProjectModal, httpOrigin, RenameProjectModal } from '@eclipse-sirius/sirius-components';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
@@ -37,8 +38,9 @@ import EditIcon from '@material-ui/icons/Edit';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useMachine } from '@xstate/react';
-import { httpOrigin, DeleteProjectModal, RenameProjectModal } from '@eclipse-sirius/sirius-components';
+import { Footer } from 'footer/Footer';
 import gql from 'graphql-tag';
+import { NavigationBar } from 'navigationBar/NavigationBar';
 import React, { useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
@@ -61,8 +63,6 @@ import {
   SchemaValue,
   ShowToastEvent,
 } from 'views/projects/ProjectsViewMachine';
-import { NavigationBar } from 'navigationBar/NavigationBar';
-import { Footer } from 'footer/Footer';
 
 const getProjectsQuery = gql`
   query getProjects {
@@ -218,7 +218,7 @@ export const ProjectsView = () => {
                       <Button
                         to={`/upload/project`}
                         component={RouterLink}
-                        data-testid="create"
+                        data-testid="upload"
                         color="primary"
                         variant="outlined">
                         Upload
@@ -288,7 +288,7 @@ const ProjectsTable = ({ projects, onMore }: ProjectsTableProps) => {
               <TableCell variant="head"></TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody data-testid="projects">
             {projects.map((project) => (
               <TableRow key={project.id}>
                 <TableCell>

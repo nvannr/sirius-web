@@ -14,11 +14,27 @@ import {
   DeleteProjectModal,
   NewDocumentModal,
   RenameProjectModal,
-  UploadDocumentModal,
   ServerContext,
+  UploadDocumentModal,
 } from '@eclipse-sirius/sirius-components';
+import {
+  emphasize,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  makeStyles,
+  Menu,
+  MenuItem,
+  Typography,
+} from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import PublishIcon from '@material-ui/icons/Publish';
+import { NavigationBar } from 'navigationBar/NavigationBar';
 import React, { useContext, useReducer } from 'react';
-import { emphasize } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import { EditProjectNavbarProps } from 'views/edit-project/EditProjectNavbar/EditProjectNavbar.types';
 import {
@@ -32,14 +48,6 @@ import {
   REDIRECT__STATE,
 } from './machine';
 import { initialState, reducer } from './reducer';
-import { makeStyles, Typography, IconButton, Menu, MenuItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import PublishIcon from '@material-ui/icons/Publish';
-import { NavigationBar } from 'navigationBar/NavigationBar';
 
 const useEditProjectViewNavbarStyles = makeStyles((theme) => ({
   center: {
@@ -130,7 +138,8 @@ export const EditProjectNavbar = ({ project }: EditProjectNavbarProps) => {
             aria-controls="more-menu"
             aria-haspopup="true"
             onClick={onMoreClick}
-            color="inherit">
+            color="inherit"
+            data-testid="more">
             <MoreVertIcon />
           </IconButton>
         </div>
@@ -139,8 +148,11 @@ export const EditProjectNavbar = ({ project }: EditProjectNavbarProps) => {
       <Menu
         open={viewState === CONTEXTUAL_MENU_DISPLAYED__STATE}
         anchorEl={projectMenuAnchor}
+        data-testid="navbar-contextmenu"
         onClose={() => dispatch({ type: HANDLE_CLOSE_CONTEXT_MENU__ACTION })}>
-        <MenuItem onClick={() => dispatch({ modalDisplayed: 'CreateDocument', type: HANDLE_SHOW_MODAL__ACTION })}>
+        <MenuItem
+          onClick={() => dispatch({ modalDisplayed: 'CreateDocument', type: HANDLE_SHOW_MODAL__ACTION })}
+          data-testid="new-model">
           <ListItemIcon>
             <AddIcon />
           </ListItemIcon>
@@ -148,6 +160,7 @@ export const EditProjectNavbar = ({ project }: EditProjectNavbarProps) => {
         </MenuItem>
         <MenuItem
           divider
+          data-testid="upload-document"
           onClick={() => dispatch({ modalDisplayed: 'UploadDocument', type: HANDLE_SHOW_MODAL__ACTION })}>
           <ListItemIcon>
             <PublishIcon />
@@ -172,7 +185,9 @@ export const EditProjectNavbar = ({ project }: EditProjectNavbarProps) => {
           </ListItemIcon>
           <ListItemText primary="Download" />
         </MenuItem>
-        <MenuItem onClick={() => dispatch({ modalDisplayed: 'DeleteProject', type: HANDLE_SHOW_MODAL__ACTION })}>
+        <MenuItem
+          onClick={() => dispatch({ modalDisplayed: 'DeleteProject', type: HANDLE_SHOW_MODAL__ACTION })}
+          data-testid="delete">
           <ListItemIcon>
             <DeleteIcon />
           </ListItemIcon>
