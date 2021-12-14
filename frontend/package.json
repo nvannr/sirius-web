@@ -13,10 +13,10 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "3.4.7",
-    "@eclipse-sirius/sirius-components": "2021.12.3",
+    "@eclipse-sirius/sirius-components": "2021.12.4",
     "@material-ui/core": "4.12.3",
     "@material-ui/icons": "4.11.2",
-    "@xstate/react": "1.5.1",
+    "@xstate/react": "1.6.3",
     "fontsource-roboto": "4.0.0",
     "graphql": "15.5.1",
     "graphql-tag": "2.12.5",
@@ -29,7 +29,7 @@
     "sprotty": "0.9.0",
     "subscriptions-transport-ws": "0.9.19",
     "uuid": "8.3.2",
-    "xstate": "4.23.1"
+    "xstate": "4.26.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "5.14.1",
@@ -40,11 +40,11 @@
     "@types/react": "17.0.17",
     "@types/react-dom": "17.0.9",
     "@types/react-router-dom": "5.1.8",
-    "@types/uuid": "8.3.1",
+    "@types/uuid": "8.3.2",
     "jest-junit-reporter": "1.1.0",
     "prettier": "2.3.2",
     "react-scripts": "4.0.3",
-    "typescript": "4.3.5"
+    "typescript": "4.5.4"
   },
   "scripts": {
     "start": "react-scripts start",
