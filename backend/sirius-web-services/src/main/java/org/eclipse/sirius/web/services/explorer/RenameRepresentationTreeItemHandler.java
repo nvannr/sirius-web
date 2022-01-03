@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.sirius.web.core.api.IEditingContext;
+import org.eclipse.sirius.web.representations.IRepresentation;
 import org.eclipse.sirius.web.representations.IStatus;
 import org.eclipse.sirius.web.representations.Success;
 import org.eclipse.sirius.web.services.explorer.api.IRenameTreeItemHandler;
@@ -34,7 +35,7 @@ public class RenameRepresentationTreeItemHandler implements IRenameTreeItemHandl
 
     @Override
     public boolean canHandle(IEditingContext editingContext, TreeItem treeItem, String newLabel) {
-        return !ExplorerDescriptionProvider.DOCUMENT_KIND.equals(treeItem.getKind()) && !treeItem.getKind().contains("::"); //$NON-NLS-1$
+        return treeItem.getKind().startsWith(IRepresentation.KIND_PREFIX);
     }
 
     @Override

@@ -11,7 +11,12 @@
  *     Obeo - initial API and implementation
  *******************************************************************************/
 import { useQuery } from '@apollo/client';
-import { Representation, TreeItemContextMenuContribution, Workbench } from '@eclipse-sirius/sirius-components';
+import {
+  Representation,
+  TreeItemContextMenuContribution,
+  TreeItemType,
+  Workbench,
+} from '@eclipse-sirius/sirius-components';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -132,11 +137,11 @@ export const EditProjectView = () => {
         onRepresentationSelected={onRepresentationSelected}
         readOnly={false}>
         <TreeItemContextMenuContribution
-          canHandle={(item) => item.kind === 'Document'}
+          canHandle={(item: TreeItemType) => item.kind === 'siriusWeb://document'}
           component={DocumentTreeItemContextMenuContribution}
         />
         <TreeItemContextMenuContribution
-          canHandle={(item) => item.kind.includes('::')}
+          canHandle={(item: TreeItemType) => item.kind.startsWith('siriusComponents://semantic')}
           component={ObjectTreeItemContextMenuContribution}
         />
       </Workbench>

@@ -18,6 +18,7 @@ import java.util.Objects;
 import org.eclipse.sirius.web.core.api.IEditService;
 import org.eclipse.sirius.web.core.api.IEditingContext;
 import org.eclipse.sirius.web.core.api.IObjectService;
+import org.eclipse.sirius.web.core.api.SemanticKindConstants;
 import org.eclipse.sirius.web.representations.Failure;
 import org.eclipse.sirius.web.representations.IStatus;
 import org.eclipse.sirius.web.representations.Success;
@@ -45,7 +46,7 @@ public class RenameObjectTreeItemEventHandler implements IRenameTreeItemHandler 
 
     @Override
     public boolean canHandle(IEditingContext editingContext, TreeItem treeItem, String newLabel) {
-        return treeItem.getKind().contains("::"); //$NON-NLS-1$
+        return treeItem.getKind().startsWith(SemanticKindConstants.PREFIX);
     }
 
     @Override

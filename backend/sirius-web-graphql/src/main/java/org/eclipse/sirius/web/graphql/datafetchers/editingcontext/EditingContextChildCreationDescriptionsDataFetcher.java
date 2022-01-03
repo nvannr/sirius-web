@@ -31,7 +31,7 @@ import graphql.schema.DataFetchingEnvironment;
  *
  * <pre>
  * type EditingContext {
- *   childCreationDescriptions(classId: ID!): [ChildCreationDescription!]!
+ *   childCreationDescriptions(kind: ID!): [ChildCreationDescription!]!
  * }
  * </pre>
  *
@@ -48,7 +48,7 @@ public class EditingContextChildCreationDescriptionsDataFetcher implements IData
     @Override
     public List<ChildCreationDescription> get(DataFetchingEnvironment environment) throws Exception {
         String editingContextId = environment.getSource();
-        String classIdArgument = environment.getArgument(EditingContextTypeProvider.CLASS_ID_ARGUMENT);
-        return this.editService.getChildCreationDescriptions(editingContextId, classIdArgument);
+        String kindArgument = environment.getArgument(EditingContextTypeProvider.KIND_ARGUMENT);
+        return this.editService.getChildCreationDescriptions(editingContextId, kindArgument);
     }
 }

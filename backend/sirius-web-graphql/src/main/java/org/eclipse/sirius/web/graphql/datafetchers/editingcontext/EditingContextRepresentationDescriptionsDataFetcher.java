@@ -65,10 +65,10 @@ public class EditingContextRepresentationDescriptionsDataFetcher implements IDat
     @Override
     public Connection<IRepresentationDescription> get(DataFetchingEnvironment environment) throws Exception {
         String editingContextId = environment.getSource();
-        String classId = environment.getArgument(EditingContextTypeProvider.CLASS_ID_ARGUMENT);
+        String kind = environment.getArgument(EditingContextTypeProvider.KIND_ARGUMENT);
 
         // @formatter:off
-        var representationDescriptions = this.editService.findClass(editingContextId, classId)
+        var representationDescriptions = this.editService.findClass(editingContextId, kind)
                 .map(this.representationDescriptionService::getRepresentationDescriptions)
                 .orElseGet(ArrayList::new);
         // @formatter:on

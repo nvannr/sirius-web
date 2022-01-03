@@ -43,7 +43,7 @@ import graphql.schema.GraphQLTypeReference;
  * type EditingContext {
  *   id: ID!
  *   stereotypeDescriptions: EditingContextStereotypeDescriptionConnection!
- *   childCreationDescriptions(classId: ID!): [ChildCreationDescription!]!
+ *   childCreationDescriptions(kind: ID!): [ChildCreationDescription!]!
  *   rootObjectCreationDescriptions(domainId: ID!, suggested: Boolean!): [ChildCreationDescription!]!
  *   domains: [Domain!]!
  *   representationDescriptions(classId: ID): EditingContextRepresentationDescriptionConnection!
@@ -63,7 +63,7 @@ public class EditingContextTypeProvider implements ITypeProvider {
 
     public static final String CHILD_CREATION_DESCRIPTIONS_FIELD = "childCreationDescriptions"; //$NON-NLS-1$
 
-    public static final String CLASS_ID_ARGUMENT = "classId"; //$NON-NLS-1$
+    public static final String KIND_ARGUMENT = "kind"; //$NON-NLS-1$
 
     public static final String ROOT_OBJECT_CREATION_DESCRIPTIONS_FIELD = "rootObjectCreationDescriptions"; //$NON-NLS-1$
 
@@ -143,16 +143,16 @@ public class EditingContextTypeProvider implements ITypeProvider {
         // @formatter:off
         return newFieldDefinition()
                 .name(CHILD_CREATION_DESCRIPTIONS_FIELD)
-                .argument(this.getClassIdArgument())
+                .argument(this.getKindArgument())
                 .type(nonNull(list(nonNull(typeRef(ChildCreationDescription.class.getSimpleName())))))
                 .build();
         // @formatter:on
     }
 
-    private GraphQLArgument getClassIdArgument() {
+    private GraphQLArgument getKindArgument() {
         // @formatter:off
         return newArgument()
-                .name(CLASS_ID_ARGUMENT)
+                .name(KIND_ARGUMENT)
                 .type(nonNull(Scalars.GraphQLID))
                 .build();
         // @formatter:on
@@ -200,7 +200,7 @@ public class EditingContextTypeProvider implements ITypeProvider {
         // @formatter:off
         return newFieldDefinition()
                 .name(REPRESENTATION_DESCRIPTIONS_FIELD)
-                .argument(this.getClassIdArgument())
+                .argument(this.getKindArgument())
                 .type(nonNull(typeRef(EDITING_CONTEXT_REPRESENTATION_DESCRIPTIONS_CONNECTION)))
                 .build();
         // @formatter:on

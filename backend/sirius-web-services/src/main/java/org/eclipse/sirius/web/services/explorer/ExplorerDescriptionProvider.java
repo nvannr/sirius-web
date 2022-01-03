@@ -25,7 +25,9 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.sirius.web.compat.services.ImageConstants;
 import org.eclipse.sirius.web.core.api.IEditingContext;
+import org.eclipse.sirius.web.core.api.IKindParser;
 import org.eclipse.sirius.web.core.api.IObjectService;
+import org.eclipse.sirius.web.core.api.SemanticKindConstants;
 import org.eclipse.sirius.web.emf.services.EditingContext;
 import org.eclipse.sirius.web.representations.Failure;
 import org.eclipse.sirius.web.representations.GetOrCreateRandomIdProvider;
@@ -52,9 +54,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider {
 
-    public static final String DOCUMENT_KIND = "Document"; //$NON-NLS-1$
+    public static final String DOCUMENT_KIND = "siriusWeb://document"; //$NON-NLS-1$
 
     private final IObjectService objectService;
+
+    private final IKindParser kindParser;
 
     private final IRepresentationService representationService;
 
@@ -64,9 +68,10 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
 
     private final List<IDeleteTreeItemHandler> deleteTreeItemHandlers;
 
-    public ExplorerDescriptionProvider(IObjectService objectService, IRepresentationService representationService, List<IRepresentationImageProvider> representationImageProviders,
-            List<IRenameTreeItemHandler> renameTreeItemHandlers, List<IDeleteTreeItemHandler> deleteTreeItemHandlers) {
+    public ExplorerDescriptionProvider(IObjectService objectService, IKindParser kindParser, IRepresentationService representationService,
+            List<IRepresentationImageProvider> representationImageProviders, List<IRenameTreeItemHandler> renameTreeItemHandlers, List<IDeleteTreeItemHandler> deleteTreeItemHandlers) {
         this.objectService = Objects.requireNonNull(objectService);
+        this.kindParser = Objects.requireNonNull(kindParser);
         this.representationService = Objects.requireNonNull(representationService);
         this.representationImageProviders = Objects.requireNonNull(representationImageProviders);
         this.renameTreeItemHandlers = Objects.requireNonNull(renameTreeItemHandlers);
@@ -147,7 +152,8 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
         } else if (self instanceof EObject) {
             label = this.objectService.getLabel(self);
             if (label.isBlank()) {
-                label = this.objectService.getKind(self).replaceAll("^.*::", ""); //$NON-NLS-1$ //$NON-NLS-2$
+                var kind = this.objectService.getKind(self);
+                label = this.kindParser.getParameterValues(kind).get(SemanticKindConstants.ENTITY_ARGUMENT).get(0);
             }
         }
         return label;
