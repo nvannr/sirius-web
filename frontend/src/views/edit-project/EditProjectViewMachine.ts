@@ -10,8 +10,8 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-import { GQLGetProjectQueryData, Project } from 'views/edit-project/EditProjectView.types';
 import { Representation } from '@eclipse-sirius/sirius-components';
+import { GQLGetProjectQueryData, Project } from 'views/edit-project/EditProjectView.types';
 import { assign, Machine } from 'xstate';
 
 export interface EditProjectViewStateSchema {
@@ -129,6 +129,7 @@ export const editProjectViewMachine = Machine<EditProjectViewContext, EditProjec
         const { project: gQLProject } = data.viewer;
         const { id, name, currentEditingContext } = gQLProject;
         const project = { id, name, currentEditingContext: { id: currentEditingContext.id } };
+        document.title = `${project.name} - Sirius Web`;
 
         let representation: Representation | null = null;
         if (gQLProject.currentEditingContext.representation) {

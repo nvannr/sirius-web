@@ -122,6 +122,10 @@ export const ProjectsView = () => {
   const { toast, projectsView } = value as SchemaValue;
   const { projects, selectedProject, menuAnchor, modalToDisplay, message } = context;
 
+  useEffect(() => {
+    document.title = 'Sirius Web';
+  }, []);
+
   const { loading, data, error, refetch } = useQuery<GQLGetProjectsQueryData, GQLGetProjectsQueryVariables>(
     getProjectsQuery,
     {}
