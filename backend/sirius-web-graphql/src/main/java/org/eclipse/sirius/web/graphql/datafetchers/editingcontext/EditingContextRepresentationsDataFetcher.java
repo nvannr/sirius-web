@@ -18,8 +18,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.eclipse.sirius.web.annotations.spring.graphql.QueryDataFetcher;
+import org.eclipse.sirius.web.core.RepresentationMetadata;
 import org.eclipse.sirius.web.graphql.schema.EditingContextTypeProvider;
-import org.eclipse.sirius.web.representations.IRepresentation;
 import org.eclipse.sirius.web.services.api.representations.IRepresentationService;
 import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
 import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
@@ -49,7 +49,7 @@ import graphql.schema.DataFetchingEnvironment;
  * @author wpiers
  */
 @QueryDataFetcher(type = EditingContextTypeProvider.TYPE, field = EditingContextTypeProvider.REPRESENTATIONS_FIELD)
-public class EditingContextRepresentationsDataFetcher implements IDataFetcherWithFieldCoordinates<Connection<IRepresentation>> {
+public class EditingContextRepresentationsDataFetcher implements IDataFetcherWithFieldCoordinates<Connection<RepresentationMetadata>> {
 
     private final IRepresentationService representationService;
 
@@ -58,17 +58,18 @@ public class EditingContextRepresentationsDataFetcher implements IDataFetcherWit
     }
 
     @Override
-    public Connection<IRepresentation> get(DataFetchingEnvironment environment) throws Exception {
+    public Connection<RepresentationMetadata> get(DataFetchingEnvironment environment) throws Exception {
         String editingContextId = environment.getSource();
         // @formatter:off
-        List<IRepresentation> representations = this.representationService.getRepresentationDescriptorsForProjectId(editingContextId)
+        List<RepresentationMetadata> representations = this.representationService.getRepresentationDescriptorsForProjectId(editingContextId)
                 .stream()
                 .map(RepresentationDescriptor::getRepresentation)
+                .map(representation -> new RepresentationMetadata(representation.getId(), representation.getKind(), representation.getLabel(), representation.getDescriptionId()))
                 .collect(Collectors.toList());
         // @formatter:on
 
         // @formatter:off
-        List<Edge<IRepresentation>> representationEdges = representations.stream()
+        List<Edge<RepresentationMetadata>> representationEdges = representations.stream()
                 .map(representation -> {
                     String value = Base64.getEncoder().encodeToString(representation.getId().getBytes());
                     ConnectionCursor cursor = new DefaultConnectionCursor(value);

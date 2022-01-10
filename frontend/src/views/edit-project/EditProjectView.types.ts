@@ -21,7 +21,7 @@ export type Project = {
   currentEditingContext: EditingContext;
 };
 
-export type GQLRepresentation = {
+export type GQLRepresentationMetadata = {
   id: string;
   label: string;
   kind: string;
@@ -29,7 +29,7 @@ export type GQLRepresentation = {
 
 export type GQLEditingContext = {
   id: string;
-  representation: GQLRepresentation | undefined;
+  representation: GQLRepresentationMetadata | undefined;
 };
 
 export type GQLProject = {
