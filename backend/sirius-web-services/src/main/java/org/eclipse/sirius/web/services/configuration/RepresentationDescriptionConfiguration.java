@@ -18,7 +18,7 @@ import java.util.Objects;
 import org.eclipse.sirius.web.api.configuration.IRepresentationDescriptionRegistryConfigurer;
 import org.eclipse.sirius.web.services.api.representations.IDynamicRepresentationDescriptionService;
 import org.eclipse.sirius.web.services.representations.RepresentationDescriptionRegistry;
-import org.eclipse.sirius.web.services.representations.RepresentationDescriptionService;
+import org.eclipse.sirius.web.services.representations.RepresentationDescriptionSearchService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -36,9 +36,9 @@ public class RepresentationDescriptionConfiguration {
     }
 
     @Bean
-    public RepresentationDescriptionService representationDescriptionService(List<IRepresentationDescriptionRegistryConfigurer> configurers) {
+    public RepresentationDescriptionSearchService representationDescriptionService(List<IRepresentationDescriptionRegistryConfigurer> configurers) {
         RepresentationDescriptionRegistry registry = new RepresentationDescriptionRegistry();
         configurers.forEach(configurer -> configurer.addRepresentationDescriptions(registry));
-        return new RepresentationDescriptionService(registry, this.dynamicRepresentationDescriptionService);
+        return new RepresentationDescriptionSearchService(registry, this.dynamicRepresentationDescriptionService);
     }
 }

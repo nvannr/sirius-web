@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021 Obeo.
+ * Copyright (c) 2021, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -78,10 +77,10 @@ public class DynamicRepresentationDescriptionService implements IDynamicRepresen
     }
 
     @Override
-    public List<IRepresentationDescription> findDynamicRepresentationDescriptions(Optional<IEditingContext> optionalEditingContext) {
+    public List<IRepresentationDescription> findDynamicRepresentationDescriptions(IEditingContext editingContext) {
         List<IRepresentationDescription> dynamicRepresentationDescriptions = new ArrayList<>();
         if (this.isStudioDefinitionEnabled) {
-            List<EPackage> accessibleEPackages = optionalEditingContext.map(this::getAccessibleEPackages).orElse(List.of());
+            List<EPackage> accessibleEPackages = this.getAccessibleEPackages(editingContext);
             ViewConverter viewConverter = new ViewConverter(this.javaServiceProviders, this.objectService, this.editService, this.isStudioDefinitionEnabled);
             this.documentRepository.findAllByType(ViewPackage.eNAME, ViewPackage.eNS_URI).forEach(documentEntity -> {
                 Resource resource = this.loadDocumentAsEMF(documentEntity);

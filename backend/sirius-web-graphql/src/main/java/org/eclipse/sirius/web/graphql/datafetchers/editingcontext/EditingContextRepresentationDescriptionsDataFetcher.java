@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2020 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -12,17 +12,20 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.datafetchers.editingcontext;
 
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import org.eclipse.sirius.web.annotations.spring.graphql.QueryDataFetcher;
-import org.eclipse.sirius.web.core.api.IEditService;
+import org.eclipse.sirius.web.graphql.pagination.PageInfoWithCount;
 import org.eclipse.sirius.web.graphql.schema.EditingContextTypeProvider;
 import org.eclipse.sirius.web.representations.IRepresentationDescription;
-import org.eclipse.sirius.web.services.api.representations.IRepresentationDescriptionService;
+import org.eclipse.sirius.web.spring.collaborative.api.IEditingContextEventProcessorRegistry;
+import org.eclipse.sirius.web.spring.collaborative.dto.EditingContextRepresentationDescriptionsInput;
+import org.eclipse.sirius.web.spring.collaborative.dto.EditingContextRepresentationDescriptionsPayload;
 import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
 
 import graphql.relay.Connection;
@@ -34,6 +37,7 @@ import graphql.relay.DefaultPageInfo;
 import graphql.relay.Edge;
 import graphql.relay.PageInfo;
 import graphql.schema.DataFetchingEnvironment;
+import reactor.core.publisher.Mono;
 
 /**
  * The data fetcher used to retrieve the representation descriptions accessible to a viewer.
@@ -51,30 +55,36 @@ import graphql.schema.DataFetchingEnvironment;
  * @author sbegaudeau
  */
 @QueryDataFetcher(type = EditingContextTypeProvider.TYPE, field = EditingContextTypeProvider.REPRESENTATION_DESCRIPTIONS_FIELD)
-public class EditingContextRepresentationDescriptionsDataFetcher implements IDataFetcherWithFieldCoordinates<Connection<IRepresentationDescription>> {
+public class EditingContextRepresentationDescriptionsDataFetcher implements IDataFetcherWithFieldCoordinates<CompletableFuture<Connection<IRepresentationDescription>>> {
 
-    private final IRepresentationDescriptionService representationDescriptionService;
+    private static final String KIND_ARGUMENT = "kind"; //$NON-NLS-1$
 
-    private final IEditService editService;
+    private final IEditingContextEventProcessorRegistry editingContextEventProcessorRegistry;
 
-    public EditingContextRepresentationDescriptionsDataFetcher(IRepresentationDescriptionService representationDescriptionService, IEditService editService) {
-        this.representationDescriptionService = Objects.requireNonNull(representationDescriptionService);
-        this.editService = Objects.requireNonNull(editService);
+    public EditingContextRepresentationDescriptionsDataFetcher(IEditingContextEventProcessorRegistry editingContextEventProcessorRegistry) {
+        this.editingContextEventProcessorRegistry = Objects.requireNonNull(editingContextEventProcessorRegistry);
     }
 
     @Override
-    public Connection<IRepresentationDescription> get(DataFetchingEnvironment environment) throws Exception {
+    public CompletableFuture<Connection<IRepresentationDescription>> get(DataFetchingEnvironment environment) throws Exception {
         String editingContextId = environment.getSource();
-        String kind = environment.getArgument(EditingContextTypeProvider.KIND_ARGUMENT);
+        String kind = environment.getArgument(KIND_ARGUMENT);
+
+        EditingContextRepresentationDescriptionsInput input = new EditingContextRepresentationDescriptionsInput(UUID.randomUUID(), editingContextId, kind);
 
         // @formatter:off
-        var representationDescriptions = this.editService.findClass(editingContextId, kind)
-                .map(this.representationDescriptionService::getRepresentationDescriptions)
-                .orElseGet(ArrayList::new);
+        return this.editingContextEventProcessorRegistry.dispatchEvent(input.getEditingContextId(), input)
+                .filter(EditingContextRepresentationDescriptionsPayload.class::isInstance)
+                .map(EditingContextRepresentationDescriptionsPayload.class::cast)
+                .map(this::toConnection)
+                .switchIfEmpty(Mono.just(new DefaultConnection<>(List.of(), new DefaultPageInfo(null, null, false, false))))
+                .toFuture();
         // @formatter:on
+    }
 
+    private Connection<IRepresentationDescription> toConnection(EditingContextRepresentationDescriptionsPayload payload) {
         // @formatter:off
-        List<Edge<IRepresentationDescription>> representationDescriptionEdges = representationDescriptions.stream()
+        List<Edge<IRepresentationDescription>> representationDescriptionEdges = payload.getRepresentationDescriptions().stream()
                 .map(representationDescription -> {
                     String value = Base64.getEncoder().encodeToString(representationDescription.getId().toString().getBytes());
                     ConnectionCursor cursor = new DefaultConnectionCursor(value);
@@ -88,7 +98,7 @@ public class EditingContextRepresentationDescriptionsDataFetcher implements IDat
         if (!representationDescriptionEdges.isEmpty()) {
             endCursor = representationDescriptionEdges.get(representationDescriptionEdges.size() - 1).getCursor();
         }
-        PageInfo pageInfo = new DefaultPageInfo(startCursor, endCursor, false, false);
+        PageInfo pageInfo = new PageInfoWithCount(startCursor, endCursor, false, false, payload.getRepresentationDescriptions().size());
         return new DefaultConnection<>(representationDescriptionEdges, pageInfo);
     }
 
