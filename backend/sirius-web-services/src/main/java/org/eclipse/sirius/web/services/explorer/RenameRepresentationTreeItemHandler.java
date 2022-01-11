@@ -21,7 +21,7 @@ import org.eclipse.sirius.web.representations.IStatus;
 import org.eclipse.sirius.web.representations.Success;
 import org.eclipse.sirius.web.services.explorer.api.IRenameTreeItemHandler;
 import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
-import org.eclipse.sirius.web.spring.collaborative.projects.EditingContextEventProcessor;
+import org.eclipse.sirius.web.spring.collaborative.editingcontext.EditingContextEventProcessor;
 import org.eclipse.sirius.web.trees.TreeItem;
 import org.springframework.stereotype.Service;
 

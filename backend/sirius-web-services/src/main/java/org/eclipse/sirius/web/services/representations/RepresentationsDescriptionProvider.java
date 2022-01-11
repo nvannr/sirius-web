@@ -41,8 +41,8 @@ import org.eclipse.sirius.web.services.api.representations.IRepresentationServic
 import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
 import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
 import org.eclipse.sirius.web.spring.collaborative.api.IRepresentationImageProvider;
+import org.eclipse.sirius.web.spring.collaborative.editingcontext.EditingContextEventProcessor;
 import org.eclipse.sirius.web.spring.collaborative.forms.api.IRepresentationsDescriptionProvider;
-import org.eclipse.sirius.web.spring.collaborative.projects.EditingContextEventProcessor;
 import org.springframework.stereotype.Service;
 
 /**
