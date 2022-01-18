@@ -41,7 +41,7 @@ describe('/projects/:projectId/edit - Robot Diagram', () => {
         const [$path, ...others] = $paths;
         cy.wrap($path).click();
         cy.getByTestId('PopupToolbar').should('exist');
-        cy.getByTestId('PopupToolbar').findByTestId('Delete - Tool').click();
+        cy.getByTestId('PopupToolbar').findByTestId('Delete from model - Tool').click();
         cy.getByTestId('PopupToolbar').should('not.exist');
       });
     }

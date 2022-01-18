@@ -148,6 +148,7 @@ Cypress.Commands.add('deleteNodeFromDiagram', (editingContextId, representationI
       representationId,
       nodeIds: [nodeId],
       edgeIds: [],
+      deletionPolicy: 'SEMANTIC',
     },
   };
 
@@ -169,12 +170,12 @@ Cypress.Commands.add('deleteNodeFromDiagram', (editingContextId, representationI
  */
 Cypress.Commands.add(
   'createRepresentation',
-  (editingContextId, classId, representationLabel, objectId, representationName) => {
+  (editingContextId, kind, representationLabel, objectId, representationName) => {
     const repDescriptionQuery = `
-    query getRepresentationDescriptions($editingContextId: ID!, $classId: ID!) {
+    query getRepresentationDescriptions($editingContextId: ID!, $kind: ID!) {
       viewer {
         editingContext(editingContextId: $editingContextId) {
-          representationDescriptions(classId: $classId) {
+          representationDescriptions(kind: $kind) {
             edges {
               node {
                 id
@@ -194,7 +195,7 @@ Cypress.Commands.add(
     `;
     const repDescriptionQueryVariables = {
       editingContextId,
-      classId,
+      kind,
     };
 
     const createRepMutation = `
