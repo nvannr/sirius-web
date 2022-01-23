@@ -83,7 +83,8 @@ describe('/projects/:projectId/edit - Document Context Menu', () => {
     cy.getByTestId('robot-more').click();
 
     cy.getByTestId('treeitem-contextmenu').findByTestId('new-object').click();
-    cy.getByTestId('domain').click().get('[data-value="http://www.eclipse.org/sirius-web/domain"]').click();
+    cy.getByTestId('domain').click();
+    cy.get('[data-value="http://www.eclipse.org/sirius-web/domain"]').click();
 
     cy.getByTestId('suggested').click({ force: true });
     cy.getByTestId('type').click();
