@@ -23,13 +23,13 @@
 	</parent>
 	<groupId>org.eclipse.sirius.web</groupId>
 	<artifactId>sirius-web-sample-application</artifactId>
-	<version>2021.12.0</version>
+	<version>2022.01.0</version>
 	<name>sirius-web-sample-application</name>
 	<description>Sirius Web Sample Application</description>
 
 	<properties>
 		<java.version>11</java.version>
-		<sirius.components.version>2021.12.16</sirius.components.version>
+		<sirius.components.version>2022.01.0</sirius.components.version>
 		<flow.version>1.0.10-SNAPSHOT</flow.version>
 		<bpmn.version>4.0.3-SNAPSHOT</bpmn.version>
 	</properties>
@@ -89,22 +89,22 @@
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
 			<artifactId>sirius-web-graphql</artifactId>
-			<version>2021.12.0</version>
+			<version>2022.01.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
 			<artifactId>sirius-web-services</artifactId>
-			<version>2021.12.0</version>
+			<version>2022.01.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
 			<artifactId>sirius-web-spring</artifactId>
-			<version>2021.12.0</version>
+			<version>2022.01.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
 			<artifactId>sirius-web-frontend</artifactId>
-			<version>2021.12.0</version>
+			<version>2022.01.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>

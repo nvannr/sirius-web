@@ -23,13 +23,13 @@
 	</parent>
 	<groupId>org.eclipse.sirius.web</groupId>
 	<artifactId>sirius-web-graphql</artifactId>
-	<version>2021.12.0</version>
+	<version>2022.01.0</version>
 	<name>sirius-web-graphql</name>
 	<description>Sirius Web GraphQL</description>
 
 	<properties>
 		<java.version>11</java.version>
-		<sirius.components.version>2021.12.16</sirius.components.version>
+		<sirius.components.version>2022.01.0</sirius.components.version>
 	</properties>
 
 	<repositories>
@@ -67,12 +67,12 @@
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
 			<artifactId>sirius-web-graphql-schema</artifactId>
-			<version>2021.12.0</version>
+			<version>2022.01.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
 			<artifactId>sirius-web-services-api</artifactId>
-			<version>2021.12.0</version>
+			<version>2022.01.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
