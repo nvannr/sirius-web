@@ -15,7 +15,7 @@ package org.eclipse.sirius.web.services.configuration;
 import java.util.List;
 import java.util.Objects;
 
-import org.eclipse.sirius.web.api.configuration.IRepresentationDescriptionRegistryConfigurer;
+import org.eclipse.sirius.web.core.configuration.IRepresentationDescriptionRegistryConfigurer;
 import org.eclipse.sirius.web.services.api.representations.IDynamicRepresentationDescriptionService;
 import org.eclipse.sirius.web.services.representations.RepresentationDescriptionRegistry;
 import org.eclipse.sirius.web.services.representations.RepresentationDescriptionSearchService;

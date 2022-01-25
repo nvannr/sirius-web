@@ -20,9 +20,9 @@ import java.util.Random;
 import java.util.UUID;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.sirius.web.api.configuration.IStereotypeDescriptionRegistry;
-import org.eclipse.sirius.web.api.configuration.IStereotypeDescriptionRegistryConfigurer;
-import org.eclipse.sirius.web.api.configuration.StereotypeDescription;
+import org.eclipse.sirius.web.core.configuration.IStereotypeDescriptionRegistry;
+import org.eclipse.sirius.web.core.configuration.IStereotypeDescriptionRegistryConfigurer;
+import org.eclipse.sirius.web.core.configuration.StereotypeDescription;
 import org.eclipse.sirius.web.domain.Domain;
 import org.eclipse.sirius.web.domain.DomainFactory;
 import org.eclipse.sirius.web.view.DiagramDescription;

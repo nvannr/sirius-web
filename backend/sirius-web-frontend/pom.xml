@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright (c) 2019, 2021 Obeo.
+ Copyright (c) 2019, 2022 Obeo.
  This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v2.0
  which accompanies this distribution, and is available at
@@ -28,7 +28,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<sirius.components.version>2022.01.0</sirius.components.version>
+		<sirius.components.version>2022.01.1</sirius.components.version>
 	</properties>
 
 	<repositories>
@@ -53,12 +53,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-api</artifactId>
-			<version>${sirius.components.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-spring-starter</artifactId>
+			<artifactId>sirius-components-starter</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 	</dependencies>

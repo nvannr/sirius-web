@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.eclipse.sirius.web.api.configuration.IRepresentationDescriptionRegistry;
+import org.eclipse.sirius.web.core.configuration.IRepresentationDescriptionRegistry;
 import org.eclipse.sirius.web.representations.IRepresentationDescription;
 
 /**

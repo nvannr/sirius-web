@@ -19,8 +19,8 @@ import java.util.UUID;
 
 import org.assertj.core.api.Condition;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.eclipse.sirius.web.api.configuration.StereotypeDescription;
 import org.eclipse.sirius.web.core.api.IPayload;
+import org.eclipse.sirius.web.core.configuration.StereotypeDescription;
 import org.eclipse.sirius.web.emf.services.EditingContext;
 import org.eclipse.sirius.web.services.api.accounts.Profile;
 import org.eclipse.sirius.web.services.api.document.Document;

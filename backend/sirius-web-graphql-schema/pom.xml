@@ -29,7 +29,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<sirius.components.version>2022.01.0</sirius.components.version>
+		<sirius.components.version>2022.01.1</sirius.components.version>
 	</properties>
 
 	<repositories>
@@ -50,12 +50,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-graphql-utils</artifactId>
+			<artifactId>sirius-components-graphql-utils</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-spring-graphql-api</artifactId>
+			<artifactId>sirius-components-graphql-api</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>
@@ -65,32 +65,32 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-spring-collaborative</artifactId>
+			<artifactId>sirius-components-collaborative</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-spring-collaborative-diagrams</artifactId>
+			<artifactId>sirius-components-collaborative-diagrams</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-spring-collaborative-forms</artifactId>
+			<artifactId>sirius-components-collaborative-forms</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-spring-collaborative-validation</artifactId>
+			<artifactId>sirius-components-collaborative-validation</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-spring-collaborative-selection</artifactId>
+			<artifactId>sirius-components-collaborative-selection</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-spring-collaborative-trees</artifactId>
+			<artifactId>sirius-components-collaborative-trees</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>
@@ -100,13 +100,13 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-tests</artifactId>
+			<artifactId>sirius-components-tests</artifactId>
 			<version>${sirius.components.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-spring-tests</artifactId>
+			<artifactId>sirius-components-spring-tests</artifactId>
 			<version>${sirius.components.version}</version>
 			<scope>test</scope>
 		</dependency>

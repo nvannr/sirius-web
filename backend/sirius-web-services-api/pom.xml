@@ -29,7 +29,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<sirius.components.version>2022.01.0</sirius.components.version>
+		<sirius.components.version>2022.01.1</sirius.components.version>
 	</properties>
 
 	<repositories>
@@ -50,27 +50,22 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-api</artifactId>
+			<artifactId>sirius-components-core</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-core-api</artifactId>
+			<artifactId>sirius-components-representations</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-representations</artifactId>
+			<artifactId>sirius-components-graphql-api</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-spring-graphql-api</artifactId>
-			<version>${sirius.components.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-tests</artifactId>
+			<artifactId>sirius-components-tests</artifactId>
 			<version>${sirius.components.version}</version>
 			<scope>test</scope>
 		</dependency>

@@ -29,7 +29,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<sirius.components.version>2022.01.0</sirius.components.version>
+		<sirius.components.version>2022.01.1</sirius.components.version>
 	</properties>
 
 	<repositories>
@@ -63,7 +63,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-annotations</artifactId>
+			<artifactId>sirius-components-annotations</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>
@@ -73,13 +73,13 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-spring-tests</artifactId>
+			<artifactId>sirius-components-spring-tests</artifactId>
 			<version>${sirius.components.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius.web</groupId>
-			<artifactId>sirius-web-tests</artifactId>
+			<artifactId>sirius-components-tests</artifactId>
 			<version>${sirius.components.version}</version>
 			<scope>test</scope>
 		</dependency>
