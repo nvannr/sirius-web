@@ -14,7 +14,7 @@ package org.eclipse.sirius.web.services.api.projects;
 
 import java.util.Objects;
 
-import org.eclipse.sirius.web.annotations.Immutable;
+import org.eclipse.sirius.components.annotations.Immutable;
 
 /**
  * Class used to hold meta data for representation for project export.

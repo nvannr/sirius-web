@@ -15,16 +15,16 @@ package org.eclipse.sirius.web.services.explorer;
 import java.util.Map;
 import java.util.Objects;
 
-import org.eclipse.sirius.web.core.api.IEditService;
-import org.eclipse.sirius.web.core.api.IEditingContext;
-import org.eclipse.sirius.web.core.api.IObjectService;
-import org.eclipse.sirius.web.core.api.SemanticKindConstants;
-import org.eclipse.sirius.web.representations.Failure;
-import org.eclipse.sirius.web.representations.IStatus;
-import org.eclipse.sirius.web.representations.Success;
+import org.eclipse.sirius.components.collaborative.api.ChangeKind;
+import org.eclipse.sirius.components.core.api.IEditService;
+import org.eclipse.sirius.components.core.api.IEditingContext;
+import org.eclipse.sirius.components.core.api.IObjectService;
+import org.eclipse.sirius.components.core.api.SemanticKindConstants;
+import org.eclipse.sirius.components.representations.Failure;
+import org.eclipse.sirius.components.representations.IStatus;
+import org.eclipse.sirius.components.representations.Success;
+import org.eclipse.sirius.components.trees.TreeItem;
 import org.eclipse.sirius.web.services.explorer.api.IRenameTreeItemHandler;
-import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
-import org.eclipse.sirius.web.trees.TreeItem;
 import org.springframework.stereotype.Service;
 
 /**

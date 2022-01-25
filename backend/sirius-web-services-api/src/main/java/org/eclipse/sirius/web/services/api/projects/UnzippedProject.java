@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.eclipse.sirius.web.annotations.Immutable;
+import org.eclipse.sirius.components.annotations.Immutable;
+import org.eclipse.sirius.components.graphql.api.UploadFile;
 import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
-import org.eclipse.sirius.web.spring.graphql.api.UploadFile;
 
 /**
  * Data class for project that has been unzipped with {@link ProjectUnzipper}.

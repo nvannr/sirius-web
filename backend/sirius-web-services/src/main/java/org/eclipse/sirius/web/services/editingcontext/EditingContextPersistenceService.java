@@ -24,11 +24,11 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.sirius.components.core.api.IEditingContext;
+import org.eclipse.sirius.components.core.api.IEditingContextPersistenceService;
+import org.eclipse.sirius.components.emf.services.EObjectIDManager;
+import org.eclipse.sirius.components.emf.services.EditingContext;
 import org.eclipse.sirius.emfjson.resource.JsonResource;
-import org.eclipse.sirius.web.core.api.IEditingContext;
-import org.eclipse.sirius.web.core.api.IEditingContextPersistenceService;
-import org.eclipse.sirius.web.emf.services.EObjectIDManager;
-import org.eclipse.sirius.web.emf.services.EditingContext;
 import org.eclipse.sirius.web.persistence.entities.DocumentEntity;
 import org.eclipse.sirius.web.persistence.repositories.IDocumentRepository;
 import org.eclipse.sirius.web.services.api.document.Document;

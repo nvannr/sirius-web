@@ -17,11 +17,11 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 import org.eclipse.emf.common.util.Diagnostic;
-import org.eclipse.sirius.web.core.api.IEditingContext;
-import org.eclipse.sirius.web.representations.VariableManager;
-import org.eclipse.sirius.web.spring.collaborative.validation.api.IValidationDescriptionProvider;
-import org.eclipse.sirius.web.spring.collaborative.validation.api.IValidationService;
-import org.eclipse.sirius.web.validation.description.ValidationDescription;
+import org.eclipse.sirius.components.collaborative.validation.api.IValidationDescriptionProvider;
+import org.eclipse.sirius.components.collaborative.validation.api.IValidationService;
+import org.eclipse.sirius.components.core.api.IEditingContext;
+import org.eclipse.sirius.components.representations.VariableManager;
+import org.eclipse.sirius.components.validation.description.ValidationDescription;
 import org.springframework.stereotype.Service;
 
 /**

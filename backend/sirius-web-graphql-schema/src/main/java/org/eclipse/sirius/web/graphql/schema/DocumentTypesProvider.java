@@ -14,7 +14,7 @@ package org.eclipse.sirius.web.graphql.schema;
 
 import java.util.Set;
 
-import org.eclipse.sirius.web.graphql.utils.schema.ITypeProvider;
+import org.eclipse.sirius.components.graphql.utils.schema.ITypeProvider;
 import org.springframework.stereotype.Service;
 
 import graphql.Scalars;

@@ -15,9 +15,9 @@ package org.eclipse.sirius.web.sample.services;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sirius.components.emf.view.IJavaServiceProvider;
+import org.eclipse.sirius.components.view.View;
 import org.eclipse.sirius.ext.emf.edit.EditingDomainServices;
-import org.eclipse.sirius.web.emf.view.IJavaServiceProvider;
-import org.eclipse.sirius.web.view.View;
 import org.springframework.stereotype.Service;
 
 /**

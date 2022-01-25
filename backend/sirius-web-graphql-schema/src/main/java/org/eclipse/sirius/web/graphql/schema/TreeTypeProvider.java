@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.eclipse.sirius.web.graphql.utils.providers.GraphQLObjectTypeProvider;
-import org.eclipse.sirius.web.graphql.utils.schema.ITypeProvider;
-import org.eclipse.sirius.web.trees.Tree;
-import org.eclipse.sirius.web.trees.TreeItem;
-import org.eclipse.sirius.web.trees.description.TreeDescription;
+import org.eclipse.sirius.components.graphql.utils.providers.GraphQLObjectTypeProvider;
+import org.eclipse.sirius.components.graphql.utils.schema.ITypeProvider;
+import org.eclipse.sirius.components.trees.Tree;
+import org.eclipse.sirius.components.trees.TreeItem;
+import org.eclipse.sirius.components.trees.description.TreeDescription;
 import org.springframework.stereotype.Service;
 
 import graphql.schema.GraphQLType;

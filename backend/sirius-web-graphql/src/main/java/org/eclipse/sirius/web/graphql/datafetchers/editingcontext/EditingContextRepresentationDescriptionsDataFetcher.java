@@ -19,14 +19,14 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import org.eclipse.sirius.web.annotations.spring.graphql.QueryDataFetcher;
+import org.eclipse.sirius.components.annotations.spring.graphql.QueryDataFetcher;
+import org.eclipse.sirius.components.collaborative.api.IEditingContextEventProcessorRegistry;
+import org.eclipse.sirius.components.collaborative.dto.EditingContextRepresentationDescriptionsInput;
+import org.eclipse.sirius.components.collaborative.dto.EditingContextRepresentationDescriptionsPayload;
+import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
+import org.eclipse.sirius.components.representations.IRepresentationDescription;
 import org.eclipse.sirius.web.graphql.pagination.PageInfoWithCount;
 import org.eclipse.sirius.web.graphql.schema.EditingContextTypeProvider;
-import org.eclipse.sirius.web.representations.IRepresentationDescription;
-import org.eclipse.sirius.web.spring.collaborative.api.IEditingContextEventProcessorRegistry;
-import org.eclipse.sirius.web.spring.collaborative.dto.EditingContextRepresentationDescriptionsInput;
-import org.eclipse.sirius.web.spring.collaborative.dto.EditingContextRepresentationDescriptionsPayload;
-import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
 
 import graphql.relay.Connection;
 import graphql.relay.ConnectionCursor;

@@ -33,7 +33,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @author sbegaudeau
  */
 @SpringBootApplication
-@ComponentScan({ "org.eclipse.sirius.web" })
+@ComponentScan({ "org.eclipse.sirius.web", "org.eclipse.sirius.components" })
 public class SampleApplication {
 
     /**

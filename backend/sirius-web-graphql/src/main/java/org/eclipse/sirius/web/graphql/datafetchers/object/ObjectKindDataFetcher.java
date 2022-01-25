@@ -14,11 +14,11 @@ package org.eclipse.sirius.web.graphql.datafetchers.object;
 
 import java.util.Objects;
 
-import org.eclipse.sirius.web.annotations.spring.graphql.QueryDataFetcher;
-import org.eclipse.sirius.web.core.api.IObjectService;
+import org.eclipse.sirius.components.annotations.spring.graphql.QueryDataFetcher;
+import org.eclipse.sirius.components.core.api.IObjectService;
+import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
 import org.eclipse.sirius.web.graphql.schema.KindFieldProvider;
 import org.eclipse.sirius.web.graphql.schema.ObjectTypeProvider;
-import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
 
 import graphql.schema.DataFetchingEnvironment;
 

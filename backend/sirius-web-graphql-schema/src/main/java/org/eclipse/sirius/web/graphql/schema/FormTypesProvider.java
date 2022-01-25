@@ -17,24 +17,24 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.eclipse.sirius.web.forms.AbstractWidget;
-import org.eclipse.sirius.web.forms.Checkbox;
-import org.eclipse.sirius.web.forms.Form;
-import org.eclipse.sirius.web.forms.Group;
-import org.eclipse.sirius.web.forms.ListItem;
-import org.eclipse.sirius.web.forms.MultiSelect;
-import org.eclipse.sirius.web.forms.Page;
-import org.eclipse.sirius.web.forms.Radio;
-import org.eclipse.sirius.web.forms.RadioOption;
-import org.eclipse.sirius.web.forms.Select;
-import org.eclipse.sirius.web.forms.SelectOption;
-import org.eclipse.sirius.web.forms.Textarea;
-import org.eclipse.sirius.web.forms.Textfield;
-import org.eclipse.sirius.web.forms.description.FormDescription;
-import org.eclipse.sirius.web.graphql.utils.providers.GraphQLInterfaceTypeProvider;
-import org.eclipse.sirius.web.graphql.utils.providers.GraphQLObjectTypeProvider;
-import org.eclipse.sirius.web.graphql.utils.schema.ITypeProvider;
-import org.eclipse.sirius.web.spring.collaborative.forms.dto.WidgetSubscription;
+import org.eclipse.sirius.components.collaborative.forms.dto.WidgetSubscription;
+import org.eclipse.sirius.components.forms.AbstractWidget;
+import org.eclipse.sirius.components.forms.Checkbox;
+import org.eclipse.sirius.components.forms.Form;
+import org.eclipse.sirius.components.forms.Group;
+import org.eclipse.sirius.components.forms.ListItem;
+import org.eclipse.sirius.components.forms.MultiSelect;
+import org.eclipse.sirius.components.forms.Page;
+import org.eclipse.sirius.components.forms.Radio;
+import org.eclipse.sirius.components.forms.RadioOption;
+import org.eclipse.sirius.components.forms.Select;
+import org.eclipse.sirius.components.forms.SelectOption;
+import org.eclipse.sirius.components.forms.Textarea;
+import org.eclipse.sirius.components.forms.Textfield;
+import org.eclipse.sirius.components.forms.description.FormDescription;
+import org.eclipse.sirius.components.graphql.utils.providers.GraphQLInterfaceTypeProvider;
+import org.eclipse.sirius.components.graphql.utils.providers.GraphQLObjectTypeProvider;
+import org.eclipse.sirius.components.graphql.utils.schema.ITypeProvider;
 import org.springframework.stereotype.Service;
 
 import graphql.schema.GraphQLType;
@@ -81,7 +81,7 @@ public class FormTypesProvider implements ITypeProvider {
             Select.class,
             MultiSelect.class,
             SelectOption.class,
-            org.eclipse.sirius.web.forms.List.class,
+            org.eclipse.sirius.components.forms.List.class,
             ListItem.class,
             FormDescription.class,
             WidgetSubscription.class

@@ -20,6 +20,10 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.eclipse.sirius.components.collaborative.api.IEditingContextEventProcessor;
+import org.eclipse.sirius.components.collaborative.dto.CreateRepresentationInput;
+import org.eclipse.sirius.components.collaborative.dto.CreateRepresentationSuccessPayload;
+import org.eclipse.sirius.components.graphql.api.UploadFile;
 import org.eclipse.sirius.web.persistence.entities.IdMappingEntity;
 import org.eclipse.sirius.web.persistence.repositories.IIdMappingRepository;
 import org.eclipse.sirius.web.services.api.document.Document;
@@ -29,10 +33,6 @@ import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.eclipse.sirius.web.services.api.projects.ProjectManifest;
 import org.eclipse.sirius.web.services.api.projects.RepresentationManifest;
 import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
-import org.eclipse.sirius.web.spring.collaborative.api.IEditingContextEventProcessor;
-import org.eclipse.sirius.web.spring.collaborative.dto.CreateRepresentationInput;
-import org.eclipse.sirius.web.spring.collaborative.dto.CreateRepresentationSuccessPayload;
-import org.eclipse.sirius.web.spring.graphql.api.UploadFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

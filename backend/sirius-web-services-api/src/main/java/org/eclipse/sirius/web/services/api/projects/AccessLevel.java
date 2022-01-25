@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.services.api.projects;
 
-import org.eclipse.sirius.web.annotations.graphql.GraphQLEnumType;
+import org.eclipse.sirius.components.annotations.graphql.GraphQLEnumType;
 
 /**
  * The possible access levels to a project.

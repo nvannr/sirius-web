@@ -15,14 +15,14 @@ package org.eclipse.sirius.web.services.explorer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.sirius.web.core.api.IEditingContext;
-import org.eclipse.sirius.web.representations.IRepresentation;
-import org.eclipse.sirius.web.representations.IStatus;
-import org.eclipse.sirius.web.representations.Success;
+import org.eclipse.sirius.components.collaborative.api.ChangeKind;
+import org.eclipse.sirius.components.collaborative.editingcontext.EditingContextEventProcessor;
+import org.eclipse.sirius.components.core.api.IEditingContext;
+import org.eclipse.sirius.components.representations.IRepresentation;
+import org.eclipse.sirius.components.representations.IStatus;
+import org.eclipse.sirius.components.representations.Success;
+import org.eclipse.sirius.components.trees.TreeItem;
 import org.eclipse.sirius.web.services.explorer.api.IDeleteTreeItemHandler;
-import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
-import org.eclipse.sirius.web.spring.collaborative.editingcontext.EditingContextEventProcessor;
-import org.eclipse.sirius.web.trees.TreeItem;
 import org.springframework.stereotype.Service;
 
 /**

@@ -14,7 +14,7 @@ package org.eclipse.sirius.web.services.configuration;
 
 import java.util.List;
 
-import org.eclipse.sirius.web.core.configuration.IStereotypeDescriptionRegistryConfigurer;
+import org.eclipse.sirius.components.core.configuration.IStereotypeDescriptionRegistryConfigurer;
 import org.eclipse.sirius.web.services.stereotypes.StereotypeDescriptionRegistry;
 import org.eclipse.sirius.web.services.stereotypes.StereotypeDescriptionService;
 import org.springframework.context.annotation.Bean;

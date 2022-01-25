@@ -15,11 +15,11 @@ package org.eclipse.sirius.web.graphql.datafetchers.representation;
 import java.util.List;
 import java.util.Objects;
 
-import org.eclipse.sirius.web.annotations.spring.graphql.QueryDataFetcher;
-import org.eclipse.sirius.web.core.RepresentationMetadata;
-import org.eclipse.sirius.web.core.api.IRepresentationMetadataSearchService;
-import org.eclipse.sirius.web.representations.IRepresentation;
-import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
+import org.eclipse.sirius.components.annotations.spring.graphql.QueryDataFetcher;
+import org.eclipse.sirius.components.core.RepresentationMetadata;
+import org.eclipse.sirius.components.core.api.IRepresentationMetadataSearchService;
+import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
+import org.eclipse.sirius.components.representations.IRepresentation;
 
 import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.FieldCoordinates;

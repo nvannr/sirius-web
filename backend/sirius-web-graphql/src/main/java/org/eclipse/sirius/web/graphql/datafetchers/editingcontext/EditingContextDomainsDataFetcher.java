@@ -15,11 +15,11 @@ package org.eclipse.sirius.web.graphql.datafetchers.editingcontext;
 import java.util.List;
 import java.util.Objects;
 
-import org.eclipse.sirius.web.annotations.spring.graphql.QueryDataFetcher;
-import org.eclipse.sirius.web.core.api.Domain;
-import org.eclipse.sirius.web.core.api.IEditService;
+import org.eclipse.sirius.components.annotations.spring.graphql.QueryDataFetcher;
+import org.eclipse.sirius.components.core.api.Domain;
+import org.eclipse.sirius.components.core.api.IEditService;
+import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
 import org.eclipse.sirius.web.graphql.schema.EditingContextTypeProvider;
-import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
 
 import graphql.schema.DataFetchingEnvironment;
 

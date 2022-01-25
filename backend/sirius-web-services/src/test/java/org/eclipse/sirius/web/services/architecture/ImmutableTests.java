@@ -14,7 +14,7 @@ package org.eclipse.sirius.web.services.architecture;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 
-import org.eclipse.sirius.web.tests.architecture.AbstractImmutableTests;
+import org.eclipse.sirius.components.tests.architecture.AbstractImmutableTests;
 
 /**
  * Immutable tests.

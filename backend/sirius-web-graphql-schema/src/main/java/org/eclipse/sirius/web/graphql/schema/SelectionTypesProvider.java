@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.eclipse.sirius.web.graphql.utils.providers.GraphQLObjectTypeProvider;
-import org.eclipse.sirius.web.graphql.utils.schema.ITypeProvider;
-import org.eclipse.sirius.web.selection.Selection;
-import org.eclipse.sirius.web.selection.SelectionObject;
-import org.eclipse.sirius.web.selection.description.SelectionDescription;
+import org.eclipse.sirius.components.graphql.utils.providers.GraphQLObjectTypeProvider;
+import org.eclipse.sirius.components.graphql.utils.schema.ITypeProvider;
+import org.eclipse.sirius.components.selection.Selection;
+import org.eclipse.sirius.components.selection.SelectionObject;
+import org.eclipse.sirius.components.selection.description.SelectionDescription;
 import org.springframework.stereotype.Service;
 
 import graphql.schema.GraphQLType;

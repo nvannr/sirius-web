@@ -12,9 +12,9 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.services.explorer.api;
 
-import org.eclipse.sirius.web.core.api.IEditingContext;
-import org.eclipse.sirius.web.representations.IStatus;
-import org.eclipse.sirius.web.trees.TreeItem;
+import org.eclipse.sirius.components.core.api.IEditingContext;
+import org.eclipse.sirius.components.representations.IStatus;
+import org.eclipse.sirius.components.trees.TreeItem;
 
 /**
  * Used to rename tree items from the explorer.

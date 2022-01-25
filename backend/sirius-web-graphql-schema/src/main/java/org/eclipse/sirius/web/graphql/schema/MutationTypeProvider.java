@@ -24,14 +24,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.eclipse.sirius.web.annotations.graphql.GraphQLMutationTypes;
-import org.eclipse.sirius.web.annotations.spring.graphql.MutationDataFetcher;
-import org.eclipse.sirius.web.core.api.ErrorPayload;
-import org.eclipse.sirius.web.graphql.utils.providers.GraphQLInputObjectTypeProvider;
-import org.eclipse.sirius.web.graphql.utils.providers.GraphQLNameProvider;
-import org.eclipse.sirius.web.graphql.utils.providers.GraphQLObjectTypeProvider;
-import org.eclipse.sirius.web.graphql.utils.schema.IMutationTypeProvider;
-import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
+import org.eclipse.sirius.components.annotations.graphql.GraphQLMutationTypes;
+import org.eclipse.sirius.components.annotations.spring.graphql.MutationDataFetcher;
+import org.eclipse.sirius.components.core.api.ErrorPayload;
+import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
+import org.eclipse.sirius.components.graphql.utils.providers.GraphQLInputObjectTypeProvider;
+import org.eclipse.sirius.components.graphql.utils.providers.GraphQLNameProvider;
+import org.eclipse.sirius.components.graphql.utils.providers.GraphQLObjectTypeProvider;
+import org.eclipse.sirius.components.graphql.utils.schema.IMutationTypeProvider;
 import org.springframework.stereotype.Service;
 
 import graphql.schema.GraphQLFieldDefinition;

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.eclipse.sirius.web.annotations.Audited;
+import org.eclipse.sirius.components.annotations.Audited;
 import org.eclipse.sirius.web.persistence.entities.AccessLevelEntity;
 import org.eclipse.sirius.web.persistence.entities.ProjectEntity;
 import org.springframework.data.jpa.repository.Query;

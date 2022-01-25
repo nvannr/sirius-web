@@ -16,11 +16,11 @@ import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.eclipse.sirius.web.annotations.graphql.GraphQLField;
-import org.eclipse.sirius.web.annotations.graphql.GraphQLID;
-import org.eclipse.sirius.web.annotations.graphql.GraphQLNonNull;
-import org.eclipse.sirius.web.annotations.graphql.GraphQLObjectType;
-import org.eclipse.sirius.web.core.api.IPayload;
+import org.eclipse.sirius.components.annotations.graphql.GraphQLField;
+import org.eclipse.sirius.components.annotations.graphql.GraphQLID;
+import org.eclipse.sirius.components.annotations.graphql.GraphQLNonNull;
+import org.eclipse.sirius.components.annotations.graphql.GraphQLObjectType;
+import org.eclipse.sirius.components.core.api.IPayload;
 
 /**
  * The payload of the project upload mutation.

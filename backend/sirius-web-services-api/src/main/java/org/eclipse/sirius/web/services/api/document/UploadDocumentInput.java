@@ -16,13 +16,13 @@ import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.eclipse.sirius.web.annotations.graphql.GraphQLField;
-import org.eclipse.sirius.web.annotations.graphql.GraphQLID;
-import org.eclipse.sirius.web.annotations.graphql.GraphQLInputObjectType;
-import org.eclipse.sirius.web.annotations.graphql.GraphQLNonNull;
-import org.eclipse.sirius.web.annotations.graphql.GraphQLUpload;
-import org.eclipse.sirius.web.core.api.IInput;
-import org.eclipse.sirius.web.spring.graphql.api.UploadFile;
+import org.eclipse.sirius.components.annotations.graphql.GraphQLField;
+import org.eclipse.sirius.components.annotations.graphql.GraphQLID;
+import org.eclipse.sirius.components.annotations.graphql.GraphQLInputObjectType;
+import org.eclipse.sirius.components.annotations.graphql.GraphQLNonNull;
+import org.eclipse.sirius.components.annotations.graphql.GraphQLUpload;
+import org.eclipse.sirius.components.core.api.IInput;
+import org.eclipse.sirius.components.graphql.api.UploadFile;
 
 /**
  * The input object for the upload document mutation.

@@ -12,11 +12,11 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.datafetchers.selection;
 
-import org.eclipse.sirius.web.annotations.spring.graphql.QueryDataFetcher;
+import org.eclipse.sirius.components.annotations.spring.graphql.QueryDataFetcher;
+import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
+import org.eclipse.sirius.components.graphql.api.URLConstants;
+import org.eclipse.sirius.components.selection.SelectionObject;
 import org.eclipse.sirius.web.graphql.schema.SelectionTypesProvider;
-import org.eclipse.sirius.web.selection.SelectionObject;
-import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
-import org.eclipse.sirius.web.spring.graphql.api.URLConstants;
 
 import graphql.schema.DataFetchingEnvironment;
 

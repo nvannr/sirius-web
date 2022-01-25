@@ -15,8 +15,8 @@ package org.eclipse.sirius.web.services.api.representations;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.eclipse.sirius.web.annotations.Immutable;
-import org.eclipse.sirius.web.representations.IRepresentation;
+import org.eclipse.sirius.components.annotations.Immutable;
+import org.eclipse.sirius.components.representations.IRepresentation;
 
 /**
  * The representation descriptor.

@@ -21,7 +21,7 @@
 		<version>2.6.1</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>org.eclipse.sirius.web</groupId>
+	<groupId>org.eclipse.sirius</groupId>
 	<artifactId>sirius-web-sample-application</artifactId>
 	<version>2022.01.0</version>
 	<name>sirius-web-sample-application</name>
@@ -29,7 +29,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<sirius.components.version>2022.01.1</sirius.components.version>
+		<sirius.components.version>2022.01.2</sirius.components.version>
 		<flow.version>1.0.10-SNAPSHOT</flow.version>
 		<bpmn.version>4.0.3-SNAPSHOT</bpmn.version>
 	</properties>
@@ -82,52 +82,52 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.sirius.web</groupId>
+			<groupId>org.eclipse.sirius</groupId>
 			<artifactId>sirius-components-starter</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.sirius.web</groupId>
+			<groupId>org.eclipse.sirius</groupId>
 			<artifactId>sirius-web-graphql</artifactId>
 			<version>2022.01.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.sirius.web</groupId>
+			<groupId>org.eclipse.sirius</groupId>
 			<artifactId>sirius-web-services</artifactId>
 			<version>2022.01.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.sirius.web</groupId>
+			<groupId>org.eclipse.sirius</groupId>
 			<artifactId>sirius-web-spring</artifactId>
 			<version>2022.01.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.sirius.web</groupId>
+			<groupId>org.eclipse.sirius</groupId>
 			<artifactId>sirius-web-frontend</artifactId>
 			<version>2022.01.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.sirius.web</groupId>
+			<groupId>org.eclipse.sirius</groupId>
 			<artifactId>sirius-components-graphiql</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.sirius.web</groupId>
+			<groupId>org.eclipse.sirius</groupId>
 			<artifactId>sirius-components-graphql-voyager</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.sirius.web</groupId>
+			<groupId>org.eclipse.sirius</groupId>
 			<artifactId>sirius-components-domain-edit</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.sirius.web</groupId>
+			<groupId>org.eclipse.sirius</groupId>
 			<artifactId>sirius-components-domain-design</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.sirius.web</groupId>
+			<groupId>org.eclipse.sirius</groupId>
 			<artifactId>sirius-components-view-edit</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>

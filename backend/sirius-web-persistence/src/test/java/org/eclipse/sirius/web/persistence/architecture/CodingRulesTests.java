@@ -14,7 +14,7 @@ package org.eclipse.sirius.web.persistence.architecture;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 
-import org.eclipse.sirius.web.tests.architecture.AbstractCodingRulesTests;
+import org.eclipse.sirius.components.tests.architecture.AbstractCodingRulesTests;
 import org.junit.Test;
 
 /**

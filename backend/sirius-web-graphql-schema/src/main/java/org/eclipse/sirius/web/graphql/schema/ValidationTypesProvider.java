@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.eclipse.sirius.web.graphql.utils.providers.GraphQLObjectTypeProvider;
-import org.eclipse.sirius.web.graphql.utils.schema.ITypeProvider;
-import org.eclipse.sirius.web.validation.Diagnostic;
-import org.eclipse.sirius.web.validation.Validation;
-import org.eclipse.sirius.web.validation.description.ValidationDescription;
+import org.eclipse.sirius.components.graphql.utils.providers.GraphQLObjectTypeProvider;
+import org.eclipse.sirius.components.graphql.utils.schema.ITypeProvider;
+import org.eclipse.sirius.components.validation.Diagnostic;
+import org.eclipse.sirius.components.validation.Validation;
+import org.eclipse.sirius.components.validation.description.ValidationDescription;
 import org.springframework.stereotype.Service;
 
 import graphql.schema.GraphQLType;

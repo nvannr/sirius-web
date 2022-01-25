@@ -19,9 +19,13 @@ import java.util.UUID;
 
 import org.assertj.core.api.Condition;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.eclipse.sirius.web.core.api.IPayload;
-import org.eclipse.sirius.web.core.configuration.StereotypeDescription;
-import org.eclipse.sirius.web.emf.services.EditingContext;
+import org.eclipse.sirius.components.collaborative.api.ChangeDescription;
+import org.eclipse.sirius.components.collaborative.api.ChangeKind;
+import org.eclipse.sirius.components.collaborative.dto.CreateDocumentInput;
+import org.eclipse.sirius.components.collaborative.dto.CreateDocumentSuccessPayload;
+import org.eclipse.sirius.components.core.api.IPayload;
+import org.eclipse.sirius.components.core.configuration.StereotypeDescription;
+import org.eclipse.sirius.components.emf.services.EditingContext;
 import org.eclipse.sirius.web.services.api.accounts.Profile;
 import org.eclipse.sirius.web.services.api.document.Document;
 import org.eclipse.sirius.web.services.api.document.IDocumentService;
@@ -30,10 +34,6 @@ import org.eclipse.sirius.web.services.api.projects.Visibility;
 import org.eclipse.sirius.web.services.api.stereotypes.IStereotypeDescriptionService;
 import org.eclipse.sirius.web.services.messages.IServicesMessageService;
 import org.eclipse.sirius.web.services.projects.NoOpServicesMessageService;
-import org.eclipse.sirius.web.spring.collaborative.api.ChangeDescription;
-import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
-import org.eclipse.sirius.web.spring.collaborative.dto.CreateDocumentInput;
-import org.eclipse.sirius.web.spring.collaborative.dto.CreateDocumentSuccessPayload;
 import org.junit.jupiter.api.Test;
 
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;

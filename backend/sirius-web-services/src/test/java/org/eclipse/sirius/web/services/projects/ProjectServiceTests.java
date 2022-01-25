@@ -19,8 +19,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.eclipse.sirius.web.core.api.ErrorPayload;
-import org.eclipse.sirius.web.core.api.IPayload;
+import org.eclipse.sirius.components.core.api.ErrorPayload;
+import org.eclipse.sirius.components.core.api.IPayload;
 import org.eclipse.sirius.web.persistence.entities.AccountEntity;
 import org.eclipse.sirius.web.persistence.entities.ProjectEntity;
 import org.eclipse.sirius.web.persistence.repositories.IAccountRepository;

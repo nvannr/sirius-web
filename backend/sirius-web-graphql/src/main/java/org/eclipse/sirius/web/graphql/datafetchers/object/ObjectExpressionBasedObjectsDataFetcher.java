@@ -16,12 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.sirius.web.annotations.spring.graphql.QueryDataFetcher;
+import org.eclipse.sirius.components.annotations.spring.graphql.QueryDataFetcher;
+import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
+import org.eclipse.sirius.components.interpreter.AQLInterpreter;
+import org.eclipse.sirius.components.interpreter.Result;
+import org.eclipse.sirius.components.representations.VariableManager;
 import org.eclipse.sirius.web.graphql.schema.ObjectTypeProvider;
-import org.eclipse.sirius.web.interpreter.AQLInterpreter;
-import org.eclipse.sirius.web.interpreter.Result;
-import org.eclipse.sirius.web.representations.VariableManager;
-import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
 
 import graphql.schema.DataFetchingEnvironment;
 

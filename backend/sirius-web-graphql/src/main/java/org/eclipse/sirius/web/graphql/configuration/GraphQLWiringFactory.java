@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.configuration;
 
-import org.eclipse.sirius.web.graphql.utils.typeresolvers.ReflectiveTypeResolver;
+import org.eclipse.sirius.components.graphql.utils.typeresolvers.ReflectiveTypeResolver;
 import org.springframework.stereotype.Service;
 
 import graphql.schema.TypeResolver;

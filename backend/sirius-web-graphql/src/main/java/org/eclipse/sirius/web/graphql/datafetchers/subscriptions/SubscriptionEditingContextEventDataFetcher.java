@@ -16,15 +16,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Objects;
 
-import org.eclipse.sirius.web.annotations.graphql.GraphQLSubscriptionTypes;
-import org.eclipse.sirius.web.annotations.spring.graphql.SubscriptionDataFetcher;
-import org.eclipse.sirius.web.core.api.IPayload;
+import org.eclipse.sirius.components.annotations.graphql.GraphQLSubscriptionTypes;
+import org.eclipse.sirius.components.annotations.spring.graphql.SubscriptionDataFetcher;
+import org.eclipse.sirius.components.collaborative.api.IEditingContextEventProcessor;
+import org.eclipse.sirius.components.collaborative.api.IEditingContextEventProcessorRegistry;
+import org.eclipse.sirius.components.collaborative.dto.EditingContextEventInput;
+import org.eclipse.sirius.components.collaborative.dto.RepresentationRenamedEventPayload;
+import org.eclipse.sirius.components.core.api.IPayload;
+import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
 import org.eclipse.sirius.web.graphql.schema.SubscriptionTypeProvider;
-import org.eclipse.sirius.web.spring.collaborative.api.IEditingContextEventProcessor;
-import org.eclipse.sirius.web.spring.collaborative.api.IEditingContextEventProcessorRegistry;
-import org.eclipse.sirius.web.spring.collaborative.dto.EditingContextEventInput;
-import org.eclipse.sirius.web.spring.collaborative.dto.RepresentationRenamedEventPayload;
-import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
 import org.reactivestreams.Publisher;
 
 import graphql.schema.DataFetchingEnvironment;

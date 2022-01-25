@@ -14,7 +14,7 @@ package org.eclipse.sirius.web.services.api.viewer;
 
 import java.util.UUID;
 
-import org.eclipse.sirius.web.annotations.graphql.GraphQLInterfaceType;
+import org.eclipse.sirius.components.annotations.graphql.GraphQLInterfaceType;
 
 /**
  * Interface used to represent a viewer.

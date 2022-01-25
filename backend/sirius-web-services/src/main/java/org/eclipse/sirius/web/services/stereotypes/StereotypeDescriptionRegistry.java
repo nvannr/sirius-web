@@ -19,8 +19,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.eclipse.sirius.web.core.configuration.IStereotypeDescriptionRegistry;
-import org.eclipse.sirius.web.core.configuration.StereotypeDescription;
+import org.eclipse.sirius.components.core.configuration.IStereotypeDescriptionRegistry;
+import org.eclipse.sirius.components.core.configuration.StereotypeDescription;
 
 /**
  * Registry containing all the stereotype descriptions.

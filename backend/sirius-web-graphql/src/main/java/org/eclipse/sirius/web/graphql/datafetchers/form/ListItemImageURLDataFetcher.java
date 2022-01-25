@@ -12,11 +12,11 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.datafetchers.form;
 
-import org.eclipse.sirius.web.annotations.spring.graphql.QueryDataFetcher;
-import org.eclipse.sirius.web.forms.ListItem;
+import org.eclipse.sirius.components.annotations.spring.graphql.QueryDataFetcher;
+import org.eclipse.sirius.components.forms.ListItem;
+import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
+import org.eclipse.sirius.components.graphql.api.URLConstants;
 import org.eclipse.sirius.web.graphql.schema.ImageURLFieldProvider;
-import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
-import org.eclipse.sirius.web.spring.graphql.api.URLConstants;
 
 import graphql.schema.DataFetchingEnvironment;
 

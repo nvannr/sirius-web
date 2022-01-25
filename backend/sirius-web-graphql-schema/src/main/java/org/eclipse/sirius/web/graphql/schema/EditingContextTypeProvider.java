@@ -21,9 +21,9 @@ import static graphql.schema.GraphQLTypeReference.typeRef;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.eclipse.sirius.web.core.api.ChildCreationDescription;
-import org.eclipse.sirius.web.core.api.Domain;
-import org.eclipse.sirius.web.graphql.utils.schema.ITypeProvider;
+import org.eclipse.sirius.components.core.api.ChildCreationDescription;
+import org.eclipse.sirius.components.core.api.Domain;
+import org.eclipse.sirius.components.graphql.utils.schema.ITypeProvider;
 import org.springframework.stereotype.Service;
 
 import graphql.Scalars;

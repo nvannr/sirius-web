@@ -14,7 +14,7 @@ package org.eclipse.sirius.web.persistence.architecture;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 
-import org.eclipse.sirius.web.spring.tests.architecture.AbstractConfigurationTests;
+import org.eclipse.sirius.components.spring.tests.architecture.AbstractConfigurationTests;
 
 /**
  * Spring @Configuration architectural tests.

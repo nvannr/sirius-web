@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.eclipse.sirius.web.annotations.Immutable;
+import org.eclipse.sirius.components.annotations.Immutable;
 
 /**
  * Represents the manifest of the project.

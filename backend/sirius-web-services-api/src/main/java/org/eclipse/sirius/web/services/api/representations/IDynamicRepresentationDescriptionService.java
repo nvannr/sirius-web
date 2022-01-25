@@ -14,8 +14,8 @@ package org.eclipse.sirius.web.services.api.representations;
 
 import java.util.List;
 
-import org.eclipse.sirius.web.core.api.IEditingContext;
-import org.eclipse.sirius.web.representations.IRepresentationDescription;
+import org.eclipse.sirius.components.core.api.IEditingContext;
+import org.eclipse.sirius.components.representations.IRepresentationDescription;
 
 /**
  * Service to discover representation descriptions dynamically from the existing user-defined documents.

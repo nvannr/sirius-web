@@ -17,10 +17,10 @@ import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 
-import org.eclipse.sirius.web.annotations.graphql.GraphQLInputObjectType;
-import org.eclipse.sirius.web.core.api.IInput;
-import org.eclipse.sirius.web.core.api.IPayload;
-import org.eclipse.sirius.web.tests.architecture.AbstractCodingRulesTests;
+import org.eclipse.sirius.components.annotations.graphql.GraphQLInputObjectType;
+import org.eclipse.sirius.components.core.api.IInput;
+import org.eclipse.sirius.components.core.api.IPayload;
+import org.eclipse.sirius.components.tests.architecture.AbstractCodingRulesTests;
 import org.junit.jupiter.api.Test;
 
 /**

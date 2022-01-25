@@ -16,17 +16,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Objects;
 
-import org.eclipse.sirius.web.annotations.graphql.GraphQLSubscriptionTypes;
-import org.eclipse.sirius.web.annotations.spring.graphql.SubscriptionDataFetcher;
-import org.eclipse.sirius.web.core.api.IPayload;
+import org.eclipse.sirius.components.annotations.graphql.GraphQLSubscriptionTypes;
+import org.eclipse.sirius.components.annotations.spring.graphql.SubscriptionDataFetcher;
+import org.eclipse.sirius.components.collaborative.api.IEditingContextEventProcessorRegistry;
+import org.eclipse.sirius.components.collaborative.dto.SubscribersUpdatedEventPayload;
+import org.eclipse.sirius.components.collaborative.trees.api.ITreeEventProcessor;
+import org.eclipse.sirius.components.collaborative.trees.api.TreeConfiguration;
+import org.eclipse.sirius.components.collaborative.trees.dto.TreeEventInput;
+import org.eclipse.sirius.components.collaborative.trees.dto.TreeRefreshedEventPayload;
+import org.eclipse.sirius.components.core.api.IPayload;
+import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
 import org.eclipse.sirius.web.graphql.schema.SubscriptionTypeProvider;
-import org.eclipse.sirius.web.spring.collaborative.api.IEditingContextEventProcessorRegistry;
-import org.eclipse.sirius.web.spring.collaborative.dto.SubscribersUpdatedEventPayload;
-import org.eclipse.sirius.web.spring.collaborative.trees.api.ITreeEventProcessor;
-import org.eclipse.sirius.web.spring.collaborative.trees.api.TreeConfiguration;
-import org.eclipse.sirius.web.spring.collaborative.trees.dto.TreeEventInput;
-import org.eclipse.sirius.web.spring.collaborative.trees.dto.TreeRefreshedEventPayload;
-import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
 import org.reactivestreams.Publisher;
 
 import graphql.schema.DataFetchingEnvironment;

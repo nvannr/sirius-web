@@ -24,15 +24,15 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.eclipse.sirius.web.annotations.graphql.GraphQLSubscriptionTypes;
-import org.eclipse.sirius.web.annotations.spring.graphql.SubscriptionDataFetcher;
-import org.eclipse.sirius.web.core.api.ErrorPayload;
-import org.eclipse.sirius.web.graphql.utils.providers.GraphQLInputObjectTypeProvider;
-import org.eclipse.sirius.web.graphql.utils.providers.GraphQLNameProvider;
-import org.eclipse.sirius.web.graphql.utils.providers.GraphQLObjectTypeProvider;
-import org.eclipse.sirius.web.graphql.utils.schema.ISubscriptionTypeProvider;
-import org.eclipse.sirius.web.spring.collaborative.dto.Subscriber;
-import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
+import org.eclipse.sirius.components.annotations.graphql.GraphQLSubscriptionTypes;
+import org.eclipse.sirius.components.annotations.spring.graphql.SubscriptionDataFetcher;
+import org.eclipse.sirius.components.collaborative.dto.Subscriber;
+import org.eclipse.sirius.components.core.api.ErrorPayload;
+import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
+import org.eclipse.sirius.components.graphql.utils.providers.GraphQLInputObjectTypeProvider;
+import org.eclipse.sirius.components.graphql.utils.providers.GraphQLNameProvider;
+import org.eclipse.sirius.components.graphql.utils.providers.GraphQLObjectTypeProvider;
+import org.eclipse.sirius.components.graphql.utils.schema.ISubscriptionTypeProvider;
 import org.springframework.stereotype.Service;
 
 import graphql.schema.GraphQLFieldDefinition;

@@ -15,8 +15,8 @@ package org.eclipse.sirius.web.graphql.schema;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.eclipse.sirius.web.graphql.utils.providers.GraphQLEnumTypeProvider;
-import org.eclipse.sirius.web.graphql.utils.schema.ITypeProvider;
+import org.eclipse.sirius.components.graphql.utils.providers.GraphQLEnumTypeProvider;
+import org.eclipse.sirius.components.graphql.utils.schema.ITypeProvider;
 import org.eclipse.sirius.web.services.api.projects.AccessLevel;
 import org.eclipse.sirius.web.services.api.projects.Visibility;
 import org.springframework.stereotype.Service;

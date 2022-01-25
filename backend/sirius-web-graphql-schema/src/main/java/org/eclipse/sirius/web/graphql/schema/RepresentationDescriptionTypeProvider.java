@@ -15,9 +15,9 @@ package org.eclipse.sirius.web.graphql.schema;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.eclipse.sirius.web.graphql.utils.providers.GraphQLInterfaceTypeProvider;
-import org.eclipse.sirius.web.graphql.utils.schema.ITypeProvider;
-import org.eclipse.sirius.web.representations.IRepresentationDescription;
+import org.eclipse.sirius.components.graphql.utils.providers.GraphQLInterfaceTypeProvider;
+import org.eclipse.sirius.components.graphql.utils.schema.ITypeProvider;
+import org.eclipse.sirius.components.representations.IRepresentationDescription;
 import org.springframework.stereotype.Service;
 
 import graphql.schema.GraphQLType;

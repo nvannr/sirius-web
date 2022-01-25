@@ -14,19 +14,19 @@ package org.eclipse.sirius.web.services.representations;
 
 import java.util.Objects;
 
-import org.eclipse.sirius.web.core.api.ErrorPayload;
-import org.eclipse.sirius.web.core.api.IEditingContext;
-import org.eclipse.sirius.web.core.api.IInput;
-import org.eclipse.sirius.web.core.api.IPayload;
+import org.eclipse.sirius.components.collaborative.api.ChangeDescription;
+import org.eclipse.sirius.components.collaborative.api.ChangeKind;
+import org.eclipse.sirius.components.collaborative.api.IEditingContextEventHandler;
+import org.eclipse.sirius.components.collaborative.api.Monitoring;
+import org.eclipse.sirius.components.collaborative.dto.DeleteRepresentationInput;
+import org.eclipse.sirius.components.collaborative.dto.DeleteRepresentationSuccessPayload;
+import org.eclipse.sirius.components.core.api.ErrorPayload;
+import org.eclipse.sirius.components.core.api.IEditingContext;
+import org.eclipse.sirius.components.core.api.IInput;
+import org.eclipse.sirius.components.core.api.IPayload;
 import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.eclipse.sirius.web.services.api.representations.IRepresentationService;
 import org.eclipse.sirius.web.services.messages.IServicesMessageService;
-import org.eclipse.sirius.web.spring.collaborative.api.ChangeDescription;
-import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
-import org.eclipse.sirius.web.spring.collaborative.api.IEditingContextEventHandler;
-import org.eclipse.sirius.web.spring.collaborative.api.Monitoring;
-import org.eclipse.sirius.web.spring.collaborative.dto.DeleteRepresentationInput;
-import org.eclipse.sirius.web.spring.collaborative.dto.DeleteRepresentationSuccessPayload;
 import org.springframework.stereotype.Service;
 
 import io.micrometer.core.instrument.Counter;

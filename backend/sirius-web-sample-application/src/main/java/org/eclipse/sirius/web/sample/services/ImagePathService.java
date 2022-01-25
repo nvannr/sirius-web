@@ -14,7 +14,7 @@ package org.eclipse.sirius.web.sample.services;
 
 import java.util.List;
 
-import org.eclipse.sirius.web.core.api.IImagePathService;
+import org.eclipse.sirius.components.core.api.IImagePathService;
 import org.springframework.stereotype.Service;
 
 /**

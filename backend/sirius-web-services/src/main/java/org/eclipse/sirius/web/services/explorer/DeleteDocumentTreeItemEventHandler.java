@@ -22,17 +22,17 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.eclipse.sirius.web.core.api.IEditingContext;
-import org.eclipse.sirius.web.emf.services.EditingContext;
+import org.eclipse.sirius.components.collaborative.api.ChangeKind;
+import org.eclipse.sirius.components.core.api.IEditingContext;
+import org.eclipse.sirius.components.emf.services.EditingContext;
+import org.eclipse.sirius.components.representations.Failure;
+import org.eclipse.sirius.components.representations.IStatus;
+import org.eclipse.sirius.components.representations.Success;
+import org.eclipse.sirius.components.trees.TreeItem;
 import org.eclipse.sirius.web.persistence.entities.DocumentEntity;
 import org.eclipse.sirius.web.persistence.repositories.IDocumentRepository;
-import org.eclipse.sirius.web.representations.Failure;
-import org.eclipse.sirius.web.representations.IStatus;
-import org.eclipse.sirius.web.representations.Success;
 import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.eclipse.sirius.web.services.explorer.api.IDeleteTreeItemHandler;
-import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
-import org.eclipse.sirius.web.trees.TreeItem;
 import org.springframework.stereotype.Service;
 
 /**

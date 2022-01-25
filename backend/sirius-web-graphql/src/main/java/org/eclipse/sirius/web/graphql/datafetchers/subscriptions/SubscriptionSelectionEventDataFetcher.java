@@ -17,17 +17,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.eclipse.sirius.web.annotations.graphql.GraphQLSubscriptionTypes;
-import org.eclipse.sirius.web.annotations.spring.graphql.SubscriptionDataFetcher;
-import org.eclipse.sirius.web.core.api.IPayload;
+import org.eclipse.sirius.components.annotations.graphql.GraphQLSubscriptionTypes;
+import org.eclipse.sirius.components.annotations.spring.graphql.SubscriptionDataFetcher;
+import org.eclipse.sirius.components.collaborative.api.IEditingContextEventProcessorRegistry;
+import org.eclipse.sirius.components.collaborative.dto.SubscribersUpdatedEventPayload;
+import org.eclipse.sirius.components.collaborative.selection.api.ISelectionEventProcessor;
+import org.eclipse.sirius.components.collaborative.selection.api.SelectionConfiguration;
+import org.eclipse.sirius.components.collaborative.selection.dto.SelectionEventInput;
+import org.eclipse.sirius.components.collaborative.selection.dto.SelectionRefreshedEventPayload;
+import org.eclipse.sirius.components.core.api.IPayload;
+import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
 import org.eclipse.sirius.web.graphql.schema.SubscriptionTypeProvider;
-import org.eclipse.sirius.web.spring.collaborative.api.IEditingContextEventProcessorRegistry;
-import org.eclipse.sirius.web.spring.collaborative.dto.SubscribersUpdatedEventPayload;
-import org.eclipse.sirius.web.spring.collaborative.selection.api.ISelectionEventProcessor;
-import org.eclipse.sirius.web.spring.collaborative.selection.api.SelectionConfiguration;
-import org.eclipse.sirius.web.spring.collaborative.selection.dto.SelectionEventInput;
-import org.eclipse.sirius.web.spring.collaborative.selection.dto.SelectionRefreshedEventPayload;
-import org.eclipse.sirius.web.spring.graphql.api.IDataFetcherWithFieldCoordinates;
 import org.reactivestreams.Publisher;
 
 import graphql.schema.DataFetchingEnvironment;

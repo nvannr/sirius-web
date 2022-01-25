@@ -17,12 +17,12 @@ import fr.obeo.dsl.designer.sample.flow.provider.FlowItemProviderAdapterFactory;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.sirius.web.domain.DomainPackage;
-import org.eclipse.sirius.web.domain.provider.DomainItemProviderAdapterFactory;
-import org.eclipse.sirius.web.emf.services.ILabelFeatureProvider;
-import org.eclipse.sirius.web.emf.services.LabelFeatureProvider;
-import org.eclipse.sirius.web.view.ViewPackage;
-import org.eclipse.sirius.web.view.provider.ViewItemProviderAdapterFactory;
+import org.eclipse.sirius.components.domain.DomainPackage;
+import org.eclipse.sirius.components.domain.provider.DomainItemProviderAdapterFactory;
+import org.eclipse.sirius.components.emf.services.ILabelFeatureProvider;
+import org.eclipse.sirius.components.emf.services.LabelFeatureProvider;
+import org.eclipse.sirius.components.view.ViewPackage;
+import org.eclipse.sirius.components.view.provider.ViewItemProviderAdapterFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

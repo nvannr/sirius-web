@@ -17,12 +17,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.eclipse.sirius.web.core.api.IEditingContext;
+import org.eclipse.sirius.components.collaborative.api.IRepresentationSearchService;
+import org.eclipse.sirius.components.core.api.IEditingContext;
+import org.eclipse.sirius.components.representations.IRepresentation;
 import org.eclipse.sirius.web.persistence.repositories.IRepresentationRepository;
-import org.eclipse.sirius.web.representations.IRepresentation;
 import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
-import org.eclipse.sirius.web.spring.collaborative.api.IRepresentationSearchService;
 import org.springframework.stereotype.Service;
 
 /**

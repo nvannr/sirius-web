@@ -14,11 +14,11 @@ package org.eclipse.sirius.web.services.representations;
 
 import java.util.UUID;
 
-import org.eclipse.sirius.web.representations.IRepresentationDescription;
-import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
-import org.eclipse.sirius.web.spring.collaborative.api.IRepresentationRefreshPolicy;
-import org.eclipse.sirius.web.spring.collaborative.api.IRepresentationRefreshPolicyProvider;
-import org.eclipse.sirius.web.spring.collaborative.api.IRepresentationRefreshPolicyRegistry;
+import org.eclipse.sirius.components.collaborative.api.ChangeKind;
+import org.eclipse.sirius.components.collaborative.api.IRepresentationRefreshPolicy;
+import org.eclipse.sirius.components.collaborative.api.IRepresentationRefreshPolicyProvider;
+import org.eclipse.sirius.components.collaborative.api.IRepresentationRefreshPolicyRegistry;
+import org.eclipse.sirius.components.representations.IRepresentationDescription;
 import org.springframework.stereotype.Service;
 
 /**

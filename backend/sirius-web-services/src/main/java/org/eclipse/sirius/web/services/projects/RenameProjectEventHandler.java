@@ -15,18 +15,18 @@ package org.eclipse.sirius.web.services.projects;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.eclipse.sirius.web.core.api.ErrorPayload;
-import org.eclipse.sirius.web.core.api.IEditingContext;
-import org.eclipse.sirius.web.core.api.IInput;
-import org.eclipse.sirius.web.core.api.IPayload;
+import org.eclipse.sirius.components.collaborative.api.ChangeDescription;
+import org.eclipse.sirius.components.collaborative.api.ChangeKind;
+import org.eclipse.sirius.components.collaborative.api.IEditingContextEventHandler;
+import org.eclipse.sirius.components.core.api.ErrorPayload;
+import org.eclipse.sirius.components.core.api.IEditingContext;
+import org.eclipse.sirius.components.core.api.IInput;
+import org.eclipse.sirius.components.core.api.IPayload;
 import org.eclipse.sirius.web.services.api.projects.IProjectService;
 import org.eclipse.sirius.web.services.api.projects.Project;
 import org.eclipse.sirius.web.services.api.projects.RenameProjectInput;
 import org.eclipse.sirius.web.services.api.projects.RenameProjectSuccessPayload;
 import org.eclipse.sirius.web.services.messages.IServicesMessageService;
-import org.eclipse.sirius.web.spring.collaborative.api.ChangeDescription;
-import org.eclipse.sirius.web.spring.collaborative.api.ChangeKind;
-import org.eclipse.sirius.web.spring.collaborative.api.IEditingContextEventHandler;
 import org.springframework.stereotype.Service;
 
 import reactor.core.publisher.Sinks.Many;
