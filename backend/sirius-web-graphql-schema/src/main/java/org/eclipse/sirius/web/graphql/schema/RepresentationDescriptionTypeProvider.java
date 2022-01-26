@@ -12,33 +12,15 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.schema;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.eclipse.sirius.components.graphql.utils.providers.GraphQLInterfaceTypeProvider;
-import org.eclipse.sirius.components.graphql.utils.schema.ITypeProvider;
 import org.eclipse.sirius.components.representations.IRepresentationDescription;
-import org.springframework.stereotype.Service;
-
-import graphql.schema.GraphQLType;
 
 /**
  * Creates the GraphQL type for {@link IRepresentationDescription}.
  *
  * @author sbegaudeau
  */
-@Service
-public class RepresentationDescriptionTypeProvider implements ITypeProvider {
+public class RepresentationDescriptionTypeProvider {
 
     public static final String TYPE = "RepresentationDescription"; //$NON-NLS-1$
-
-    private final GraphQLInterfaceTypeProvider graphQLInterfaceTypeProvider = new GraphQLInterfaceTypeProvider();
-
-    @Override
-    public Set<GraphQLType> getTypes() {
-        LinkedHashSet<GraphQLType> types = new LinkedHashSet<>();
-        types.add(this.graphQLInterfaceTypeProvider.getType(IRepresentationDescription.class));
-        return types;
-    }
 
 }

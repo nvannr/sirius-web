@@ -12,49 +12,15 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.schema;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.eclipse.sirius.components.graphql.utils.providers.GraphQLObjectTypeProvider;
-import org.eclipse.sirius.components.graphql.utils.schema.ITypeProvider;
-import org.eclipse.sirius.components.selection.Selection;
-import org.eclipse.sirius.components.selection.SelectionObject;
-import org.eclipse.sirius.components.selection.description.SelectionDescription;
-import org.springframework.stereotype.Service;
-
-import graphql.schema.GraphQLType;
-
 /**
  * This class is used to create all the definitions of the types related to the selection representation.
  *
  * @author arichard
  */
-@Service
-public class SelectionTypesProvider implements ITypeProvider {
+public class SelectionTypesProvider {
 
     public static final String SELECTION_TYPE = "Selection"; //$NON-NLS-1$
 
     public static final String SELECTION_OBJECT_TYPE = "SelectionObject"; //$NON-NLS-1$
 
-    private final GraphQLObjectTypeProvider graphQLObjectTypeProvider = new GraphQLObjectTypeProvider();
-
-    @Override
-    public Set<GraphQLType> getTypes() {
-        // @formatter:off
-        List<Class<?>> objectClasses = List.of(
-            Selection.class,
-            SelectionObject.class,
-            SelectionDescription.class
-        );
-        var graphQLObjectTypes = objectClasses.stream()
-                .map(this.graphQLObjectTypeProvider::getType)
-                .collect(Collectors.toUnmodifiableList());
-        // @formatter:on
-
-        Set<GraphQLType> types = new LinkedHashSet<>();
-        types.addAll(graphQLObjectTypes);
-        return types;
-    }
 }

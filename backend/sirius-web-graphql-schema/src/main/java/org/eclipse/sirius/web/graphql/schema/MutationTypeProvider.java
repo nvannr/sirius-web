@@ -12,131 +12,14 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.schema;
 
-import static graphql.schema.GraphQLArgument.newArgument;
-import static graphql.schema.GraphQLNonNull.nonNull;
-import static graphql.schema.GraphQLTypeReference.typeRef;
-
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.eclipse.sirius.components.annotations.graphql.GraphQLMutationTypes;
-import org.eclipse.sirius.components.annotations.spring.graphql.MutationDataFetcher;
-import org.eclipse.sirius.components.core.api.ErrorPayload;
-import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
-import org.eclipse.sirius.components.graphql.utils.providers.GraphQLNameProvider;
-import org.eclipse.sirius.components.graphql.utils.providers.GraphQLObjectTypeProvider;
-import org.eclipse.sirius.components.graphql.utils.schema.IMutationTypeProvider;
-import org.springframework.stereotype.Service;
-
-import graphql.schema.GraphQLFieldDefinition;
-import graphql.schema.GraphQLObjectType;
-import graphql.schema.GraphQLType;
-import graphql.schema.GraphQLTypeReference;
-import graphql.schema.GraphQLUnionType;
-
 /**
  * This class is used to create the definition of the Mutation type.
  *
  * @author sbegaudeau
  */
-@Service
-public class MutationTypeProvider implements IMutationTypeProvider {
+public class MutationTypeProvider {
     public static final String TYPE = "Mutation"; //$NON-NLS-1$
 
     public static final String INPUT_ARGUMENT = "input"; //$NON-NLS-1$
-
-    private static final String INPUT_SUFFIX = "Input"; //$NON-NLS-1$
-
-    private static final String PAYLOAD_SUFFIX = "Payload"; //$NON-NLS-1$
-
-    private final GraphQLObjectTypeProvider graphQLObjectTypeProvider = new GraphQLObjectTypeProvider();
-
-    private final GraphQLNameProvider graphQLNameProvider = new GraphQLNameProvider();
-
-    private final List<Class<?>> mutationDataFetcherClass;
-
-    public MutationTypeProvider(List<IDataFetcherWithFieldCoordinates<?>> dataFetchersWithCoordinates) {
-        // @formatter:off
-        this.mutationDataFetcherClass = Objects.requireNonNull(dataFetchersWithCoordinates).stream()
-                .map(Object::getClass)
-                .filter(aClass -> aClass.isAnnotationPresent(MutationDataFetcher.class))
-                .collect(Collectors.toList());
-        // @formatter:on
-    }
-
-    @Override
-    public GraphQLObjectType getType() {
-        // @formatter:off
-        var fields = this.mutationDataFetcherClass.stream()
-                .map(this.graphQLNameProvider::getMutationFieldName)
-                .map(this::getMutationField)
-                .collect(Collectors.toUnmodifiableList());
-
-        return GraphQLObjectType.newObject()
-                .name(TYPE)
-                .fields(fields)
-                .build();
-        // @formatter:on
-    }
-
-    private GraphQLFieldDefinition getMutationField(String fieldName) {
-        // @formatter:off
-        return GraphQLFieldDefinition.newFieldDefinition()
-                .name(fieldName)
-                .argument(newArgument()
-                            .name(INPUT_ARGUMENT)
-                            .type(nonNull(typeRef(this.toUpperFirst(fieldName) + INPUT_SUFFIX))))
-                .type(nonNull(typeRef(this.toUpperFirst(fieldName) + PAYLOAD_SUFFIX)))
-                .build();
-    }
-
-    private String toUpperFirst(String name) {
-        if (name.length() > 1) {
-            return name.substring(0, 1).toUpperCase() + name.substring(1);
-        }
-        return name.toUpperCase();
-    }
-
-    @Override
-    public Set<GraphQLType> getAdditionalTypes() {
-        var graphQLObjectTypes = this.mutationDataFetcherClass.stream()
-                .flatMap(this::getGraphQLPayloadTypes)
-                .collect(Collectors.toUnmodifiableList());
-        // @formatter:on
-
-        GraphQLObjectType errorPayloadObjectType = this.graphQLObjectTypeProvider.getType(ErrorPayload.class);
-
-        Set<GraphQLType> types = new LinkedHashSet<>();
-        types.addAll(graphQLObjectTypes);
-        types.add(errorPayloadObjectType);
-        return types;
-    }
-
-    private Stream<GraphQLType> getGraphQLPayloadTypes(Class<?> dataFetcherClass) {
-        GraphQLMutationTypes graphQLMutationTypes = dataFetcherClass.getAnnotation(GraphQLMutationTypes.class);
-        Class<?>[] payloadClasses = graphQLMutationTypes.payloads();
-
-        // @formatter:off
-        List<GraphQLObjectType> graphQLObjectTypes = new ArrayList<>();
-        for (Class<?> payloadClass : payloadClasses) {
-            GraphQLObjectType graphQLObjectType = this.graphQLObjectTypeProvider.getType(payloadClass);
-            graphQLObjectTypes.add(graphQLObjectType);
-        }
-
-        String unionTypeName = this.graphQLNameProvider.getMutationUnionTypeName(dataFetcherClass);
-        var union = GraphQLUnionType.newUnionType()
-                .name(unionTypeName)
-                .possibleTypes(graphQLObjectTypes.toArray(new GraphQLObjectType[graphQLObjectTypes.size()]))
-                .possibleType(new GraphQLTypeReference(ErrorPayload.class.getSimpleName()))
-                .build();
-
-        return Stream.concat(Stream.of(union), graphQLObjectTypes.stream());
-        // @formatter:on
-    }
 
 }

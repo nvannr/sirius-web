@@ -12,17 +12,6 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.schema;
 
-import java.util.Set;
-
-import org.eclipse.sirius.components.graphql.utils.schema.IQueryTypeProvider;
-import org.springframework.stereotype.Service;
-
-import graphql.schema.GraphQLFieldDefinition;
-import graphql.schema.GraphQLNonNull;
-import graphql.schema.GraphQLObjectType;
-import graphql.schema.GraphQLType;
-import graphql.schema.GraphQLTypeReference;
-
 /**
  * This class is used to create the definition of the Query type.
  * <p>
@@ -37,33 +26,8 @@ import graphql.schema.GraphQLTypeReference;
  *
  * @author sbegaudeau
  */
-@Service
-public class QueryTypeProvider implements IQueryTypeProvider {
+public class QueryTypeProvider {
     public static final String TYPE = "Query"; //$NON-NLS-1$
 
     public static final String VIEWER_FIELD = "viewer"; //$NON-NLS-1$
-
-    @Override
-    public GraphQLObjectType getType() {
-        // @formatter:off
-        return GraphQLObjectType.newObject()
-                .name(TYPE)
-                .field(this.getViewerField())
-                .build();
-        // @formatter:on
-    }
-
-    private GraphQLFieldDefinition getViewerField() {
-        // @formatter:off
-        return GraphQLFieldDefinition.newFieldDefinition()
-                .name(VIEWER_FIELD)
-                .type(new GraphQLNonNull(new GraphQLTypeReference(ViewerTypeProvider.TYPE)))
-                .build();
-        // @formatter:on
-    }
-
-    @Override
-    public Set<GraphQLType> getAdditionalTypes() {
-        return Set.of();
-    }
 }

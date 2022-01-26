@@ -12,18 +12,6 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.schema;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.eclipse.sirius.components.graphql.utils.schema.ITypeProvider;
-import org.springframework.stereotype.Service;
-
-import graphql.Scalars;
-import graphql.schema.GraphQLFieldDefinition;
-import graphql.schema.GraphQLInterfaceType;
-import graphql.schema.GraphQLNonNull;
-import graphql.schema.GraphQLType;
-
 /**
  * This class is used to create the definition of the Representation interface.
  * <p>
@@ -40,34 +28,6 @@ import graphql.schema.GraphQLType;
  *
  * @author sbegaudeau
  */
-@Service
-public class RepresentationTypeProvider implements ITypeProvider {
+public class RepresentationTypeProvider {
     public static final String TYPE = "Representation"; //$NON-NLS-1$
-
-    private static final String LABEL = "label"; //$NON-NLS-1$
-
-    @Override
-    public Set<GraphQLType> getTypes() {
-        LinkedHashSet<GraphQLType> types = new LinkedHashSet<>();
-        // @formatter:off
-        var representationType = GraphQLInterfaceType.newInterface()
-                .name(TYPE)
-                .field(new IdFieldProvider().getField())
-                .field(new KindFieldProvider().getField())
-                .field(this.getLabelField())
-                .build();
-        // @formatter:on
-
-        types.add(representationType);
-        return types;
-    }
-
-    private GraphQLFieldDefinition getLabelField() {
-        // @formatter:off
-        return GraphQLFieldDefinition.newFieldDefinition()
-                .name(LABEL)
-                .type(new GraphQLNonNull(Scalars.GraphQLString))
-                .build();
-        // @formatter:on
-    }
 }

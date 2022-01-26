@@ -12,50 +12,15 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.schema;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.eclipse.sirius.components.graphql.utils.providers.GraphQLObjectTypeProvider;
-import org.eclipse.sirius.components.graphql.utils.schema.ITypeProvider;
-import org.eclipse.sirius.components.trees.Tree;
-import org.eclipse.sirius.components.trees.TreeItem;
-import org.eclipse.sirius.components.trees.description.TreeDescription;
-import org.springframework.stereotype.Service;
-
-import graphql.schema.GraphQLType;
-
 /**
  * This class is used to create all the definitions of the types related to the tree-based representation.
  *
  * @author sbegaudeau
  */
-@Service
-public class TreeTypeProvider implements ITypeProvider {
+public class TreeTypeProvider {
     public static final String TREE_TYPE = "Tree"; //$NON-NLS-1$
 
     public static final String TREE_ITEM_TYPE = "TreeItem"; //$NON-NLS-1$
 
     public static final String TARGET_FIELD = "target"; //$NON-NLS-1$
-
-    private final GraphQLObjectTypeProvider graphQLObjectTypeProvider = new GraphQLObjectTypeProvider();
-
-    @Override
-    public Set<GraphQLType> getTypes() {
-        // @formatter:off
-        List<Class<?>> objectClasses = List.of(
-            Tree.class,
-            TreeItem.class,
-            TreeDescription.class
-        );
-        var graphQLObjectTypes = objectClasses.stream()
-                .map(this.graphQLObjectTypeProvider::getType)
-                .collect(Collectors.toUnmodifiableList());
-        // @formatter:on
-
-        Set<GraphQLType> types = new LinkedHashSet<>();
-        types.addAll(graphQLObjectTypes);
-        return types;
-    }
 }

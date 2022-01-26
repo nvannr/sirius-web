@@ -12,40 +12,12 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.schema;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.eclipse.sirius.components.collaborative.forms.dto.WidgetSubscription;
-import org.eclipse.sirius.components.forms.AbstractWidget;
-import org.eclipse.sirius.components.forms.Checkbox;
-import org.eclipse.sirius.components.forms.Form;
-import org.eclipse.sirius.components.forms.Group;
-import org.eclipse.sirius.components.forms.ListItem;
-import org.eclipse.sirius.components.forms.MultiSelect;
-import org.eclipse.sirius.components.forms.Page;
-import org.eclipse.sirius.components.forms.Radio;
-import org.eclipse.sirius.components.forms.RadioOption;
-import org.eclipse.sirius.components.forms.Select;
-import org.eclipse.sirius.components.forms.SelectOption;
-import org.eclipse.sirius.components.forms.Textarea;
-import org.eclipse.sirius.components.forms.Textfield;
-import org.eclipse.sirius.components.forms.description.FormDescription;
-import org.eclipse.sirius.components.graphql.utils.providers.GraphQLInterfaceTypeProvider;
-import org.eclipse.sirius.components.graphql.utils.providers.GraphQLObjectTypeProvider;
-import org.eclipse.sirius.components.graphql.utils.schema.ITypeProvider;
-import org.springframework.stereotype.Service;
-
-import graphql.schema.GraphQLType;
-
 /**
  * This class is used to create all the definitions of the types related to the form-based representation.
  *
  * @author sbegaudeau
  */
-@Service
-public class FormTypesProvider implements ITypeProvider {
+public class FormTypesProvider {
     public static final String FORM_TYPE = "Form"; //$NON-NLS-1$
 
     public static final String WIDGET_TYPE = "Widget"; //$NON-NLS-1$
@@ -61,47 +33,5 @@ public class FormTypesProvider implements ITypeProvider {
     public static final String MULTI_SELECT_TYPE = "MultiSelect"; //$NON-NLS-1$
 
     public static final String RADIO_TYPE = "Radio"; //$NON-NLS-1$
-
-    private final GraphQLObjectTypeProvider graphQLObjectTypeProvider = new GraphQLObjectTypeProvider();
-
-    private final GraphQLInterfaceTypeProvider graphQLInterfaceTypeProvider = new GraphQLInterfaceTypeProvider();
-
-    @Override
-    public Set<GraphQLType> getTypes() {
-        // @formatter:off
-        List<Class<?>> objectClasses = List.of(
-            Form.class,
-            Page.class,
-            Group.class,
-            Textfield.class,
-            Textarea.class,
-            Checkbox.class,
-            Radio.class,
-            RadioOption.class,
-            Select.class,
-            MultiSelect.class,
-            SelectOption.class,
-            org.eclipse.sirius.components.forms.List.class,
-            ListItem.class,
-            FormDescription.class,
-            WidgetSubscription.class
-        );
-        var graphQLObjectTypes = objectClasses.stream()
-                .map(this.graphQLObjectTypeProvider::getType)
-                .collect(Collectors.toUnmodifiableList());
-
-        List<Class<?>> interfaceClasses = List.of(
-            AbstractWidget.class
-        );
-        var graphQLInterfaceTypes = interfaceClasses.stream()
-                .map(this.graphQLInterfaceTypeProvider::getType)
-                .collect(Collectors.toUnmodifiableList());
-        // @formatter:on
-
-        Set<GraphQLType> types = new LinkedHashSet<>();
-        types.addAll(graphQLObjectTypes);
-        types.addAll(graphQLInterfaceTypes);
-        return types;
-    }
 
 }

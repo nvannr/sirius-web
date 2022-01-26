@@ -12,18 +12,6 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.schema;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.eclipse.sirius.components.graphql.utils.schema.ITypeProvider;
-import org.springframework.stereotype.Service;
-
-import graphql.Scalars;
-import graphql.schema.GraphQLFieldDefinition;
-import graphql.schema.GraphQLInterfaceType;
-import graphql.schema.GraphQLNonNull;
-import graphql.schema.GraphQLType;
-
 /**
  * This class is used to create the definition of the Tool interface.
  * <p>
@@ -40,47 +28,7 @@ import graphql.schema.GraphQLType;
  *
  * @author hmarchadour
  */
-@Service
-public class ToolTypeProvider implements ITypeProvider {
+public class ToolTypeProvider {
     public static final String TYPE = "Tool"; //$NON-NLS-1$
 
-    private static final String LABEL = "label"; //$NON-NLS-1$
-
-    private static final String IMAGE_URL_FIELD = "imageURL"; //$NON-NLS-1$
-
-    @Override
-    public Set<GraphQLType> getTypes() {
-        Set<GraphQLType> types = new LinkedHashSet<>();
-        types.add(this.getToolType());
-        return types;
-    }
-
-    public GraphQLInterfaceType getToolType() {
-        // @formatter:off
-        return GraphQLInterfaceType.newInterface()
-                .name(TYPE)
-                .field(new IdFieldProvider().getField())
-                .field(this.getLabelField())
-                .field(this.getImageURLField())
-                .build();
-        // @formatter:on
-    }
-
-    private GraphQLFieldDefinition getLabelField() {
-        // @formatter:off
-        return GraphQLFieldDefinition.newFieldDefinition()
-                .name(LABEL)
-                .type(new GraphQLNonNull(Scalars.GraphQLString))
-                .build();
-        // @formatter:on
-    }
-
-    private GraphQLFieldDefinition getImageURLField() {
-        // @formatter:off
-        return GraphQLFieldDefinition.newFieldDefinition()
-                .name(IMAGE_URL_FIELD)
-                .type(new GraphQLNonNull(Scalars.GraphQLString))
-                .build();
-        // @formatter:on
-    }
 }

@@ -12,16 +12,6 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.schema;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.eclipse.sirius.components.graphql.utils.providers.GraphQLObjectTypeProvider;
-import org.eclipse.sirius.components.graphql.utils.schema.ITypeProvider;
-import org.eclipse.sirius.web.services.api.accounts.Profile;
-import org.springframework.stereotype.Service;
-
-import graphql.schema.GraphQLType;
-
 /**
  * This class is used to create the definition of the Account type.
  * <p>
@@ -37,17 +27,7 @@ import graphql.schema.GraphQLType;
  *
  * @author sbegaudeau
  */
-@Service
-public class ProfileTypeProvider implements ITypeProvider {
+public class ProfileTypeProvider {
     public static final String TYPE = "Profile"; //$NON-NLS-1$
-
-    private final GraphQLObjectTypeProvider graphQLObjectTypeProvider = new GraphQLObjectTypeProvider();
-
-    @Override
-    public Set<GraphQLType> getTypes() {
-        LinkedHashSet<GraphQLType> types = new LinkedHashSet<>();
-        types.add(this.graphQLObjectTypeProvider.getType(Profile.class));
-        return types;
-    }
 
 }
