@@ -13,10 +13,13 @@
 package org.eclipse.sirius.web.graphql.datafetchers.editingcontext;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import org.eclipse.sirius.components.annotations.spring.graphql.QueryDataFetcher;
 import org.eclipse.sirius.components.core.RepresentationMetadata;
 import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
+import org.eclipse.sirius.components.representations.IRepresentation;
+import org.eclipse.sirius.components.representations.ISemanticRepresentation;
 import org.eclipse.sirius.web.graphql.schema.EditingContextTypeProvider;
 import org.eclipse.sirius.web.services.api.representations.IRepresentationService;
 import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
@@ -58,13 +61,24 @@ public class EditingContextRepresentationDataFetcher implements IDataFetcherWith
             // @formatter:off
             return this.representationService.getRepresentationDescriptorForProjectId(editingContextId, representationId)
                     .map(RepresentationDescriptor::getRepresentation)
-                    .map(representation -> new RepresentationMetadata(representation.getId(), representation.getKind(), representation.getLabel(), representation.getDescriptionId()))
+                    .map(this::toRepresentationMetadata)
                     .orElse(null);
             // @formatter:on
         } catch (IllegalArgumentException exception) {
             this.logger.warn(exception.getMessage(), exception);
         }
         return null;
+    }
+
+    private RepresentationMetadata toRepresentationMetadata(IRepresentation representation) {
+        // @formatter:off
+        String targetObjectId = Optional.of(representation)
+                .filter(ISemanticRepresentation.class::isInstance)
+                .map(ISemanticRepresentation.class::cast)
+                .map(ISemanticRepresentation::getTargetObjectId)
+                .orElse(null);
+        // @formatter:on
+        return new RepresentationMetadata(representation.getId(), representation.getKind(), representation.getLabel(), representation.getDescriptionId(), targetObjectId);
     }
 
 }

@@ -175,11 +175,18 @@ public class RepresentationService implements IRepresentationService, IRepresent
 
     @Override
     public Optional<RepresentationMetadata> findByRepresentation(IRepresentation representation) {
-        return Optional.of(new RepresentationMetadata(representation.getId(), representation.getKind(), representation.getLabel(), representation.getDescriptionId()));
+        // @formatter:off
+        String targetObjectId = Optional.of(representation)
+                .filter(ISemanticRepresentation.class::isInstance)
+                .map(ISemanticRepresentation.class::cast)
+                .map(ISemanticRepresentation::getTargetObjectId)
+                .orElse(null);
+        // @formatter:on
+        return Optional.of(new RepresentationMetadata(representation.getId(), representation.getKind(), representation.getLabel(), representation.getDescriptionId(), targetObjectId));
     }
 
     @Override
-    public List<RepresentationMetadata> findAll(String targetObjectId) {
+    public List<RepresentationMetadata> findAllByTargetObjectId(IEditingContext editingContext, String targetObjectId) {
         // @formatter:off
         return this.representationRepository.findAllByTargetObjectId(targetObjectId).stream()
                 .map(new RepresentationMapper(this.objectMapper)::toDTO)
