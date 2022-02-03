@@ -81,7 +81,7 @@ public class DynamicRepresentationDescriptionService implements IDynamicRepresen
         List<IRepresentationDescription> dynamicRepresentationDescriptions = new ArrayList<>();
         if (this.isStudioDefinitionEnabled) {
             List<EPackage> accessibleEPackages = this.getAccessibleEPackages(editingContext);
-            ViewConverter viewConverter = new ViewConverter(this.javaServiceProviders, this.objectService, this.editService, this.isStudioDefinitionEnabled);
+            ViewConverter viewConverter = new ViewConverter(this.objectService, this.editService, this.javaServiceProviders);
             this.documentRepository.findAllByType(ViewPackage.eNAME, ViewPackage.eNS_URI).forEach(documentEntity -> {
                 Resource resource = this.loadDocumentAsEMF(documentEntity);
                 // @formatter:off

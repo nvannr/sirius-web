@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2021 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -23,8 +23,10 @@ import java.util.stream.Collectors;
 
 import org.eclipse.sirius.components.collaborative.api.IDanglingRepresentationDeletionService;
 import org.eclipse.sirius.components.collaborative.api.IRepresentationPersistenceService;
+import org.eclipse.sirius.components.core.RepresentationMetadata;
 import org.eclipse.sirius.components.core.api.IEditingContext;
 import org.eclipse.sirius.components.core.api.IObjectService;
+import org.eclipse.sirius.components.core.api.IRepresentationMetadataSearchService;
 import org.eclipse.sirius.components.representations.IRepresentation;
 import org.eclipse.sirius.components.representations.ISemanticRepresentation;
 import org.eclipse.sirius.web.persistence.entities.ProjectEntity;
@@ -45,7 +47,7 @@ import io.micrometer.core.instrument.Timer;
  * @author gcoutable
  */
 @Service
-public class RepresentationService implements IRepresentationService, IRepresentationPersistenceService, IDanglingRepresentationDeletionService {
+public class RepresentationService implements IRepresentationService, IRepresentationPersistenceService, IDanglingRepresentationDeletionService, IRepresentationMetadataSearchService {
 
     private static final String TIMER_NAME = "siriusweb_representation_save"; //$NON-NLS-1$
 
@@ -169,5 +171,21 @@ public class RepresentationService implements IRepresentationService, IRepresent
     @Override
     public void deleteDanglingRepresentations(String editingContextId) {
         new IDParser().parse(editingContextId).ifPresent(this.representationRepository::deleteDanglingRepresentations);
+    }
+
+    @Override
+    public Optional<RepresentationMetadata> findByRepresentation(IRepresentation representation) {
+        return Optional.of(new RepresentationMetadata(representation.getId(), representation.getKind(), representation.getLabel(), representation.getDescriptionId()));
+    }
+
+    @Override
+    public List<RepresentationMetadata> findAll(String targetObjectId) {
+        // @formatter:off
+        return this.representationRepository.findAllByTargetObjectId(targetObjectId).stream()
+                .map(new RepresentationMapper(this.objectMapper)::toDTO)
+                .map(RepresentationDescriptor::getRepresentation)
+                .map(representation -> this.findByRepresentation(representation).get())
+                .collect(Collectors.toList());
+        // @formatter:on
     }
 }
