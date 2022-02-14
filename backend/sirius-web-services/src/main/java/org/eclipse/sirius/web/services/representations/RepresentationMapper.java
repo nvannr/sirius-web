@@ -49,6 +49,7 @@ public class RepresentationMapper {
                     .descriptionId(representation.getDescriptionId())
                     .targetObjectId(representationEntity.getTargetObjectId())
                     .representation(representation)
+                    .kind(representationEntity.getKind())
                     .build();
             // @formatter:on
         } catch (JsonProcessingException exception) {
@@ -64,7 +65,8 @@ public class RepresentationMapper {
         representationEntity.setProject(projectEntity);
         representationEntity.setLabel(representationDescriptor.getLabel());
         representationEntity.setTargetObjectId(representationDescriptor.getTargetObjectId());
-        representationEntity.setContentType(representationDescriptor.getRepresentation().getClass().getSimpleName());
+        representationEntity.setKind(representationDescriptor.getKind());
+        representationEntity.setDescriptionId(representationDescriptor.getDescriptionId());
         try {
             String content = this.objectMapper.writeValueAsString(representationDescriptor.getRepresentation());
             representationEntity.setContent(content);

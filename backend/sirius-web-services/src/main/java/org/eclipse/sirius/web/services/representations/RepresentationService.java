@@ -113,6 +113,7 @@ public class RepresentationService implements IRepresentationService, IRepresent
                     .descriptionId(representation.getDescriptionId())
                     .targetObjectId(representation.getTargetObjectId())
                     .label(representation.getLabel())
+                    .kind(representation.getKind())
                     .representation(representation)
                     .build();
             // @formatter:on

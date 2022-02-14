@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2020 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -116,7 +116,7 @@ public class RepresentationRepositoryIntegrationTests extends AbstractIntegratio
             assertThat(representationFound.getLabel()).isEqualTo(representationEntity.getLabel());
             assertThat(representationFound.getTargetObjectId()).isEqualTo(representationEntity.getTargetObjectId());
             assertThat(representationFound.getContent()).isEqualTo(representationEntity.getContent());
-            assertThat(representationFound.getContentType()).isEqualTo(representationEntity.getContentType());
+            assertThat(representationFound.getKind()).isEqualTo(representationEntity.getKind());
         });
     }
 
@@ -249,7 +249,6 @@ public class RepresentationRepositoryIntegrationTests extends AbstractIntegratio
     }
 
     private DocumentEntity createAndSaveDocumentEntity(ProjectEntity projectEntity, String documentContent) {
-
         DocumentEntity documentEntity = new DocumentEntity();
         documentEntity.setName(DOCUMENT_NAME);
         documentEntity.setProject(projectEntity);
@@ -274,7 +273,8 @@ public class RepresentationRepositoryIntegrationTests extends AbstractIntegratio
         representationEntity.setLabel(label);
         representationEntity.setProject(projectEntity);
         representationEntity.setTargetObjectId(targetObjectId);
-        representationEntity.setContentType("Diagram"); //$NON-NLS-1$
+        representationEntity.setKind("siriusComponents://representation?type=Diagram"); //$NON-NLS-1$
+        representationEntity.setDescriptionId(UUID.randomUUID());
         representationEntity.setContent("{ \"nodes\": [], \"edges\": []}"); //$NON-NLS-1$
         return representationEntity;
     }

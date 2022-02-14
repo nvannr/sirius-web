@@ -35,6 +35,8 @@ public final class RepresentationDescriptor {
 
     private String label;
 
+    private String kind;
+
     private IRepresentation representation;
 
     private RepresentationDescriptor() {
@@ -59,6 +61,10 @@ public final class RepresentationDescriptor {
 
     public String getLabel() {
         return this.label;
+    }
+
+    public String getKind() {
+        return this.kind;
     }
 
     public IRepresentation getRepresentation() {
@@ -86,6 +92,8 @@ public final class RepresentationDescriptor {
 
         private String label;
 
+        private String kind;
+
         private IRepresentation representation;
 
         public Builder(UUID id) {
@@ -112,6 +120,11 @@ public final class RepresentationDescriptor {
             return this;
         }
 
+        public Builder kind(String kind) {
+            this.kind = Objects.requireNonNull(kind);
+            return this;
+        }
+
         public Builder representation(IRepresentation representation) {
             this.representation = Objects.requireNonNull(representation);
             return this;
@@ -124,6 +137,7 @@ public final class RepresentationDescriptor {
             representationDescriptor.descriptionId = Objects.requireNonNull(this.descriptionId);
             representationDescriptor.targetObjectId = Objects.requireNonNull(this.targetObjectId);
             representationDescriptor.label = Objects.requireNonNull(this.label);
+            representationDescriptor.kind = Objects.requireNonNull(this.kind);
             representationDescriptor.representation = Objects.requireNonNull(this.representation);
             return representationDescriptor;
         }
