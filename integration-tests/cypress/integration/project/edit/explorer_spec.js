@@ -44,6 +44,48 @@ describe('/projects/:projectId/edit - Explorer', () => {
     cy.getByTestId('Robot').should('not.exist');
   });
 
+  it('can expand a tree item without changing the selection', () => {
+    cy.getByTestId('robot').dblclick();
+    cy.getByTestId('selected').contains('robot');
+    cy.getByTestId('explorer').contains('Robot');
+
+    cy.getByTestId('Robot-toggle').click();
+    cy.getByTestId('explorer').contains('Robot');
+    cy.getByTestId('explorer').contains('Central_Unit');
+    cy.getByTestId('explorer').contains('CaptureSubSystem');
+    cy.getByTestId('explorer').contains('Wifi');
+  });
+
+  it('can collapse a tree item without changing the selection', () => {
+    // Select and expand 'robot' root
+    cy.getByTestId('robot').dblclick();
+    cy.getByTestId('selected').contains('robot');
+    cy.getByTestId('explorer').contains('Robot');
+
+    // Select and expand 'Robot' child
+    cy.getByTestId('Robot').dblclick();
+    cy.getByTestId('selected').contains('Robot');
+    cy.getByTestId('explorer').contains('Central_Unit');
+    cy.getByTestId('explorer').contains('CaptureSubSystem');
+    cy.getByTestId('explorer').contains('Wifi');
+
+    // Select the 'robot' root
+    cy.getByTestId('robot').click();
+    cy.getByTestId('selected').contains('robot');
+    cy.getByTestId('Robot').should('exist');
+    cy.getByTestId('explorer').contains('Central_Unit');
+    cy.getByTestId('explorer').contains('CaptureSubSystem');
+    cy.getByTestId('explorer').contains('Wifi');
+
+    // Collapse the 'Robot' child while keeping the selection on 'robot' root
+    cy.getByTestId('Robot-toggle').click();
+    cy.getByTestId('selected').contains('robot');
+    cy.getByTestId('Robot').should('exist');
+    cy.getByTestId('explorer').contains('Central_Unit').should('not.exist');
+    cy.getByTestId('explorer').contains('CaptureSubSystem').should('not.exist');
+    cy.getByTestId('explorer').contains('Wifi').should('not.exist');
+  });
+
   it('can select an object', () => {
     cy.getByTestId('robot').dblclick();
     cy.getByTestId('Robot').dblclick();
