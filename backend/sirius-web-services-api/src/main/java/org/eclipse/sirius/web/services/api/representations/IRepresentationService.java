@@ -16,20 +16,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.eclipse.sirius.components.core.api.IRepresentationMetadataSearchService;
+
 /**
  * Interface to manipulate representations.
  *
  * @author gcoutable
  */
-public interface IRepresentationService {
+public interface IRepresentationService extends IRepresentationMetadataSearchService {
 
     boolean hasRepresentations(String objectId);
 
     Optional<RepresentationDescriptor> getRepresentationDescriptorForProjectId(String projectId, String representationId);
 
     List<RepresentationDescriptor> getRepresentationDescriptorsForProjectId(String projectId);
-
-    List<RepresentationDescriptor> getRepresentationDescriptorsForObjectId(String objectId);
 
     Optional<RepresentationDescriptor> getRepresentation(UUID representationId);
 

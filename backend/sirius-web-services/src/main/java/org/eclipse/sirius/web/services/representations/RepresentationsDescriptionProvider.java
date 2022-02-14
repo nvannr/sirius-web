@@ -28,6 +28,8 @@ import org.eclipse.sirius.components.collaborative.editingcontext.EditingContext
 import org.eclipse.sirius.components.collaborative.forms.api.IRepresentationsDescriptionProvider;
 import org.eclipse.sirius.components.compatibility.forms.WidgetIdProvider;
 import org.eclipse.sirius.components.compatibility.services.ImageConstants;
+import org.eclipse.sirius.components.core.RepresentationMetadata;
+import org.eclipse.sirius.components.core.api.IEditingContext;
 import org.eclipse.sirius.components.core.api.IObjectService;
 import org.eclipse.sirius.components.forms.components.ListComponent;
 import org.eclipse.sirius.components.forms.description.AbstractControlDescription;
@@ -37,12 +39,10 @@ import org.eclipse.sirius.components.forms.description.ListDescription;
 import org.eclipse.sirius.components.forms.description.PageDescription;
 import org.eclipse.sirius.components.representations.Failure;
 import org.eclipse.sirius.components.representations.GetOrCreateRandomIdProvider;
-import org.eclipse.sirius.components.representations.IRepresentation;
 import org.eclipse.sirius.components.representations.IStatus;
 import org.eclipse.sirius.components.representations.Success;
 import org.eclipse.sirius.components.representations.VariableManager;
 import org.eclipse.sirius.web.services.api.representations.IRepresentationService;
-import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -154,9 +154,8 @@ public class RepresentationsDescriptionProvider implements IRepresentationsDescr
     private Function<VariableManager, IStatus> getItemDeleteHandlerProvider() {
         return variableManager -> {
             // @formatter:off
-            return variableManager.get(ListComponent.CANDIDATE_VARIABLE, RepresentationDescriptor.class)
-                    .map(RepresentationDescriptor::getId)
-                    .map(UUID::toString)
+            return variableManager.get(ListComponent.CANDIDATE_VARIABLE, RepresentationMetadata.class)
+                    .map(RepresentationMetadata::getId)
                     .map(this::getSuccessStatus)
                     .orElse(new Failure("")); //$NON-NLS-1$
             // @formatter:on
@@ -177,13 +176,13 @@ public class RepresentationsDescriptionProvider implements IRepresentationsDescr
 
     private Function<VariableManager, String> getItemImageURLProvider() {
         return variableManager -> {
-            Optional<RepresentationDescriptor> optionalRepresentationDescriptor = variableManager.get(ListComponent.CANDIDATE_VARIABLE, RepresentationDescriptor.class);
-            if (optionalRepresentationDescriptor.isPresent()) {
-                RepresentationDescriptor representationDescriptor = optionalRepresentationDescriptor.get();
+            var optionalRepresentationMetadata = variableManager.get(ListComponent.CANDIDATE_VARIABLE, RepresentationMetadata.class);
+            if (optionalRepresentationMetadata.isPresent()) {
+                RepresentationMetadata representationMetadata = optionalRepresentationMetadata.get();
 
                 // @formatter:off
                 return this.representationImageProviders.stream()
-                        .map(representationImageProvider -> representationImageProvider.getImageURL(representationDescriptor.getRepresentation().getKind()))
+                        .map(representationImageProvider -> representationImageProvider.getImageURL(representationMetadata.getKind()))
                         .flatMap(Optional::stream)
                         .findFirst()
                         .orElse(ImageConstants.RESOURCE_SVG);
@@ -196,8 +195,8 @@ public class RepresentationsDescriptionProvider implements IRepresentationsDescr
     private Function<VariableManager, String> getItemLabelProvider() {
         return variableManager -> {
             // @formatter:off
-            return variableManager.get(ListComponent.CANDIDATE_VARIABLE, RepresentationDescriptor.class)
-                    .map(RepresentationDescriptor::getLabel)
+            return variableManager.get(ListComponent.CANDIDATE_VARIABLE, RepresentationMetadata.class)
+                    .map(RepresentationMetadata::getLabel)
                     .orElse(null);
             // @formatter:on
         };
@@ -206,9 +205,8 @@ public class RepresentationsDescriptionProvider implements IRepresentationsDescr
     private Function<VariableManager, String> getItemKindProvider() {
         return variableManager -> {
             // @formatter:off
-            return variableManager.get(ListComponent.CANDIDATE_VARIABLE, RepresentationDescriptor.class)
-                    .map(RepresentationDescriptor::getRepresentation)
-                    .map(IRepresentation::getKind)
+            return variableManager.get(ListComponent.CANDIDATE_VARIABLE, RepresentationMetadata.class)
+                    .map(RepresentationMetadata::getKind)
                     .orElse(null);
             // @formatter:on
         };
@@ -217,9 +215,8 @@ public class RepresentationsDescriptionProvider implements IRepresentationsDescr
     private Function<VariableManager, String> getItemIdProvider() {
         return variableManager -> {
             // @formatter:off
-            return variableManager.get(ListComponent.CANDIDATE_VARIABLE, RepresentationDescriptor.class)
-                    .map(RepresentationDescriptor::getId)
-                    .map(UUID::toString)
+            return variableManager.get(ListComponent.CANDIDATE_VARIABLE, RepresentationMetadata.class)
+                    .map(RepresentationMetadata::getId)
                     .orElse(null);
             // @formatter:on
         };
@@ -229,8 +226,10 @@ public class RepresentationsDescriptionProvider implements IRepresentationsDescr
         return variableManager -> {
             Object object = variableManager.getVariables().get(VariableManager.SELF);
             String id = this.objectService.getId(object);
-            if (id != null) {
-                List<RepresentationDescriptor> items = this.representationService.getRepresentationDescriptorsForObjectId(id);
+            var optionalEditingContext = variableManager.get(IEditingContext.EDITING_CONTEXT, IEditingContext.class);
+            if (optionalEditingContext.isPresent() && id != null) {
+                IEditingContext editingContext = optionalEditingContext.get();
+                List<RepresentationMetadata> items = this.representationService.findAllByTargetObjectId(editingContext, id);
                 return items;
             }
             return List.of();

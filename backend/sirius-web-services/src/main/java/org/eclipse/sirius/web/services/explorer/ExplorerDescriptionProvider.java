@@ -26,6 +26,7 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.sirius.components.collaborative.api.IRepresentationImageProvider;
 import org.eclipse.sirius.components.collaborative.trees.api.IExplorerDescriptionProvider;
 import org.eclipse.sirius.components.compatibility.services.ImageConstants;
+import org.eclipse.sirius.components.core.RepresentationMetadata;
 import org.eclipse.sirius.components.core.api.IEditingContext;
 import org.eclipse.sirius.components.core.api.IKindParser;
 import org.eclipse.sirius.components.core.api.IObjectService;
@@ -33,14 +34,12 @@ import org.eclipse.sirius.components.core.api.SemanticKindConstants;
 import org.eclipse.sirius.components.emf.services.EditingContext;
 import org.eclipse.sirius.components.representations.Failure;
 import org.eclipse.sirius.components.representations.GetOrCreateRandomIdProvider;
-import org.eclipse.sirius.components.representations.IRepresentation;
 import org.eclipse.sirius.components.representations.IStatus;
 import org.eclipse.sirius.components.representations.VariableManager;
 import org.eclipse.sirius.components.trees.TreeItem;
 import org.eclipse.sirius.components.trees.description.TreeDescription;
 import org.eclipse.sirius.components.trees.renderer.TreeRenderer;
 import org.eclipse.sirius.web.services.api.representations.IRepresentationService;
-import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
 import org.eclipse.sirius.web.services.documents.DocumentMetadataAdapter;
 import org.eclipse.sirius.web.services.explorer.api.IDeleteTreeItemHandler;
 import org.eclipse.sirius.web.services.explorer.api.IRenameTreeItemHandler;
@@ -110,8 +109,8 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
         Object self = variableManager.getVariables().get(VariableManager.SELF);
 
         String id = null;
-        if (self instanceof RepresentationDescriptor) {
-            id = ((RepresentationDescriptor) self).getId().toString();
+        if (self instanceof RepresentationMetadata) {
+            id = ((RepresentationMetadata) self).getId();
         } else if (self instanceof Resource) {
             Resource resource = (Resource) self;
             id = resource.getURI().toString();
@@ -124,9 +123,9 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
     private String getKind(VariableManager variableManager) {
         String kind = ""; //$NON-NLS-1$
         Object self = variableManager.getVariables().get(VariableManager.SELF);
-        if (self instanceof RepresentationDescriptor) {
-            IRepresentation representation = ((RepresentationDescriptor) self).getRepresentation();
-            kind = representation.getKind();
+        if (self instanceof RepresentationMetadata) {
+            RepresentationMetadata representationMetadata = (RepresentationMetadata) self;
+            kind = representationMetadata.getKind();
         } else if (self instanceof Resource) {
             kind = DOCUMENT_KIND;
         } else {
@@ -139,8 +138,8 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
         Object self = variableManager.getVariables().get(VariableManager.SELF);
 
         String label = ""; //$NON-NLS-1$
-        if (self instanceof RepresentationDescriptor) {
-            label = ((RepresentationDescriptor) self).getLabel();
+        if (self instanceof RepresentationMetadata) {
+            label = ((RepresentationMetadata) self).getLabel();
         } else if (self instanceof Resource) {
             Resource resource = (Resource) self;
             // @formatter:off
@@ -165,7 +164,7 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
         Object self = variableManager.getVariables().get(VariableManager.SELF);
 
         boolean editable = false;
-        if (self instanceof RepresentationDescriptor) {
+        if (self instanceof RepresentationMetadata) {
             editable = true;
         } else if (self instanceof Resource) {
             editable = true;
@@ -186,12 +185,12 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
         String imageURL = null;
         if (self instanceof EObject) {
             imageURL = this.objectService.getImagePath(self);
-        } else if (self instanceof RepresentationDescriptor) {
-            RepresentationDescriptor representationDescriptor = (RepresentationDescriptor) self;
+        } else if (self instanceof RepresentationMetadata) {
+            RepresentationMetadata representationMetadata = (RepresentationMetadata) self;
 
             // @formatter:off
             imageURL = this.representationImageProviders.stream()
-                    .map(representationImageProvider -> representationImageProvider.getImageURL(representationDescriptor.getRepresentation().getKind()))
+                    .map(representationImageProvider -> representationImageProvider.getImageURL(representationMetadata.getKind()))
                     .flatMap(Optional::stream)
                     .findFirst()
                     .orElse(ImageConstants.RESOURCE_SVG);
@@ -248,10 +247,10 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
             expandedIds = list.stream().filter(String.class::isInstance).map(String.class::cast).collect(Collectors.toUnmodifiableList());
         }
 
-        Object editingContext = variableManager.getVariables().get(IEditingContext.EDITING_CONTEXT);
+        var optionalEditingContext = variableManager.get(IEditingContext.EDITING_CONTEXT, IEditingContext.class);
 
-        if (editingContext instanceof IEditingContext) {
-            IEditingContext context = (IEditingContext) editingContext;
+        if (optionalEditingContext.isPresent()) {
+            IEditingContext editingContext = optionalEditingContext.get();
 
             String id = this.getTreeItemId(variableManager);
             if (expandedIds.contains(id)) {
@@ -261,10 +260,10 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
                     Resource resource = (Resource) self;
                     result.addAll(resource.getContents());
                 } else if (self instanceof EObject) {
-                    var representationDescriptors = new ArrayList<>(this.representationService.getRepresentationDescriptorsForObjectId(id));
-                    representationDescriptors.sort((descriptor1, descriptor2) -> descriptor1.getLabel().compareTo(descriptor2.getLabel()));
-                    result.addAll(representationDescriptors);
-                    List<Object> contents = this.objectService.getContents(context, id);
+                    var representationMetadata = new ArrayList<>(this.representationService.findAllByTargetObjectId(editingContext, id));
+                    representationMetadata.sort((metadata1, metadata2) -> metadata1.getLabel().compareTo(metadata2.getLabel()));
+                    result.addAll(representationMetadata);
+                    List<Object> contents = this.objectService.getContents(editingContext, id);
                     result.addAll(contents);
                 }
             }
