@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2021 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -61,7 +61,7 @@ public class SubscriptionPropertiesEventDataFetcher implements IDataFetcherWithF
     public Publisher<IPayload> get(DataFetchingEnvironment environment) throws Exception {
         Object argument = environment.getArgument(SubscriptionTypeProvider.INPUT_ARGUMENT);
         var input = this.objectMapper.convertValue(argument, PropertiesEventInput.class);
-        var propertiesConfiguration = new PropertiesConfiguration(input.getObjectId());
+        var propertiesConfiguration = new PropertiesConfiguration(input.getObjectIds());
 
         // @formatter:off
         return this.editingContextEventProcessorRegistry.getOrCreateEditingContextEventProcessor(input.getEditingContextId())

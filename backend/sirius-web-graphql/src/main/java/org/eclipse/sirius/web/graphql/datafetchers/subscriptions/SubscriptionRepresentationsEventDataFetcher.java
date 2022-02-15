@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021 Obeo.
+ * Copyright (c) 2021, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,7 @@ import org.eclipse.sirius.components.annotations.spring.graphql.SubscriptionData
 import org.eclipse.sirius.components.collaborative.api.IEditingContextEventProcessorRegistry;
 import org.eclipse.sirius.components.collaborative.forms.api.IFormEventProcessor;
 import org.eclipse.sirius.components.collaborative.forms.api.RepresentationsConfiguration;
-import org.eclipse.sirius.components.collaborative.forms.dto.PropertiesEventInput;
+import org.eclipse.sirius.components.collaborative.forms.dto.RepresentationsEventInput;
 import org.eclipse.sirius.components.core.api.IPayload;
 import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
 import org.eclipse.sirius.web.graphql.schema.SubscriptionTypeProvider;
@@ -61,7 +61,7 @@ public class SubscriptionRepresentationsEventDataFetcher implements IDataFetcher
     @Override
     public Publisher<IPayload> get(DataFetchingEnvironment environment) throws Exception {
         Object argument = environment.getArgument(SubscriptionTypeProvider.INPUT_ARGUMENT);
-        var input = this.objectMapper.convertValue(argument, PropertiesEventInput.class);
+        var input = this.objectMapper.convertValue(argument, RepresentationsEventInput.class);
         RepresentationsConfiguration representationsConfiguration = new RepresentationsConfiguration(input.getObjectId());
 
         // @formatter:off
