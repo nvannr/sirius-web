@@ -79,13 +79,19 @@ public class RepresentationsDescriptionProvider implements IRepresentationsDescr
         pageDescriptions.add(firstPageDescription);
 
         // @formatter:off
-        Function<VariableManager, String> labelProvider = variableManager -> {
-            return Optional.ofNullable(variableManager.getVariables().get(VariableManager.SELF))
-                    .map(this.objectService::getFullLabel)
-                    .orElse("Properties"); //$NON-NLS-1$
-        };
+        Function<VariableManager, String> labelProvider = variableManager -> variableManager.get(VariableManager.SELF, Object.class)
+                .filter(self -> self instanceof List<?>)
+                .map(self -> (List<?>) self)
+                .flatMap(self -> self.stream().findFirst())
+                .map(this.objectService::getFullLabel)
+                .orElse("Properties"); //$NON-NLS-1$
+        // @formatter:on
 
+        // @formatter:off
         Function<VariableManager, String> targetObjectIdProvider = variableManager -> variableManager.get(VariableManager.SELF, Object.class)
+                .filter(self -> self instanceof List<?>)
+                .map(self -> (List<?>) self)
+                .flatMap(self -> self.stream().findFirst())
                 .map(this.objectService::getId)
                 .orElse(null);
 
