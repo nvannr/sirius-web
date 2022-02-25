@@ -10,6 +10,16 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
+ function createRepresentationFromTreeItem(treeItemLabel, representationDescriptionName, representationName) {
+  cy.getByTestId(treeItemLabel + '-more').click();
+  cy.getByTestId('treeitem-contextmenu').findByTestId('new-representation').click();
+  cy.getByTestId('name').clear();
+  cy.getByTestId('name').type(representationName);
+  cy.getByTestId('representationDescription').click();
+  cy.getByTestId(representationDescriptionName).click();
+  cy.getByTestId('create-representation').click();
+}
+
 describe('/projects/:projectId/edit - Explorer', () => {
   beforeEach(() => {
     cy.deleteAllProjects();
@@ -91,5 +101,65 @@ describe('/projects/:projectId/edit - Explorer', () => {
     // A proper solution would involve waiting for the focus to change after the focus lost but that seems way more complex
     cy.wait(1000);
     cy.getByTestId('selected').contains('renamed-robot');
+  });
+
+  it('reveals a newly created diagram', () => {
+    // 1. Expand the  root 'Robot' but do not reveal its children (yet)
+    cy.getByTestId('robot').dblclick();
+    cy.getByTestId('Robot').should('exist');
+    cy.getByTestId('Central_Unit').should('not.exist');
+    cy.getByTestId('CaptureSubSystem').should('not.exist');
+    cy.getByTestId('Topography').should('not.exist');
+
+    // 2. Create 'Topography' diagram on it
+    createRepresentationFromTreeItem('Robot', 'Topography with auto layout', 'Topography');
+
+    // 3. CHECK that the 'Robot' is now expanded, and the 'Topography' diagram inside is visible and selected
+    cy.getByTestId('Central_Unit').should('exist');
+    cy.getByTestId('CaptureSubSystem').should('exist');
+    cy.getByTestId('Topography').should('exist');
+    cy.getByTestId('selected').findByTestId('Topography').should('exist');
+  });
+
+  it('reveals the semantic element selected on a diagram', () => {
+    // 1. Expand the root 'Robot' but do not reveal its children (yet)
+    cy.getByTestId('robot').dblclick();
+    cy.getByTestId('Robot').should('exist');
+    cy.getByTestId('Central_Unit').should('not.exist');
+    cy.getByTestId('CaptureSubSystem').should('not.exist');
+    cy.getByTestId('Topography').should('not.exist');
+
+    // 2. Create 'Topography' diagram on it
+    createRepresentationFromTreeItem('Robot', 'Topography with auto layout', 'Topography');
+
+    // 3. On the diagram, click on the 'DSP' node
+    cy.getByTestId('DSP').should('not.exist');
+    cy.getByTestId('Image - DSP').click();
+
+    // 4. CHECK that the 'DSP' node is now visible and selected in the explorer
+    cy.getByTestId('DSP').should('exist');
+    cy.getByTestId('selected').findByTestId('DSP').should('exist');
+  });
+
+  it('reveals an existing diagram opened using the onboard area', () => {
+    // 1. Expand and select root 'Robot' but do not reveal its children (yet)
+    cy.getByTestId('robot').dblclick();
+    cy.getByTestId('Robot').click();
+
+    // 2. Create 'Topography' diagram on it
+    createRepresentationFromTreeItem('Robot', 'Topography with auto layout', 'Topography');
+
+    // 3. Close the new representation and hide it in the explorer
+    cy.getByTestId('close-representation-tab-Topography').click();
+    cy.getByTestId('robot').click();
+    cy.getByTestId('robot').dblclick();
+    cy.getByTestId('Topography').should('not.exist');
+
+    // 4. Re-open the representation from the onboard area
+    cy.getByTestId('onboard-open-Topography').click();
+
+    // 5. CHECK that is is visible and selected again
+    cy.getByTestId('Topography').should('exist');
+    cy.getByTestId('selected').findByTestId('Topography').should('exist');
   });
 });

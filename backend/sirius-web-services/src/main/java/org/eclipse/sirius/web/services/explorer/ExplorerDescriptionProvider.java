@@ -54,6 +54,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider {
 
+    public static final UUID DESCRIPTION_ID = UUID.nameUUIDFromBytes("explorer_tree_description".getBytes()); //$NON-NLS-1$
+
     public static final String DOCUMENT_KIND = "siriusWeb://document"; //$NON-NLS-1$
 
     private final IObjectService objectService;
@@ -85,7 +87,7 @@ public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider
         Predicate<VariableManager> canCreatePredicate = variableManager -> false;
 
         // @formatter:off
-        return TreeDescription.newTreeDescription(UUID.nameUUIDFromBytes("explorer_tree_description".getBytes())) //$NON-NLS-1$
+        return TreeDescription.newTreeDescription(DESCRIPTION_ID)
                 .label("Explorer") //$NON-NLS-1$
                 .idProvider(new GetOrCreateRandomIdProvider())
                 .treeItemIdProvider(this::getTreeItemId)
