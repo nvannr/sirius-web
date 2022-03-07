@@ -12,10 +12,15 @@
  *******************************************************************************/
 import { useQuery } from '@apollo/client';
 import {
+  ExplorerWebSocketContainer,
+  PropertiesWebSocketContainer,
   Representation,
+  RepresentationsWebSocketContainer,
   TreeItemContextMenuContribution,
   TreeItemType,
+  ValidationWebSocketContainer,
   Workbench,
+  WorkbenchViewContribution,
 } from '@eclipse-sirius/sirius-components';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
@@ -136,6 +141,10 @@ export const EditProjectView = () => {
         initialRepresentationSelected={representation}
         onRepresentationSelected={onRepresentationSelected}
         readOnly={false}>
+        <WorkbenchViewContribution side="left" title="Explorer" component={ExplorerWebSocketContainer} />
+        <WorkbenchViewContribution side="left" title="Validation" component={ValidationWebSocketContainer} />
+        <WorkbenchViewContribution side="right" title="Details" component={PropertiesWebSocketContainer} />
+        <WorkbenchViewContribution side="right" title="Representations" component={RepresentationsWebSocketContainer} />
         <TreeItemContextMenuContribution
           canHandle={(item: TreeItemType) => item.kind === 'siriusWeb://document'}
           component={DocumentTreeItemContextMenuContribution}
