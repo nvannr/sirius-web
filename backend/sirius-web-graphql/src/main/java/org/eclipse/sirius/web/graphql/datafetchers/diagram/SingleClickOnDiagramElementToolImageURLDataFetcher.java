@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2020 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -22,21 +22,12 @@ import org.eclipse.sirius.web.graphql.schema.ImageURLFieldProvider;
 import graphql.schema.DataFetchingEnvironment;
 
 /**
- * The data fetcher used to concatenate the server image URL to the create edge tool image path.
- * <p>
- * It will be used to fetch the data for the following GraphQL field:
- * </p>
- *
- * <pre>
- * type CreateEdgeTool {
- *   imageURL: String!
- * }
- * </pre>
+ * The data fetcher used to concatenate the server image URL to the single click on diagram element tool image path.
  *
  * @author hmarchadour
  */
-@QueryDataFetcher(type = DiagramTypesProvider.CREATE_EDGE_TOOL_TYPE, field = ImageURLFieldProvider.IMAGE_URL_FIELD)
-public class CreateEdgeToolImageURLDataFetcher implements IDataFetcherWithFieldCoordinates<String> {
+@QueryDataFetcher(type = DiagramTypesProvider.SINGLE_CLICK_ON_DIAGRAM_ELEMENT_TOOL_TYPE, field = ImageURLFieldProvider.IMAGE_URL_FIELD)
+public class SingleClickOnDiagramElementToolImageURLDataFetcher implements IDataFetcherWithFieldCoordinates<String> {
 
     @Override
     public String get(DataFetchingEnvironment environment) throws Exception {

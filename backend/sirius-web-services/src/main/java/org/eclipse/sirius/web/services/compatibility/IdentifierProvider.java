@@ -71,6 +71,7 @@ public class IdentifierProvider implements IIdentifierProvider {
         // @formatter:on
     }
 
+    @Override
     public Optional<String> findVsmElementId(UUID id) {
         return this.getOrFetchByUUID(id).map(IdMappingEntity::getExternalId);
     }

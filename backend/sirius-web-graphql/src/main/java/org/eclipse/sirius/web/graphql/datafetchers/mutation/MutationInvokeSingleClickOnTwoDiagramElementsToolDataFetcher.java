@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2021 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.sirius.components.annotations.spring.graphql.MutationDataFetcher;
 import org.eclipse.sirius.components.collaborative.api.IEditingContextEventProcessorRegistry;
-import org.eclipse.sirius.components.collaborative.diagrams.dto.InvokeNodeToolOnDiagramInput;
+import org.eclipse.sirius.components.collaborative.diagrams.dto.InvokeSingleClickOnTwoDiagramElementsToolInput;
 import org.eclipse.sirius.components.core.api.ErrorPayload;
 import org.eclipse.sirius.components.core.api.IPayload;
 import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
@@ -29,23 +29,15 @@ import org.eclipse.sirius.web.graphql.schema.MutationTypeProvider;
 import graphql.schema.DataFetchingEnvironment;
 
 /**
- * The data fetcher used to invoke a node tool on a diagram.
- * <p>
- * It will be used to handle the following GraphQL field:
- * </p>
- *
- * <pre>
- * type Mutation {
- *   invokeNodeToolOnDiagram(input: InvokeNodeToolOnDiagramInput!): InvokeNodeDiagamToolPayload!
- * }
- * </pre>
+ * The data fetcher used to invoke a single click on two diagram elements tool.
  *
  * @author pcdavid
+ * @author hmarchadour
  */
-@MutationDataFetcher(type = MutationTypeProvider.TYPE, field = MutationInvokeNodeToolOnDiagramDataFetcher.INVOKE_NODE_TOOL_ON_DIAGRAM_FIELD)
-public class MutationInvokeNodeToolOnDiagramDataFetcher implements IDataFetcherWithFieldCoordinates<CompletableFuture<IPayload>> {
+@MutationDataFetcher(type = MutationTypeProvider.TYPE, field = MutationInvokeSingleClickOnTwoDiagramElementsToolDataFetcher.INVOKE_SINGLE_CLICK_ON_TWO_DIAGRAM_ELEMENTS_TOOL_FIELD)
+public class MutationInvokeSingleClickOnTwoDiagramElementsToolDataFetcher implements IDataFetcherWithFieldCoordinates<CompletableFuture<IPayload>> {
 
-    public static final String INVOKE_NODE_TOOL_ON_DIAGRAM_FIELD = "invokeNodeToolOnDiagram"; //$NON-NLS-1$
+    public static final String INVOKE_SINGLE_CLICK_ON_TWO_DIAGRAM_ELEMENTS_TOOL_FIELD = "invokeSingleClickOnTwoDiagramElementsTool"; //$NON-NLS-1$
 
     private final ObjectMapper objectMapper;
 
@@ -53,7 +45,7 @@ public class MutationInvokeNodeToolOnDiagramDataFetcher implements IDataFetcherW
 
     private final IGraphQLMessageService messageService;
 
-    public MutationInvokeNodeToolOnDiagramDataFetcher(ObjectMapper objectMapper, IEditingContextEventProcessorRegistry editingContextEventProcessorRegistry, IGraphQLMessageService messageService) {
+    public MutationInvokeSingleClickOnTwoDiagramElementsToolDataFetcher(ObjectMapper objectMapper, IEditingContextEventProcessorRegistry editingContextEventProcessorRegistry, IGraphQLMessageService messageService) {
         this.objectMapper = Objects.requireNonNull(objectMapper);
         this.editingContextEventProcessorRegistry = Objects.requireNonNull(editingContextEventProcessorRegistry);
         this.messageService = Objects.requireNonNull(messageService);
@@ -62,7 +54,7 @@ public class MutationInvokeNodeToolOnDiagramDataFetcher implements IDataFetcherW
     @Override
     public CompletableFuture<IPayload> get(DataFetchingEnvironment environment) throws Exception {
         Object argument = environment.getArgument(MutationTypeProvider.INPUT_ARGUMENT);
-        var input = this.objectMapper.convertValue(argument, InvokeNodeToolOnDiagramInput.class);
+        var input = this.objectMapper.convertValue(argument, InvokeSingleClickOnTwoDiagramElementsToolInput.class);
 
         // @formatter:off
         return this.editingContextEventProcessorRegistry.dispatchEvent(input.getEditingContextId(), input)

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2021 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.sirius.components.annotations.spring.graphql.MutationDataFetcher;
 import org.eclipse.sirius.components.collaborative.api.IEditingContextEventProcessorRegistry;
-import org.eclipse.sirius.components.collaborative.diagrams.dto.InvokeEdgeToolOnDiagramInput;
+import org.eclipse.sirius.components.collaborative.diagrams.dto.InvokeSingleClickOnDiagramElementToolInput;
 import org.eclipse.sirius.components.core.api.ErrorPayload;
 import org.eclipse.sirius.components.core.api.IPayload;
 import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
@@ -29,24 +29,14 @@ import org.eclipse.sirius.web.graphql.schema.MutationTypeProvider;
 import graphql.schema.DataFetchingEnvironment;
 
 /**
- * The data fetcher used to invoke an edge tool on a diagram.
- * <p>
- * It will be used to handle the following GraphQL field:
- * </p>
- *
- * <pre>
- * type Mutation {
- *   invokeEdgeToolOnDiagram(input: InvokeEdgeToolOnDiagramInput!): InvokeEdgeDiagamToolPayload!
- * }
- * </pre>
+ * The data fetcher used to invoke a single click on diagram element tool.
  *
  * @author pcdavid
- * @author hmarchadour
  */
-@MutationDataFetcher(type = MutationTypeProvider.TYPE, field = MutationInvokeEdgeToolOnDiagramDataFetcher.INVOKE_EDGE_TOOL_ON_DIAGRAM_FIELD)
-public class MutationInvokeEdgeToolOnDiagramDataFetcher implements IDataFetcherWithFieldCoordinates<CompletableFuture<IPayload>> {
+@MutationDataFetcher(type = MutationTypeProvider.TYPE, field = MutationInvokeSingleClickOnDiagramElementToolDataFetcher.INVOKE_SINGLE_CLICK_ON_DIAGRAM_ELEMENT_TOOL_FIELD)
+public class MutationInvokeSingleClickOnDiagramElementToolDataFetcher implements IDataFetcherWithFieldCoordinates<CompletableFuture<IPayload>> {
 
-    public static final String INVOKE_EDGE_TOOL_ON_DIAGRAM_FIELD = "invokeEdgeToolOnDiagram"; //$NON-NLS-1$
+    public static final String INVOKE_SINGLE_CLICK_ON_DIAGRAM_ELEMENT_TOOL_FIELD = "invokeSingleClickOnDiagramElementTool"; //$NON-NLS-1$
 
     private final ObjectMapper objectMapper;
 
@@ -54,7 +44,7 @@ public class MutationInvokeEdgeToolOnDiagramDataFetcher implements IDataFetcherW
 
     private final IGraphQLMessageService messageService;
 
-    public MutationInvokeEdgeToolOnDiagramDataFetcher(ObjectMapper objectMapper, IEditingContextEventProcessorRegistry editingContextEventProcessorRegistry, IGraphQLMessageService messageService) {
+    public MutationInvokeSingleClickOnDiagramElementToolDataFetcher(ObjectMapper objectMapper, IEditingContextEventProcessorRegistry editingContextEventProcessorRegistry, IGraphQLMessageService messageService) {
         this.objectMapper = Objects.requireNonNull(objectMapper);
         this.editingContextEventProcessorRegistry = Objects.requireNonNull(editingContextEventProcessorRegistry);
         this.messageService = Objects.requireNonNull(messageService);
@@ -63,7 +53,7 @@ public class MutationInvokeEdgeToolOnDiagramDataFetcher implements IDataFetcherW
     @Override
     public CompletableFuture<IPayload> get(DataFetchingEnvironment environment) throws Exception {
         Object argument = environment.getArgument(MutationTypeProvider.INPUT_ARGUMENT);
-        var input = this.objectMapper.convertValue(argument, InvokeEdgeToolOnDiagramInput.class);
+        var input = this.objectMapper.convertValue(argument, InvokeSingleClickOnDiagramElementToolInput.class);
 
         // @formatter:off
         return this.editingContextEventProcessorRegistry.dispatchEvent(input.getEditingContextId(), input)

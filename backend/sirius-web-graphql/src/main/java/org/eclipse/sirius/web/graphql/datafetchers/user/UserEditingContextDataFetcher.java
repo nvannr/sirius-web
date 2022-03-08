@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021 Obeo.
+ * Copyright (c) 2021, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -12,10 +12,15 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.datafetchers.user;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.sirius.components.annotations.spring.graphql.QueryDataFetcher;
 import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
+import org.eclipse.sirius.web.graphql.datafetchers.LocalContextConstants;
 import org.eclipse.sirius.web.graphql.schema.ViewerTypeProvider;
 
+import graphql.execution.DataFetcherResult;
 import graphql.schema.DataFetchingEnvironment;
 
 /**
@@ -33,12 +38,21 @@ import graphql.schema.DataFetchingEnvironment;
  * @author sbegaudeau
  */
 @QueryDataFetcher(type = ViewerTypeProvider.USER_TYPE, field = ViewerTypeProvider.EDITING_CONTEXT_FIELD)
-public class UserEditingContextDataFetcher implements IDataFetcherWithFieldCoordinates<String> {
+public class UserEditingContextDataFetcher implements IDataFetcherWithFieldCoordinates<DataFetcherResult<String>> {
+    private static final String EDITING_CONTEXT_ID_ARGUMENT = "editingContextId"; //$NON-NLS-1$
 
     @Override
-    public String get(DataFetchingEnvironment environment) throws Exception {
-        String editingContextId = environment.getArgument(ViewerTypeProvider.EDITING_CONTEXT_ID_ARGUMENT);
-        return editingContextId;
+    public DataFetcherResult<String> get(DataFetchingEnvironment environment) throws Exception {
+        String editingContextId = environment.getArgument(EDITING_CONTEXT_ID_ARGUMENT);
+        Map<String, Object> localContext = new HashMap<>();
+        localContext.put(LocalContextConstants.EDITING_CONTEXT_ID, editingContextId);
+
+        // @formatter:off
+        return DataFetcherResult.<String>newResult()
+                .data(editingContextId)
+                .localContext(localContext)
+                .build();
+        // @formatter:on
     }
 
 }

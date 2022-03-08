@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2021 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.graphql.datafetchers.editingcontext;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -20,12 +22,12 @@ import org.eclipse.sirius.components.core.RepresentationMetadata;
 import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
 import org.eclipse.sirius.components.representations.IRepresentation;
 import org.eclipse.sirius.components.representations.ISemanticRepresentation;
+import org.eclipse.sirius.web.graphql.datafetchers.LocalContextConstants;
 import org.eclipse.sirius.web.graphql.schema.EditingContextTypeProvider;
 import org.eclipse.sirius.web.services.api.representations.IRepresentationService;
 import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import graphql.execution.DataFetcherResult;
 import graphql.schema.DataFetchingEnvironment;
 
 /**
@@ -43,31 +45,33 @@ import graphql.schema.DataFetchingEnvironment;
  * @author sbegaudeau
  */
 @QueryDataFetcher(type = EditingContextTypeProvider.TYPE, field = EditingContextTypeProvider.REPRESENTATION_FIELD)
-public class EditingContextRepresentationDataFetcher implements IDataFetcherWithFieldCoordinates<RepresentationMetadata> {
+public class EditingContextRepresentationDataFetcher implements IDataFetcherWithFieldCoordinates<DataFetcherResult<RepresentationMetadata>> {
 
     private final IRepresentationService representationService;
-
-    private final Logger logger = LoggerFactory.getLogger(EditingContextRepresentationDataFetcher.class);
 
     public EditingContextRepresentationDataFetcher(IRepresentationService representationService) {
         this.representationService = Objects.requireNonNull(representationService);
     }
 
     @Override
-    public RepresentationMetadata get(DataFetchingEnvironment environment) throws Exception {
+    public DataFetcherResult<RepresentationMetadata> get(DataFetchingEnvironment environment) throws Exception {
         String editingContextId = environment.getSource();
         String representationId = environment.getArgument(EditingContextTypeProvider.REPRESENTATION_ID_ARGUMENT);
-        try {
-            // @formatter:off
-            return this.representationService.getRepresentationDescriptorForProjectId(editingContextId, representationId)
-                    .map(RepresentationDescriptor::getRepresentation)
-                    .map(this::toRepresentationMetadata)
-                    .orElse(null);
-            // @formatter:on
-        } catch (IllegalArgumentException exception) {
-            this.logger.warn(exception.getMessage(), exception);
-        }
-        return null;
+
+        Map<String, Object> localContext = new HashMap<>(environment.getLocalContext());
+        localContext.put(LocalContextConstants.REPRESENTATION_ID, representationId);
+
+        // @formatter:off
+        var representationMetadata = this.representationService.getRepresentationDescriptorForProjectId(editingContextId, representationId)
+                .map(RepresentationDescriptor::getRepresentation)
+                .map(this::toRepresentationMetadata)
+                .orElse(null);
+
+        return DataFetcherResult.<RepresentationMetadata>newResult()
+                .data(representationMetadata)
+                .localContext(localContext)
+                .build();
+        // @formatter:on
     }
 
     private RepresentationMetadata toRepresentationMetadata(IRepresentation representation) {

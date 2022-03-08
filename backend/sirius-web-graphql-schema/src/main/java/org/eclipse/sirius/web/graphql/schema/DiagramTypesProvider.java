@@ -21,9 +21,9 @@ public class DiagramTypesProvider {
 
     public static final String DIAGRAM_TYPE = "Diagram"; //$NON-NLS-1$
 
-    public static final String CREATE_EDGE_TOOL_TYPE = "CreateEdgeTool"; //$NON-NLS-1$
+    public static final String SINGLE_CLICK_ON_TWO_DIAGRAM_ELEMENTS_TOOL_TYPE = "SingleClickOnTwoDiagramElementsTool"; //$NON-NLS-1$
 
-    public static final String CREATE_NODE_TOOL_TYPE = "CreateNodeTool"; //$NON-NLS-1$
+    public static final String SINGLE_CLICK_ON_DIAGRAM_ELEMENT_TOOL_TYPE = "SingleClickOnDiagramElementTool"; //$NON-NLS-1$
 
     public static final String DELETE_TOOL_TYPE = "DeleteTool"; //$NON-NLS-1$
 
