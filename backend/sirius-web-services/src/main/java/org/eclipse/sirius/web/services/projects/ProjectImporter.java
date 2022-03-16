@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2021 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.eclipse.sirius.components.collaborative.api.IEditingContextEventProcessor;
@@ -29,7 +30,6 @@ import org.eclipse.sirius.web.persistence.repositories.IIdMappingRepository;
 import org.eclipse.sirius.web.services.api.document.Document;
 import org.eclipse.sirius.web.services.api.document.UploadDocumentInput;
 import org.eclipse.sirius.web.services.api.document.UploadDocumentSuccessPayload;
-import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.eclipse.sirius.web.services.api.projects.ProjectManifest;
 import org.eclipse.sirius.web.services.api.projects.RepresentationManifest;
 import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
@@ -114,8 +114,8 @@ public class ProjectImporter {
                  * If the given descriptionURI does not match with an existing IdMappingEntity, the current representation is
                  * based on a custom description. We use the descriptionURI as representationDescriptionId.
                  */
-                .or(() -> new IDParser().parse(descriptionURI))
-                .map(representationDescriptionId -> new CreateRepresentationInput(inputId, this.projectId.toString(), representationDescriptionId, objectId, representationDescriptor.getLabel()))
+                .or(() -> Optional.of(descriptionURI))
+                .map(representationDescriptionId -> new CreateRepresentationInput(inputId, this.projectId.toString(), representationDescriptionId.toString(), objectId, representationDescriptor.getLabel()))
                 .map(this.editingContextEventProcessor::handle)
                 .orElseGet(Mono::empty);
 

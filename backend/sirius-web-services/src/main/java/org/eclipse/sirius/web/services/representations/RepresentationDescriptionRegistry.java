@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2021 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.eclipse.sirius.components.core.configuration.IRepresentationDescriptionRegistry;
@@ -29,14 +28,14 @@ import org.eclipse.sirius.components.representations.IRepresentationDescription;
  */
 public class RepresentationDescriptionRegistry implements IRepresentationDescriptionRegistry {
 
-    private final Map<UUID, IRepresentationDescription> id2representationDescriptions = new HashMap<>();
+    private final Map<String, IRepresentationDescription> id2representationDescriptions = new HashMap<>();
 
     @Override
     public void add(IRepresentationDescription representationDescription) {
         this.id2representationDescriptions.put(representationDescription.getId(), representationDescription);
     }
 
-    public Optional<IRepresentationDescription> getRepresentationDescription(UUID id) {
+    public Optional<IRepresentationDescription> getRepresentationDescription(String id) {
         return Optional.ofNullable(this.id2representationDescriptions.get(id));
     }
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2020 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -29,7 +29,7 @@ public final class RepresentationDescriptor {
 
     private UUID projectId;
 
-    private UUID descriptionId;
+    private String descriptionId;
 
     private String targetObjectId;
 
@@ -49,7 +49,7 @@ public final class RepresentationDescriptor {
         return this.projectId;
     }
 
-    public UUID getDescriptionId() {
+    public String getDescriptionId() {
         return this.descriptionId;
     }
 
@@ -80,7 +80,7 @@ public final class RepresentationDescriptor {
 
         private UUID projectId;
 
-        private UUID descriptionId;
+        private String descriptionId;
 
         private String targetObjectId;
 
@@ -97,7 +97,7 @@ public final class RepresentationDescriptor {
             return this;
         }
 
-        public Builder descriptionId(UUID descriptionId) {
+        public Builder descriptionId(String descriptionId) {
             this.descriptionId = Objects.requireNonNull(descriptionId);
             return this;
         }

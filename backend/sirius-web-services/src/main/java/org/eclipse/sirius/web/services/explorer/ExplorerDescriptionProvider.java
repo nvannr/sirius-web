@@ -54,7 +54,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ExplorerDescriptionProvider implements IExplorerDescriptionProvider {
 
-    public static final UUID DESCRIPTION_ID = UUID.nameUUIDFromBytes("explorer_tree_description".getBytes()); //$NON-NLS-1$
+    public static final String DESCRIPTION_ID = UUID.nameUUIDFromBytes("explorer_tree_description".getBytes()).toString(); //$NON-NLS-1$
 
     public static final String DOCUMENT_KIND = "siriusWeb://document"; //$NON-NLS-1$
 

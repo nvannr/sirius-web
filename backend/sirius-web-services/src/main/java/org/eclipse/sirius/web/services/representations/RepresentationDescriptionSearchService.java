@@ -16,7 +16,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.eclipse.sirius.components.core.api.IEditingContext;
 import org.eclipse.sirius.components.core.api.IRepresentationDescriptionSearchService;
@@ -41,8 +40,8 @@ public class RepresentationDescriptionSearchService implements IRepresentationDe
     }
 
     @Override
-    public Map<UUID, IRepresentationDescription> findAll(IEditingContext editingContext) {
-        Map<UUID, IRepresentationDescription> allRepresentationDescriptions = new LinkedHashMap<>();
+    public Map<String, IRepresentationDescription> findAll(IEditingContext editingContext) {
+        Map<String, IRepresentationDescription> allRepresentationDescriptions = new LinkedHashMap<>();
         this.registry.getRepresentationDescriptions().forEach(representationDescription -> {
             allRepresentationDescriptions.put(representationDescription.getId(), representationDescription);
         });
@@ -54,7 +53,7 @@ public class RepresentationDescriptionSearchService implements IRepresentationDe
     }
 
     @Override
-    public Optional<IRepresentationDescription> findById(IEditingContext editingContext, UUID representationDescriptionId) {
+    public Optional<IRepresentationDescription> findById(IEditingContext editingContext, String representationDescriptionId) {
         return Optional.ofNullable(this.findAll(editingContext).get(representationDescriptionId));
     }
 

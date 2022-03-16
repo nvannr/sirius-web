@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2021 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -46,12 +46,12 @@ public class IdentifierProvider implements IIdentifierProvider {
 
     private final Cache<String, IdMappingEntity> idMappingByExternalId;
 
-    private final Cache<UUID, IdMappingEntity> idMappingByUUID;
+    private final Cache<String, IdMappingEntity> idMappingById;
 
     public IdentifierProvider(IIdMappingRepository repository, @Value("${sirius.web.identifierProvider.cacheSize:10000}") int cacheSize) {
         this.repository = Objects.requireNonNull(repository);
         this.idMappingByExternalId = CacheBuilder.newBuilder().maximumSize(cacheSize).build();
-        this.idMappingByUUID = CacheBuilder.newBuilder().maximumSize(cacheSize).build();
+        this.idMappingById = CacheBuilder.newBuilder().maximumSize(cacheSize).build();
         this.repository.findAll().forEach(this::cached);
     }
 
@@ -72,8 +72,8 @@ public class IdentifierProvider implements IIdentifierProvider {
     }
 
     @Override
-    public Optional<String> findVsmElementId(UUID id) {
-        return this.getOrFetchByUUID(id).map(IdMappingEntity::getExternalId);
+    public Optional<String> findVsmElementId(String id) {
+        return this.getOrFetchById(id).map(IdMappingEntity::getExternalId);
     }
 
     private Optional<IdMappingEntity> getOrFetchByExternalId(String vsmElementId) {
@@ -89,12 +89,12 @@ public class IdentifierProvider implements IIdentifierProvider {
         }
     }
 
-    private Optional<IdMappingEntity> getOrFetchByUUID(UUID id) {
+    private Optional<IdMappingEntity> getOrFetchById(String id) {
         try {
             Callable<? extends IdMappingEntity> loader = () -> {
                 return this.repository.findById(id).orElseThrow(() -> this.loadingError(id.toString()));
             };
-            IdMappingEntity idMapping = this.idMappingByUUID.get(id, loader);
+            IdMappingEntity idMapping = this.idMappingById.get(id, loader);
             return Optional.of(this.cached(idMapping));
         } catch (ExecutionException e) {
             // Do not log: it is expected not to find a mapping in the repo the first time.
@@ -108,14 +108,14 @@ public class IdentifierProvider implements IIdentifierProvider {
 
     private IdMappingEntity cached(IdMappingEntity idMapping) {
         this.idMappingByExternalId.put(idMapping.getExternalId(), idMapping);
-        this.idMappingByUUID.put(idMapping.getId(), idMapping);
+        this.idMappingById.put(idMapping.getId(), idMapping);
         return idMapping;
     }
 
     private IdMappingEntity newIdMapping(String vsmElementId) {
         IdMappingEntity idMappingEntity = new IdMappingEntity();
+        idMappingEntity.setId(UUID.nameUUIDFromBytes(vsmElementId.getBytes()).toString());
         idMappingEntity.setExternalId(vsmElementId);
-        idMappingEntity.setId(UUID.nameUUIDFromBytes(vsmElementId.getBytes()));
         idMappingEntity = this.repository.save(idMappingEntity);
         return this.cached(idMappingEntity);
     }
