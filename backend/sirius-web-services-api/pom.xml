@@ -23,7 +23,7 @@
 	</parent>
 	<groupId>org.eclipse.sirius</groupId>
 	<artifactId>sirius-web-services-api</artifactId>
-	<version>2022.01.0</version>
+	<version>2022.3.0</version>
 	<name>sirius-web-services-api</name>
 	<description>Sirius Web Services API</description>
 
