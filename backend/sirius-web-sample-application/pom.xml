@@ -32,6 +32,7 @@
 		<sirius.components.version>2022.01.22</sirius.components.version>
 		<flow.version>1.0.10-SNAPSHOT</flow.version>
 		<bpmn.version>4.0.3-SNAPSHOT</bpmn.version>
+		<eef.version>2.1.5-SNAPSHOT</eef.version>
 	</properties>
 
 	<repositories>
@@ -51,6 +52,14 @@
 			<id>github-bpmn</id>
 			<url>https://maven.pkg.github.com/ObeoNetwork/BPMN-Designer</url>
 		</repository>
+ 		<repository>
+ 			<id>Eclipse EEF</id>
+ 			<name>EEF Repository - Snapshots</name>
+ 			<url>https://repo.eclipse.org/content/repositories/eef-snapshots/</url>
+ 			<snapshots>
+ 				<enabled>true</enabled>
+ 			</snapshots>
+ 		</repository>
 	</repositories>
 
 	<dependencies>
@@ -161,6 +170,16 @@
 			<artifactId>org.obeonetwork.dsl.bpmn2.design</artifactId>
 			<version>${bpmn.version}</version>
 		</dependency>
+ 		<dependency>
+ 			 <groupId>org.eclipse.eef</groupId>
+ 			<artifactId>org.eclipse.eef.core</artifactId>
+ 			<version>${eef.version}</version>
+ 		</dependency>
+ 		<dependency>
+ 			 <groupId>org.eclipse.eef</groupId>
+ 			<artifactId>org.eclipse.eef.common</artifactId>
+ 			<version>${eef.version}</version>
+ 		</dependency>
 	</dependencies>
 
 	<build>
