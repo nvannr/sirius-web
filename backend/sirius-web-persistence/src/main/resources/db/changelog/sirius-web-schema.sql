@@ -28,7 +28,7 @@ CREATE TABLE document (
 );
 
 CREATE TABLE idmapping (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    id text NOT NULL,
     externalid text NOT NULL
 );
 
@@ -46,7 +46,7 @@ CREATE TABLE representation (
     targetobjectid text NOT NULL,
     label text NOT NULL,
     kind text NOT NULL,
-    descriptionId UUID NOT NULL,
+    descriptionId TEXT NOT NULL,
     content text NOT NULL,
     CONSTRAINT representation_label_length CHECK (((char_length(label) > 0) AND (char_length(label) <= 50)))
 );

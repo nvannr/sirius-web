@@ -38,7 +38,7 @@ public class RepresentationEntity {
 
     private String targetObjectId;
 
-    private UUID descriptionId;
+    private String descriptionId;
 
     private String label;
 
@@ -62,11 +62,11 @@ public class RepresentationEntity {
         this.project = project;
     }
 
-    public UUID getDescriptionId() {
+    public String getDescriptionId() {
         return this.descriptionId;
     }
 
-    public void setDescriptionId(UUID descriptionId) {
+    public void setDescriptionId(String descriptionId) {
         this.descriptionId = descriptionId;
     }
 

@@ -15,8 +15,6 @@ package org.eclipse.sirius.web.persistence.entities;
 import java.text.MessageFormat;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -30,7 +28,6 @@ import javax.persistence.Table;
 public class IdMappingEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
     private String externalId;

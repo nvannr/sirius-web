@@ -274,7 +274,7 @@ public class RepresentationRepositoryIntegrationTests extends AbstractIntegratio
         representationEntity.setProject(projectEntity);
         representationEntity.setTargetObjectId(targetObjectId);
         representationEntity.setKind("siriusComponents://representation?type=Diagram"); //$NON-NLS-1$
-        representationEntity.setDescriptionId(UUID.randomUUID());
+        representationEntity.setDescriptionId(UUID.randomUUID().toString());
         representationEntity.setContent("{ \"nodes\": [], \"edges\": []}"); //$NON-NLS-1$
         return representationEntity;
     }
