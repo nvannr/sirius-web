@@ -11,12 +11,12 @@
  *     Obeo - initial API and implementation
  *******************************************************************************/
 import { ApolloProvider } from '@apollo/client';
+import { theme } from '@eclipse-sirius/sirius-components';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { ApolloGraphQLClient } from 'ApolloGraphQLClient';
 import { Main } from 'main/Main';
 import ReactDOM from 'react-dom';
-import { theme } from '@eclipse-sirius/sirius-components';
 import { BrowserRouter } from 'react-router-dom';
 import './fonts.css';
 import './reset.css';
@@ -48,6 +48,10 @@ const baseTheme = createTheme({
       light: '#E43F33',
     },
     divider: '#B3BFC5',
+    navigation: {
+      leftBackground: '#BE1A7880',
+      rightBackground: '#261E5880',
+    },
   },
   props: {
     MuiAppBar: {

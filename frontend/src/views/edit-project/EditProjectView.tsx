@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2021 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,11 @@ import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import CloseIcon from '@material-ui/icons/Close';
+import Filter from '@material-ui/icons/Filter';
+import MenuIcon from '@material-ui/icons/Menu';
+import WarningIcon from '@material-ui/icons/Warning';
 import { useMachine } from '@xstate/react';
 import gql from 'graphql-tag';
 import { NavigationBar } from 'navigationBar/NavigationBar';
@@ -141,10 +145,30 @@ export const EditProjectView = () => {
         initialRepresentationSelected={representation}
         onRepresentationSelected={onRepresentationSelected}
         readOnly={false}>
-        <WorkbenchViewContribution side="left" title="Explorer" component={ExplorerWebSocketContainer} />
-        <WorkbenchViewContribution side="left" title="Validation" component={ValidationWebSocketContainer} />
-        <WorkbenchViewContribution side="right" title="Details" component={PropertiesWebSocketContainer} />
-        <WorkbenchViewContribution side="right" title="Representations" component={RepresentationsWebSocketContainer} />
+        <WorkbenchViewContribution
+          side="left"
+          title="Explorer"
+          icon={<AccountTreeIcon />}
+          component={ExplorerWebSocketContainer}
+        />
+        <WorkbenchViewContribution
+          side="left"
+          title="Validation"
+          icon={<WarningIcon />}
+          component={ValidationWebSocketContainer}
+        />
+        <WorkbenchViewContribution
+          side="right"
+          title="Details"
+          icon={<MenuIcon />}
+          component={PropertiesWebSocketContainer}
+        />
+        <WorkbenchViewContribution
+          side="right"
+          title="Representations"
+          icon={<Filter />}
+          component={RepresentationsWebSocketContainer}
+        />
         <TreeItemContextMenuContribution
           canHandle={(item: TreeItemType) => item.kind === 'siriusWeb://document'}
           component={DocumentTreeItemContextMenuContribution}
