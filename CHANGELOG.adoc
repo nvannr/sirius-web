@@ -1,0 +1,7 @@
+= Changelog
+
+== v2022.5.0 (unreleased)
+
+=== Improvements
+
+- https://github.com/eclipse-sirius/sirius-components/issues/1165[#1165] [doc] Improve the pull request template
