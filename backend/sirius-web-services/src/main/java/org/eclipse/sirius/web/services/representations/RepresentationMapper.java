@@ -18,14 +18,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Objects;
 
 import org.eclipse.sirius.components.representations.IRepresentation;
-import org.eclipse.sirius.web.persistence.entities.ProjectEntity;
 import org.eclipse.sirius.web.persistence.entities.RepresentationEntity;
 import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Class used to convert representation entities to representation descriptor data transfer objects and vice versa.
+ * Class used to convert representation entities to representation descriptor data transfer objects.
  *
  * @author sbegaudeau
  */
@@ -56,25 +55,6 @@ public class RepresentationMapper {
             this.logger.warn(exception.getMessage(), exception);
         }
         return null;
-    }
-
-    public RepresentationEntity toEntity(RepresentationDescriptor representationDescriptor, ProjectEntity projectEntity) {
-        RepresentationEntity representationEntity = new RepresentationEntity();
-
-        representationEntity.setId(representationDescriptor.getId());
-        representationEntity.setProject(projectEntity);
-        representationEntity.setLabel(representationDescriptor.getLabel());
-        representationEntity.setTargetObjectId(representationDescriptor.getTargetObjectId());
-        representationEntity.setKind(representationDescriptor.getKind());
-        representationEntity.setDescriptionId(representationDescriptor.getDescriptionId());
-        try {
-            String content = this.objectMapper.writeValueAsString(representationDescriptor.getRepresentation());
-            representationEntity.setContent(content);
-        } catch (JsonProcessingException exception) {
-            this.logger.warn(exception.getMessage(), exception);
-        }
-
-        return representationEntity;
     }
 
 }

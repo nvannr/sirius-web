@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.sirius.web.services.representations;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
@@ -35,6 +36,8 @@ import org.eclipse.sirius.web.persistence.repositories.IRepresentationRepository
 import org.eclipse.sirius.web.services.api.id.IDParser;
 import org.eclipse.sirius.web.services.api.representations.IRepresentationService;
 import org.eclipse.sirius.web.services.api.representations.RepresentationDescriptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import io.micrometer.core.instrument.MeterRegistry;
@@ -59,6 +62,8 @@ public class RepresentationService implements IRepresentationService, IRepresent
     private final ObjectMapper objectMapper;
 
     private final Timer timer;
+
+    private final Logger logger = LoggerFactory.getLogger(RepresentationService.class);
 
     public RepresentationService(IObjectService objectService, IProjectRepository projectRepository, IRepresentationRepository representationRepository, ObjectMapper objectMapper,
             MeterRegistry meterRegistry) {
@@ -107,27 +112,39 @@ public class RepresentationService implements IRepresentationService, IRepresent
         var representationId = new IDParser().parse(representation.getId());
 
         if (editingContextId.isPresent() && representationId.isPresent()) {
-         // @formatter:off
-            var representationDescriptor = RepresentationDescriptor.newRepresentationDescriptor(representationId.get())
-                    .projectId(editingContextId.get())
-                    .descriptionId(representation.getDescriptionId())
-                    .targetObjectId(representation.getTargetObjectId())
-                    .label(representation.getLabel())
-                    .kind(representation.getKind())
-                    .representation(representation)
-                    .build();
-            // @formatter:on
+            UUID editingContextUUID = editingContextId.get();
+            UUID representationUUID = representationId.get();
 
-            var optionalProjectEntity = this.projectRepository.findById(representationDescriptor.getProjectId());
+            var optionalProjectEntity = this.projectRepository.findById(editingContextUUID);
             if (optionalProjectEntity.isPresent()) {
                 ProjectEntity projectEntity = optionalProjectEntity.get();
-                RepresentationEntity representationEntity = new RepresentationMapper(this.objectMapper).toEntity(representationDescriptor, projectEntity);
+
+                RepresentationEntity representationEntity = this.toEntity(projectEntity, representationUUID, representation);
                 this.representationRepository.save(representationEntity);
             }
         }
 
         long end = System.currentTimeMillis();
         this.timer.record(end - start, TimeUnit.MILLISECONDS);
+    }
+
+    private RepresentationEntity toEntity(ProjectEntity projectEntity, UUID representationId, ISemanticRepresentation representation) {
+        RepresentationEntity representationEntity = new RepresentationEntity();
+
+        representationEntity.setId(representationId);
+        representationEntity.setProject(projectEntity);
+        representationEntity.setLabel(representation.getLabel());
+        representationEntity.setTargetObjectId(representation.getTargetObjectId());
+        representationEntity.setKind(representation.getKind());
+        representationEntity.setDescriptionId(representation.getDescriptionId());
+        try {
+            String content = this.objectMapper.writeValueAsString(representation);
+            representationEntity.setContent(content);
+        } catch (JsonProcessingException exception) {
+            this.logger.warn(exception.getMessage(), exception);
+        }
+
+        return representationEntity;
     }
 
     @Override
