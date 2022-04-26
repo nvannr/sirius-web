@@ -26,13 +26,10 @@ import org.eclipse.emf.ecore.EPackage.Registry;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.sirius.components.core.api.IEditService;
 import org.eclipse.sirius.components.core.api.IEditingContext;
-import org.eclipse.sirius.components.core.api.IObjectService;
 import org.eclipse.sirius.components.emf.services.EditingContext;
 import org.eclipse.sirius.components.emf.services.SiriusWebJSONResourceFactoryImpl;
-import org.eclipse.sirius.components.emf.view.IJavaServiceProvider;
-import org.eclipse.sirius.components.emf.view.ViewConverter;
+import org.eclipse.sirius.components.emf.view.IViewConverter;
 import org.eclipse.sirius.components.representations.IRepresentationDescription;
 import org.eclipse.sirius.components.view.View;
 import org.eclipse.sirius.components.view.ViewPackage;
@@ -58,21 +55,15 @@ public class DynamicRepresentationDescriptionService implements IDynamicRepresen
 
     private final EPackage.Registry ePackageRegistry;
 
-    private final List<IJavaServiceProvider> javaServiceProviders;
-
-    private final IObjectService objectService;
-
-    private final IEditService editService;
+    private final IViewConverter viewConverter;
 
     private final boolean isStudioDefinitionEnabled;
 
-    public DynamicRepresentationDescriptionService(IDocumentRepository documentRepository, EPackage.Registry ePackageRegistry, IObjectService objectService, IEditService editService,
-            List<IJavaServiceProvider> javaServiceProviders, @Value("${org.eclipse.sirius.web.features.studioDefinition:false}") boolean isStudioDefinitionEnabled) {
+    public DynamicRepresentationDescriptionService(IDocumentRepository documentRepository, EPackage.Registry ePackageRegistry, IViewConverter viewConverter,
+            @Value("${org.eclipse.sirius.web.features.studioDefinition:false}") boolean isStudioDefinitionEnabled) {
         this.documentRepository = Objects.requireNonNull(documentRepository);
         this.ePackageRegistry = Objects.requireNonNull(ePackageRegistry);
-        this.javaServiceProviders = Objects.requireNonNull(javaServiceProviders);
-        this.objectService = Objects.requireNonNull(objectService);
-        this.editService = Objects.requireNonNull(editService);
+        this.viewConverter = Objects.requireNonNull(viewConverter);
         this.isStudioDefinitionEnabled = isStudioDefinitionEnabled;
     }
 
@@ -81,11 +72,10 @@ public class DynamicRepresentationDescriptionService implements IDynamicRepresen
         List<IRepresentationDescription> dynamicRepresentationDescriptions = new ArrayList<>();
         if (this.isStudioDefinitionEnabled) {
             List<EPackage> accessibleEPackages = this.getAccessibleEPackages(editingContext);
-            ViewConverter viewConverter = new ViewConverter(this.objectService, this.editService, this.javaServiceProviders);
             this.documentRepository.findAllByType(ViewPackage.eNAME, ViewPackage.eNS_URI).forEach(documentEntity -> {
                 Resource resource = this.loadDocumentAsEMF(documentEntity);
                 // @formatter:off
-                this.getViewDefinitions(resource).forEach(view -> viewConverter.convert(view, accessibleEPackages).stream()
+                this.getViewDefinitions(resource).forEach(view -> this.viewConverter.convert(view, accessibleEPackages).stream()
                         .filter(Objects::nonNull)
                         .forEach(dynamicRepresentationDescriptions::add));
                 // @formatter:on
