@@ -10,7 +10,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
- function createRepresentationFromTreeItem(treeItemLabel, representationDescriptionName, representationName) {
+function createRepresentationFromTreeItem(treeItemLabel, representationDescriptionName, representationName) {
   cy.getByTestId(treeItemLabel + '-more').click();
   cy.getByTestId('treeitem-contextmenu').findByTestId('new-representation').click();
   cy.getByTestId('name').clear();
@@ -97,10 +97,6 @@ describe('/projects/:projectId/edit - Explorer', () => {
     cy.getByTestId('robot').type('renamed-robot');
     cy.getByTestId('Robot').click();
     cy.getByTestId('renamed-robot').should('exist');
-    // While this solution is bad, it allows React to re-render and OCP to reselect the newly edited element
-    // A proper solution would involve waiting for the focus to change after the focus lost but that seems way more complex
-    cy.wait(1000);
-    cy.getByTestId('selected').contains('renamed-robot');
   });
 
   it('reveals a newly created diagram', () => {

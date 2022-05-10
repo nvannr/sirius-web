@@ -81,6 +81,8 @@ describe('/projects/:projectId/edit - Object Context Menu', () => {
     cy.getByTestId('Robot-more').click();
 
     cy.getByTestId('treeitem-contextmenu').findByTestId('new-object').click();
+    //make sure the data are fetched before selecting
+    cy.getByTestId('create-object').should('be.enabled');
 
     cy.getByTestId('childCreationDescription').click();
     cy.get('[data-value="Power Input"]').click();
@@ -147,11 +149,14 @@ describe('/projects/:projectId/edit - Object Context Menu', () => {
     cy.getByTestId('Robot-more').click();
 
     cy.getByTestId('treeitem-contextmenu').findByTestId('new-representation').click();
+    //make sure the data are fetched before selecting
+    cy.getByTestId('create-representation').should('be.enabled');
     cy.getByTestId('representationDescription').click();
     cy.getByTestId('Topography with auto layout').click();
     cy.getByTestId('name').should('have.value', 'Topography with auto layout');
 
     cy.getByTestId('representationDescription').click();
+    //Choose topography representation type
     cy.getByTestId('Topography').click();
     cy.getByTestId('name').should('have.value', 'Topography');
 
@@ -159,6 +164,7 @@ describe('/projects/:projectId/edit - Object Context Menu', () => {
     cy.getByTestId('name').should('have.value', 'newName');
 
     cy.getByTestId('representationDescription').click();
+    //Choose topography with auto layout representation type
     cy.getByTestId('Topography with auto layout').click();
     cy.getByTestId('name').should('have.value', 'newName');
   });

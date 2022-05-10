@@ -89,17 +89,16 @@ describe('/projects/:projectId/edit - Diagram', () => {
     cy.getByTestId('Topography with auto layout').click();
     cy.getByTestId('create-representation').click();
 
-    cy.get('#diagram>svg.sprotty-graph').should('have.length', 1);
     cy.get('#diagram>svg text.sprotty-label').should('have.length', 25);
     cy.get('#diagram>svg g.sprotty-edge').should('have.length', 7);
     cy.get('#diagram>svg image').should('have.length', 10);
-    cy.get('#diagram rect').should('have.length', 8);
+    cy.get('#diagram rect').should('have.length', 18);
 
-    cy.get('#diagram>svg>g>g>rect').should('have.length', 2);
+    cy.get('#diagram>svg>g>g>rect').should('have.length', 3);
     cy.get('#diagram>svg>g>g>image').should('have.length', 1);
     cy.get('#diagram>svg>g>g.sprotty-edge').should('have.length', 7);
 
-    cy.get('#diagram>svg>g>g>g rect').should('have.length', 6);
+    cy.get('#diagram>svg>g>g>g rect').should('have.length', 15);
     cy.get('#diagram>svg>g>g>g image').should('have.length', 9);
   });
 

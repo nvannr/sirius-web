@@ -56,17 +56,17 @@ describe('/projects/:projectId/edit - Representations', () => {
     cy.getByTestId('robot').dblclick();
 
     cy.getByTestId('Robot').click();
-    cy.getByTestId('properties').contains('System Robot').should('exist');
+    cy.getByTestId('properties').contains('Robot').should('exist');
 
     cy.getByTestId('Robot').dblclick();
     cy.getByTestId('Central_Unit').click();
-    cy.getByTestId('properties').contains('CompositeProcessor Central_Unit').should('exist');
+    cy.getByTestId('properties').contains('Central_Unit').should('exist');
 
     cy.getByTestId('CaptureSubSystem').click();
-    cy.getByTestId('properties').contains('CompositeProcessor CaptureSubSystem').should('exist');
+    cy.getByTestId('properties').contains('CaptureSubSystem').should('exist');
 
     cy.getByTestId('Wifi').click();
-    cy.getByTestId('properties').contains('DataSource Wifi').should('exist');
+    cy.getByTestId('properties').contains('Wifi').should('exist');
   });
 
   it('can open a diagram and switch diagrams', function () {

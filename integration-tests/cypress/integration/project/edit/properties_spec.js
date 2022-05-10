@@ -28,22 +28,22 @@ describe('/projects/:projectId/edit - Details', () => {
   it('shows the properties of the selected object', () => {
     cy.getByTestId('robot').dblclick();
     cy.getByTestId('Robot').dblclick();
-    cy.getByTestId('properties').contains('System Robot');
+    cy.getByTestId('properties').contains('Robot');
 
     cy.getByTestId('Wifi').click();
-    cy.getByTestId('properties').contains('DataSource Wifi');
+    cy.getByTestId('properties').contains('Wifi');
   });
 
   it('should not be empty when "unsupported" element is selected', () => {
-    cy.getByTestId('Details AccordionDetails').contains('No object selected');
+    cy.getByTestId('view-Details').contains('No object selected');
 
     cy.getByTestId('Sample Domain').click();
-    cy.getByTestId('Details AccordionDetails').contains('No object selected');
+    cy.getByTestId('view-Details').contains('No object selected');
 
     cy.getByTestId('Sample Domain').dblclick();
     cy.get('[title="domain::Domain"]').click();
     cy.getByTestId('Sample Domain').click();
-    cy.getByTestId('Details AccordionDetails').contains('No object selected');
+    cy.getByTestId('view-Details').contains('No object selected');
   });
 
   it('can edit a textfield using enter', () => {

@@ -54,7 +54,10 @@ describe('/projects/:projectId/edit - Project Context Menu', () => {
     cy.getByTestId('more').click();
     cy.getByTestId('new-model').click();
 
+    cy.getByTestId('name-input').should('be.enabled');
     cy.getByTestId('name').type('nobel');
+
+    cy.getByTestId('create-document').should('be.enabled');
     cy.getByTestId('create-document').click();
 
     cy.get('.MuiDialog-container').should('not.exist');
