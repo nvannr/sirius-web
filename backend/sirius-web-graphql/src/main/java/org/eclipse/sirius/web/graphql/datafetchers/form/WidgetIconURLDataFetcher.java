@@ -47,7 +47,8 @@ public class WidgetIconURLDataFetcher implements IDataFetcherWithFieldCoordinate
                 "Radio", //$NON-NLS-1$
                 "Select", //$NON-NLS-1$
                 "Textarea", //$NON-NLS-1$
-                "Textfield" //$NON-NLS-1$
+                "Textfield", //$NON-NLS-1$
+                "TreeWidget" //$NON-NLS-1$
         );
         return widgetTypes.stream().map(widgetType -> FieldCoordinates.coordinates(widgetType, ICON_URL_FIELD)).collect(Collectors.toList());
         // @formatter:on

@@ -8,6 +8,10 @@
 
 - https://github.com/eclipse-sirius/sirius-components/issues/1169[#1169] [form] Add support for a form description editor
 
+=== New features
+
+- https://github.com/eclipse-sirius/sirius-components/issues/1139[#1139] [form] Add support for a new Tree widget
+
 == v2022.5.0
 
 === Dependency update
