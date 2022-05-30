@@ -1,6 +1,11 @@
 = Changelog
 
-== v2022.5.0 (unreleased)
+== v2022.5.0
+
+=== Dependency update
+
+- This version corresponds to https://github.com/eclipse-sirius/sirius-components/milestone/9[Sirius Components 2022.5.0].
+See https://github.com/eclipse-sirius/sirius-components/blob/master/CHANGELOG.adoc#v202250[the corresponding release notes] for more details.
 
 === Improvements
 
