@@ -47,6 +47,7 @@ public class RepresentationMetadataDataFetcher implements IDataFetcherWithFieldC
                 FieldCoordinates.coordinates("Diagram", METADATA_FIELD), //$NON-NLS-1$
                 FieldCoordinates.coordinates("Form", METADATA_FIELD), //$NON-NLS-1$
                 FieldCoordinates.coordinates("FormDescriptionEditor", METADATA_FIELD), //$NON-NLS-1$
+                FieldCoordinates.coordinates("BarChart", METADATA_FIELD), //$NON-NLS-1$
                 FieldCoordinates.coordinates("Tree", METADATA_FIELD), //$NON-NLS-1$
                 FieldCoordinates.coordinates("Selection", METADATA_FIELD), //$NON-NLS-1$
                 FieldCoordinates.coordinates("Validation", METADATA_FIELD) //$NON-NLS-1$
