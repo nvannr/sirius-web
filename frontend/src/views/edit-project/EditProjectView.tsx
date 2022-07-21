@@ -12,8 +12,9 @@
  *******************************************************************************/
 import { useQuery } from '@apollo/client';
 import {
+  DetailsView,
   ExplorerWebSocketContainer,
-  PropertiesWebSocketContainer,
+  RelatedElementsView,
   Representation,
   RepresentationsWebSocketContainer,
   TreeItemContextMenuContribution,
@@ -30,6 +31,7 @@ import Typography from '@material-ui/core/Typography';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import CloseIcon from '@material-ui/icons/Close';
 import Filter from '@material-ui/icons/Filter';
+import LinkIcon from '@material-ui/icons/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import WarningIcon from '@material-ui/icons/Warning';
 import { useMachine } from '@xstate/react';
@@ -157,17 +159,18 @@ export const EditProjectView = () => {
           icon={<WarningIcon />}
           component={ValidationWebSocketContainer}
         />
-        <WorkbenchViewContribution
-          side="right"
-          title="Details"
-          icon={<MenuIcon />}
-          component={PropertiesWebSocketContainer}
-        />
+        <WorkbenchViewContribution side="right" title="Details" icon={<MenuIcon />} component={DetailsView} />
         <WorkbenchViewContribution
           side="right"
           title="Representations"
           icon={<Filter />}
           component={RepresentationsWebSocketContainer}
+        />
+        <WorkbenchViewContribution
+          side="right"
+          title="Related Elements"
+          icon={<LinkIcon />}
+          component={RelatedElementsView}
         />
         <TreeItemContextMenuContribution
           canHandle={(item: TreeItemType) => item.kind === 'siriusWeb://document'}
