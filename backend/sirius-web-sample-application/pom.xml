@@ -23,7 +23,7 @@
 	</parent>
 	<groupId>org.eclipse.sirius</groupId>
 	<artifactId>sirius-web-sample-application</artifactId>
-	<version>2022.5.0</version>
+	<version>2022.7.0</version>
 	<name>sirius-web-sample-application</name>
 	<description>Sirius Web Sample Application</description>
 
@@ -98,22 +98,22 @@
 		<dependency>
 			<groupId>org.eclipse.sirius</groupId>
 			<artifactId>sirius-web-graphql</artifactId>
-			<version>2022.5.0</version>
+			<version>2022.7.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius</groupId>
 			<artifactId>sirius-web-services</artifactId>
-			<version>2022.5.0</version>
+			<version>2022.7.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius</groupId>
 			<artifactId>sirius-web-spring</artifactId>
-			<version>2022.5.0</version>
+			<version>2022.7.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius</groupId>
 			<artifactId>sirius-web-frontend</artifactId>
-			<version>2022.5.0</version>
+			<version>2022.7.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius</groupId>
