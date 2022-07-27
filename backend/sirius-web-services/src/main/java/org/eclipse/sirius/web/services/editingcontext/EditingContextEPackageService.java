@@ -29,7 +29,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.sirius.components.domain.Domain;
 import org.eclipse.sirius.components.domain.DomainPackage;
-import org.eclipse.sirius.components.emf.domain.DomainConverter;
+import org.eclipse.sirius.components.domain.emf.DomainConverter;
 import org.eclipse.sirius.components.emf.services.IEditingContextEPackageService;
 import org.eclipse.sirius.components.emf.services.SiriusWebJSONResourceFactoryImpl;
 import org.eclipse.sirius.emfjson.resource.JsonResource;

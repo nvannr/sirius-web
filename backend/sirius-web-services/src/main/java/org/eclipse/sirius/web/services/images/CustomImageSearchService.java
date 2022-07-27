@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.eclipse.sirius.components.emf.view.CustomImage;
-import org.eclipse.sirius.components.emf.view.ICustomImageSearchService;
+import org.eclipse.sirius.components.view.emf.CustomImage;
+import org.eclipse.sirius.components.view.emf.ICustomImageSearchService;
 import org.eclipse.sirius.web.persistence.entities.CustomImageEntity;
 import org.eclipse.sirius.web.persistence.repositories.ICustomImageRepository;
 import org.springframework.stereotype.Service;
