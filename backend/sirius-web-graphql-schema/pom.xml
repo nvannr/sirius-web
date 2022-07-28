@@ -29,7 +29,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<sirius.components.version>2022.7.1</sirius.components.version>
+		<sirius.components.version>2022.7.2</sirius.components.version>
 	</properties>
 
 	<repositories>
@@ -50,11 +50,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.sirius</groupId>
-			<artifactId>sirius-components-graphql-utils</artifactId>
-			<version>${sirius.components.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.sirius</groupId>
 			<artifactId>sirius-components-graphql-api</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
@@ -71,16 +66,6 @@
 		<dependency>
 			<groupId>org.eclipse.sirius</groupId>
 			<artifactId>sirius-components-collaborative-diagrams</artifactId>
-			<version>${sirius.components.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.sirius</groupId>
-			<artifactId>sirius-components-collaborative-forms</artifactId>
-			<version>${sirius.components.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.sirius</groupId>
-			<artifactId>sirius-components-collaborative-validation</artifactId>
 			<version>${sirius.components.version}</version>
 		</dependency>
 		<dependency>

@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
-import org.eclipse.sirius.components.graphql.utils.types.UploadScalarType;
+import org.eclipse.sirius.components.graphql.api.UploadScalarType;
 import org.eclipse.sirius.web.graphql.datafetchers.GraphQLDataFetcherExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
