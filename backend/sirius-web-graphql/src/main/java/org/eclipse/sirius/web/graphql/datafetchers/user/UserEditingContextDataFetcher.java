@@ -17,7 +17,7 @@ import java.util.Map;
 
 import org.eclipse.sirius.components.annotations.spring.graphql.QueryDataFetcher;
 import org.eclipse.sirius.components.graphql.api.IDataFetcherWithFieldCoordinates;
-import org.eclipse.sirius.web.graphql.datafetchers.LocalContextConstants;
+import org.eclipse.sirius.components.graphql.api.LocalContextConstants;
 import org.eclipse.sirius.web.graphql.schema.ViewerTypeProvider;
 
 import graphql.execution.DataFetcherResult;
