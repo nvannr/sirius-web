@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2021 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -139,7 +139,8 @@ export const EditProjectNavbar = ({ project }: EditProjectNavbarProps) => {
             aria-haspopup="true"
             onClick={onMoreClick}
             color="inherit"
-            data-testid="more">
+            data-testid="more"
+          >
             <MoreVertIcon />
           </IconButton>
         </div>
@@ -149,10 +150,12 @@ export const EditProjectNavbar = ({ project }: EditProjectNavbarProps) => {
         open={viewState === CONTEXTUAL_MENU_DISPLAYED__STATE}
         anchorEl={projectMenuAnchor}
         data-testid="navbar-contextmenu"
-        onClose={() => dispatch({ type: HANDLE_CLOSE_CONTEXT_MENU__ACTION })}>
+        onClose={() => dispatch({ type: HANDLE_CLOSE_CONTEXT_MENU__ACTION })}
+      >
         <MenuItem
           onClick={() => dispatch({ modalDisplayed: 'CreateDocument', type: HANDLE_SHOW_MODAL__ACTION })}
-          data-testid="new-model">
+          data-testid="new-model"
+        >
           <ListItemIcon>
             <AddIcon />
           </ListItemIcon>
@@ -161,7 +164,8 @@ export const EditProjectNavbar = ({ project }: EditProjectNavbarProps) => {
         <MenuItem
           divider
           data-testid="upload-document"
-          onClick={() => dispatch({ modalDisplayed: 'UploadDocument', type: HANDLE_SHOW_MODAL__ACTION })}>
+          onClick={() => dispatch({ modalDisplayed: 'UploadDocument', type: HANDLE_SHOW_MODAL__ACTION })}
+        >
           <ListItemIcon>
             <PublishIcon />
           </ListItemIcon>
@@ -179,7 +183,8 @@ export const EditProjectNavbar = ({ project }: EditProjectNavbarProps) => {
           href={`${httpOrigin}/api/projects/${project?.id}`}
           type="application/octet-stream"
           onClick={() => dispatch({ type: HANDLE_CLOSE_CONTEXT_MENU__ACTION })}
-          data-testid="download-link">
+          data-testid="download-link"
+        >
           <ListItemIcon>
             <GetAppIcon />
           </ListItemIcon>
@@ -187,7 +192,8 @@ export const EditProjectNavbar = ({ project }: EditProjectNavbarProps) => {
         </MenuItem>
         <MenuItem
           onClick={() => dispatch({ modalDisplayed: 'DeleteProject', type: HANDLE_SHOW_MODAL__ACTION })}
-          data-testid="delete">
+          data-testid="delete"
+        >
           <ListItemIcon>
             <DeleteIcon />
           </ListItemIcon>

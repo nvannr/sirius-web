@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2021 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-import { httpOrigin, ContextMenu, Entry, Separator, TOP_START, Delete, Edit } from '@eclipse-sirius/sirius-components';
+import { ContextMenu, Delete, Edit, Entry, httpOrigin, Separator, TOP_START } from '@eclipse-sirius/sirius-components';
 import { Link } from 'react-router-dom';
 import { EditProjectNavbarContextMenuProps } from 'views/edit-project/EditProjectNavbar/EditProjectNavbarContextMenu.types';
 
@@ -34,7 +34,8 @@ export const EditProjectNavbarContextMenu = ({
         href={`${httpOrigin}/api/projects/${projectId}`}
         type="application/octet-stream"
         onClick={onClose}
-        data-testid="download-link">
+        data-testid="download-link"
+      >
         <Entry label="Download" data-testid="download" />
       </a>
       <Entry icon={<Delete title="" />} label="Delete" onClick={onDelete} data-testid="delete" />

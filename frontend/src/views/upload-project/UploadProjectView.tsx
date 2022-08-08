@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2021 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
+import { gql } from '@apollo/client';
+import { FileUpload, Form, FormContainer, sendFile } from '@eclipse-sirius/sirius-components';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
@@ -17,8 +19,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
 import CloseIcon from '@material-ui/icons/Close';
 import { useMachine } from '@xstate/react';
-import { Form, FormContainer, FileUpload, sendFile } from '@eclipse-sirius/sirius-components';
-import gql from 'graphql-tag';
+import { NavigationBar } from 'navigationBar/NavigationBar';
 import { Redirect } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import {
@@ -27,7 +28,6 @@ import {
   uploadProjectMachine,
   UploadProjectViewContext,
 } from './UploadProjectViewMachine';
-import { NavigationBar } from 'navigationBar/NavigationBar';
 
 const uploadProjectMutation = gql`
   mutation uploadProject($input: UploadProjectInput!) {
@@ -119,7 +119,8 @@ export const UploadProjectView = () => {
                   type="submit"
                   color="primary"
                   disabled={uploadProjectView !== 'fileSelected'}
-                  data-testid="upload-project">
+                  data-testid="upload-project"
+                >
                   Upload
                 </Button>
               </div>

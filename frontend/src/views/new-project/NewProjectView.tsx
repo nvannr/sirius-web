@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2021 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-import { useMutation } from '@apollo/client';
+import { gql, useMutation } from '@apollo/client';
 import { Form, FormContainer } from '@eclipse-sirius/sirius-components';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -21,7 +21,6 @@ import TextField from '@material-ui/core/TextField';
 import CloseIcon from '@material-ui/icons/Close';
 import { useMachine } from '@xstate/react';
 import { Footer } from 'footer/Footer';
-import gql from 'graphql-tag';
 import { NavigationBar } from 'navigationBar/NavigationBar';
 import { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
@@ -159,7 +158,8 @@ export const NewProjectView = () => {
                     type="submit"
                     disabled={newProjectView !== 'valid'}
                     data-testid="create-project"
-                    color="primary">
+                    color="primary"
+                  >
                     Create
                   </Button>
                 </div>
@@ -183,7 +183,8 @@ export const NewProjectView = () => {
             size="small"
             aria-label="close"
             color="inherit"
-            onClick={() => dispatch({ type: 'HIDE_TOAST' } as HideToastEvent)}>
+            onClick={() => dispatch({ type: 'HIDE_TOAST' } as HideToastEvent)}
+          >
             <CloseIcon fontSize="small" />
           </IconButton>
         }

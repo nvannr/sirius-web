@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021 Obeo.
+ * Copyright (c) 2021, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -65,7 +65,8 @@ export const ObjectTreeItemContextMenuContribution = forwardRef(
           data-testid="new-object"
           disabled={readOnly}
           ref={ref}
-          aria-disabled>
+          aria-disabled
+        >
           <ListItemIcon>
             <AddIcon fontSize="small" />
           </ListItemIcon>
@@ -76,7 +77,8 @@ export const ObjectTreeItemContextMenuContribution = forwardRef(
           onClick={() => setModal('CreateNewRepresentation')}
           data-testid="new-representation"
           disabled={readOnly}
-          aria-disabled>
+          aria-disabled
+        >
           <ListItemIcon>
             <AddIcon fontSize="small" />
           </ListItemIcon>

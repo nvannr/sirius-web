@@ -10,7 +10,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-import { useQuery } from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
 import {
   DetailsView,
   ExplorerWebSocketContainer,
@@ -35,7 +35,6 @@ import LinkIcon from '@material-ui/icons/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import WarningIcon from '@material-ui/icons/Warning';
 import { useMachine } from '@xstate/react';
-import gql from 'graphql-tag';
 import { NavigationBar } from 'navigationBar/NavigationBar';
 import { useEffect } from 'react';
 import { generatePath, useHistory, useParams, useRouteMatch } from 'react-router-dom';
@@ -146,7 +145,8 @@ export const EditProjectView = () => {
         editingContextId={project.currentEditingContext.id}
         initialRepresentationSelected={representation}
         onRepresentationSelected={onRepresentationSelected}
-        readOnly={false}>
+        readOnly={false}
+      >
         <WorkbenchViewContribution
           side="left"
           title="Explorer"
@@ -219,7 +219,8 @@ export const EditProjectView = () => {
             size="small"
             aria-label="close"
             color="inherit"
-            onClick={() => dispatch({ type: 'HIDE_TOAST' } as HideToastEvent)}>
+            onClick={() => dispatch({ type: 'HIDE_TOAST' } as HideToastEvent)}
+          >
             <CloseIcon fontSize="small" />
           </IconButton>
         }

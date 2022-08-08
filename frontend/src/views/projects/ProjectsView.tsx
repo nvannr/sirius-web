@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2021 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-import { useQuery } from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
 import { DeleteProjectModal, httpOrigin, RenameProjectModal } from '@eclipse-sirius/sirius-components';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -39,7 +39,6 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useMachine } from '@xstate/react';
 import { Footer } from 'footer/Footer';
-import gql from 'graphql-tag';
 import { NavigationBar } from 'navigationBar/NavigationBar';
 import React, { useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
@@ -212,7 +211,8 @@ export const ProjectsView = () => {
                         component={RouterLink}
                         data-testid="create"
                         color="primary"
-                        variant="contained">
+                        variant="contained"
+                      >
                         New
                       </Button>
                       <Button
@@ -220,7 +220,8 @@ export const ProjectsView = () => {
                         component={RouterLink}
                         data-testid="upload"
                         color="primary"
-                        variant="outlined">
+                        variant="outlined"
+                      >
                         Upload
                       </Button>
                     </div>
@@ -247,7 +248,8 @@ export const ProjectsView = () => {
             size="small"
             aria-label="close"
             color="inherit"
-            onClick={() => dispatch({ type: 'HIDE_TOAST' } as HideToastEvent)}>
+            onClick={() => dispatch({ type: 'HIDE_TOAST' } as HideToastEvent)}
+          >
             <CloseIcon fontSize="small" />
           </IconButton>
         }
@@ -302,7 +304,8 @@ const ProjectsTable = ({ projects, onMore }: ProjectsTableProps) => {
                       aria-label="more"
                       onClick={(event) => onMore(event, project)}
                       size="small"
-                      data-testid="more">
+                      data-testid="more"
+                    >
                       <MoreHorizIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
@@ -324,7 +327,8 @@ const ProjectContextMenu = ({ menuAnchor, project, onClose, onRename, onDelete }
       anchorEl={menuAnchor}
       keepMounted
       open={true}
-      onClose={onClose}>
+      onClose={onClose}
+    >
       <MenuItem onClick={onRename} data-testid="rename">
         <ListItemIcon>
           <EditIcon />

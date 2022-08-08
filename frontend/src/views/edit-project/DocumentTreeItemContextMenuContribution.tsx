@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021 Obeo.
+ * Copyright (c) 2021, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -59,7 +59,8 @@ export const DocumentTreeItemContextMenuContribution = forwardRef(
           onClick={() => setModal('CreateNewRootObject')}
           ref={ref}
           disabled={readOnly}
-          aria-disabled>
+          aria-disabled
+        >
           <ListItemIcon>
             <AddIcon fontSize="small" />
           </ListItemIcon>
@@ -73,7 +74,8 @@ export const DocumentTreeItemContextMenuContribution = forwardRef(
           href={`${httpOrigin}/api/editingcontexts/${editingContextId}/documents/${item.id}`}
           type="application/octet-stream"
           data-testid="download"
-          aria-disabled>
+          aria-disabled
+        >
           <ListItemIcon>
             <GetAppIcon fontSize="small" />
           </ListItemIcon>
