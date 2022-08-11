@@ -143,7 +143,8 @@ export const EditProjectView = () => {
         editingContextId={project.currentEditingContext.id}
         initialRepresentationSelected={representation}
         onRepresentationSelected={onRepresentationSelected}
-        readOnly={false}>
+        readOnly={false}
+      >
         <WorkbenchViewContribution
           side="left"
           title="Explorer"
@@ -211,7 +212,8 @@ export const EditProjectView = () => {
             size="small"
             aria-label="close"
             color="inherit"
-            onClick={() => dispatch({ type: 'HIDE_TOAST' } as HideToastEvent)}>
+            onClick={() => dispatch({ type: 'HIDE_TOAST' } as HideToastEvent)}
+          >
             <CloseIcon fontSize="small" />
           </IconButton>
         }
