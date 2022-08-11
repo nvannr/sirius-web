@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2021 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the erms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,17 @@
  *     Obeo - initial API and implementation
  *******************************************************************************/
 import { ApolloProvider } from '@apollo/client';
-import { theme } from '@eclipse-sirius/sirius-components';
+import {
+  DiagramWebSocketContainer,
+  httpOrigin,
+  Representation,
+  RepresentationComponent,
+  RepresentationContext,
+  theme,
+} from '@eclipse-sirius/sirius-components';
+import { ServerContext } from '@eclipse-sirius/sirius-components-core';
+import { FormDescriptionEditorRepresentation } from '@eclipse-sirius/sirius-components-formdescriptioneditors';
+import { FormRepresentation } from '@eclipse-sirius/sirius-components-forms';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { ApolloGraphQLClient } from 'ApolloGraphQLClient';
@@ -87,14 +97,38 @@ const style = {
   minHeight: '100vh',
 };
 
+const registry = {
+  getComponent: (representation: Representation): RepresentationComponent | null => {
+    const query = representation.kind.substring(representation.kind.indexOf('?') + 1, representation.kind.length);
+    const params = new URLSearchParams(query);
+    const type = params.get('type');
+    if (type === 'Diagram') {
+      return DiagramWebSocketContainer;
+    } else if (type === 'Form') {
+      return FormRepresentation;
+    } else if (type === 'FormDescriptionEditor') {
+      return FormDescriptionEditorRepresentation;
+    }
+    return null;
+  },
+};
+
+const representationContextValue = {
+  registry,
+};
+
 ReactDOM.render(
   <ApolloProvider client={ApolloGraphQLClient}>
     <BrowserRouter>
       <ThemeProvider theme={siriusWebTheme}>
         <CssBaseline />
-        <div style={style}>
-          <Main />
-        </div>
+        <ServerContext.Provider value={{ httpOrigin }}>
+          <RepresentationContext.Provider value={representationContextValue}>
+            <div style={style}>
+              <Main />
+            </div>
+          </RepresentationContext.Provider>
+        </ServerContext.Provider>
       </ThemeProvider>
     </BrowserRouter>
   </ApolloProvider>,

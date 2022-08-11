@@ -12,17 +12,15 @@
  *******************************************************************************/
 import { gql, useQuery } from '@apollo/client';
 import {
-  DetailsView,
   ExplorerWebSocketContainer,
-  RelatedElementsView,
   Representation,
-  RepresentationsWebSocketContainer,
   TreeItemContextMenuContribution,
   TreeItemType,
-  ValidationWebSocketContainer,
   Workbench,
   WorkbenchViewContribution,
 } from '@eclipse-sirius/sirius-components';
+import { DetailsView, RelatedElementsView, RepresentationsView } from '@eclipse-sirius/sirius-components-forms';
+import { ValidationView } from '@eclipse-sirius/sirius-components-validation';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -145,26 +143,20 @@ export const EditProjectView = () => {
         editingContextId={project.currentEditingContext.id}
         initialRepresentationSelected={representation}
         onRepresentationSelected={onRepresentationSelected}
-        readOnly={false}
-      >
+        readOnly={false}>
         <WorkbenchViewContribution
           side="left"
           title="Explorer"
           icon={<AccountTreeIcon />}
           component={ExplorerWebSocketContainer}
         />
-        <WorkbenchViewContribution
-          side="left"
-          title="Validation"
-          icon={<WarningIcon />}
-          component={ValidationWebSocketContainer}
-        />
+        <WorkbenchViewContribution side="left" title="Validation" icon={<WarningIcon />} component={ValidationView} />
         <WorkbenchViewContribution side="right" title="Details" icon={<MenuIcon />} component={DetailsView} />
         <WorkbenchViewContribution
           side="right"
           title="Representations"
           icon={<Filter />}
-          component={RepresentationsWebSocketContainer}
+          component={RepresentationsView}
         />
         <WorkbenchViewContribution
           side="right"
@@ -219,8 +211,7 @@ export const EditProjectView = () => {
             size="small"
             aria-label="close"
             color="inherit"
-            onClick={() => dispatch({ type: 'HIDE_TOAST' } as HideToastEvent)}
-          >
+            onClick={() => dispatch({ type: 'HIDE_TOAST' } as HideToastEvent)}>
             <CloseIcon fontSize="small" />
           </IconButton>
         }
