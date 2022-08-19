@@ -11,15 +11,15 @@
  *     Obeo - initial API and implementation
  *******************************************************************************/
 import { gql, useQuery } from '@apollo/client';
-import {
-  ExplorerWebSocketContainer,
-  Representation,
-  TreeItemContextMenuContribution,
-  TreeItemType,
-  Workbench,
-  WorkbenchViewContribution,
-} from '@eclipse-sirius/sirius-components';
+import { OnboardArea } from '@eclipse-sirius/sirius-components';
+import { Representation, Workbench, WorkbenchViewContribution } from '@eclipse-sirius/sirius-components-core';
 import { DetailsView, RelatedElementsView, RepresentationsView } from '@eclipse-sirius/sirius-components-forms';
+import {
+  ExplorerView,
+  GQLTreeItem,
+  TreeItemContextMenuContext,
+  TreeItemContextMenuContribution,
+} from '@eclipse-sirius/sirius-components-trees';
 import { ValidationView } from '@eclipse-sirius/sirius-components-validation';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
@@ -54,6 +54,7 @@ import {
   ShowToastEvent,
 } from 'views/edit-project/EditProjectViewMachine';
 import { ObjectTreeItemContextMenuContribution } from 'views/edit-project/ObjectTreeItemContextMenuContribution';
+import { DiagramTreeItemContextMenuContribution } from './DiagramTreeItemContextMenuContribution';
 
 const getProjectQuery = gql`
   query getRepresentation($projectId: ID!, $representationId: ID!, $includeRepresentation: Boolean!) {
@@ -138,42 +139,47 @@ export const EditProjectView = () => {
       dispatch(selectRepresentationEvent);
     };
 
+    const treeItemContextMenuContributions = [
+      <TreeItemContextMenuContribution
+        canHandle={(item: GQLTreeItem) => item.kind.startsWith('obeoStudio://document')}
+        component={DocumentTreeItemContextMenuContribution}
+      />,
+      <TreeItemContextMenuContribution
+        canHandle={(item: GQLTreeItem) => item.kind.startsWith('siriusComponents://semantic')}
+        component={ObjectTreeItemContextMenuContribution}
+      />,
+      <TreeItemContextMenuContribution
+        canHandle={(item: GQLTreeItem) => item.kind === 'siriusComponents://representation?type=Diagram'}
+        component={DiagramTreeItemContextMenuContribution}
+      />,
+    ];
+
     main = (
-      <Workbench
-        editingContextId={project.currentEditingContext.id}
-        initialRepresentationSelected={representation}
-        onRepresentationSelected={onRepresentationSelected}
-        readOnly={false}
-      >
-        <WorkbenchViewContribution
-          side="left"
-          title="Explorer"
-          icon={<AccountTreeIcon />}
-          component={ExplorerWebSocketContainer}
-        />
-        <WorkbenchViewContribution side="left" title="Validation" icon={<WarningIcon />} component={ValidationView} />
-        <WorkbenchViewContribution side="right" title="Details" icon={<MenuIcon />} component={DetailsView} />
-        <WorkbenchViewContribution
-          side="right"
-          title="Representations"
-          icon={<Filter />}
-          component={RepresentationsView}
-        />
-        <WorkbenchViewContribution
-          side="right"
-          title="Related Elements"
-          icon={<LinkIcon />}
-          component={RelatedElementsView}
-        />
-        <TreeItemContextMenuContribution
-          canHandle={(item: TreeItemType) => item.kind === 'siriusWeb://document'}
-          component={DocumentTreeItemContextMenuContribution}
-        />
-        <TreeItemContextMenuContribution
-          canHandle={(item: TreeItemType) => item.kind.startsWith('siriusComponents://semantic')}
-          component={ObjectTreeItemContextMenuContribution}
-        />
-      </Workbench>
+      <TreeItemContextMenuContext.Provider value={treeItemContextMenuContributions}>
+        <Workbench
+          editingContextId={project.currentEditingContext.id}
+          initialRepresentationSelected={representation}
+          onRepresentationSelected={onRepresentationSelected}
+          mainAreaComponent={OnboardArea}
+          readOnly={false}
+        >
+          <WorkbenchViewContribution side="left" title="Explorer" icon={<AccountTreeIcon />} component={ExplorerView} />
+          <WorkbenchViewContribution side="left" title="Validation" icon={<WarningIcon />} component={ValidationView} />
+          <WorkbenchViewContribution side="right" title="Details" icon={<MenuIcon />} component={DetailsView} />
+          <WorkbenchViewContribution
+            side="right"
+            title="Representations"
+            icon={<Filter />}
+            component={RepresentationsView}
+          />
+          <WorkbenchViewContribution
+            side="right"
+            title="Related Elements"
+            icon={<LinkIcon />}
+            component={RelatedElementsView}
+          />
+        </Workbench>
+      </TreeItemContextMenuContext.Provider>
     );
   } else if (editProjectView === 'missing') {
     main = (

@@ -11,15 +11,14 @@
  *     Obeo - initial API and implementation
  *******************************************************************************/
 import { ApolloProvider } from '@apollo/client';
+import { DiagramWebSocketContainer, httpOrigin } from '@eclipse-sirius/sirius-components';
 import {
-  DiagramWebSocketContainer,
-  httpOrigin,
   Representation,
   RepresentationComponent,
   RepresentationContext,
+  ServerContext,
   theme,
-} from '@eclipse-sirius/sirius-components';
-import { ServerContext } from '@eclipse-sirius/sirius-components-core';
+} from '@eclipse-sirius/sirius-components-core';
 import { FormDescriptionEditorRepresentation } from '@eclipse-sirius/sirius-components-formdescriptioneditors';
 import { FormRepresentation } from '@eclipse-sirius/sirius-components-forms';
 import CssBaseline from '@material-ui/core/CssBaseline';

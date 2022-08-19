@@ -52,7 +52,7 @@ for (let index = 0; index < projects.length; index++) {
   }
 }
 
-const updateSiriusComponentsCommand = `npm install @eclipse-sirius/sirius-components@${newSiriusComponentsVersion} @eclipse-sirius/sirius-components-charts@${newSiriusComponentsVersion} @eclipse-sirius/sirius-components-core@${newSiriusComponentsVersion} @eclipse-sirius/sirius-components-forms@${newSiriusComponentsVersion} @eclipse-sirius/sirius-components-formdescriptioneditors@${newSiriusComponentsVersion} @eclipse-sirius/sirius-components-validation@${newSiriusComponentsVersion} --save-exact`;
+const updateSiriusComponentsCommand = `npm install @eclipse-sirius/sirius-components@${newSiriusComponentsVersion} @eclipse-sirius/sirius-components-charts@${newSiriusComponentsVersion} @eclipse-sirius/sirius-components-core@${newSiriusComponentsVersion} @eclipse-sirius/sirius-components-forms@${newSiriusComponentsVersion} @eclipse-sirius/sirius-components-formdescriptioneditors@${newSiriusComponentsVersion} @eclipse-sirius/sirius-components-trees@${newSiriusComponentsVersion} @eclipse-sirius/sirius-components-validation@${newSiriusComponentsVersion} --save-exact`;
 
 console.log('Updating @eclipse-sirius/sirius-components in the frontend');
 const frontendWorkingDirectory = path.join(workspace, 'frontend');

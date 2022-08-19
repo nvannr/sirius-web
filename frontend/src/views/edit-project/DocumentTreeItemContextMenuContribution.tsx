@@ -10,12 +10,9 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-import {
-  NewRootObjectModal,
-  Selection,
-  ServerContext,
-  TreeItemContextMenuComponentProps,
-} from '@eclipse-sirius/sirius-components';
+import { NewRootObjectModal, ServerContext } from '@eclipse-sirius/sirius-components';
+import { Selection } from '@eclipse-sirius/sirius-components-core';
+import { TreeItemContextMenuComponentProps } from '@eclipse-sirius/sirius-components-trees';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MenuItem from '@material-ui/core/MenuItem';
