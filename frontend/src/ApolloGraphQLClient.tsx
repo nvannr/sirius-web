@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2020 Obeo.
+ * Copyright (c) 2019, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,7 @@
 import { ApolloClient, DefaultOptions, HttpLink, InMemoryCache, split } from '@apollo/client';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { httpOrigin, wsOrigin } from '@eclipse-sirius/sirius-components';
+import { httpOrigin, wsOrigin } from 'core/URL';
 
 const httpLink = new HttpLink({
   uri: `${httpOrigin}/api/graphql`,

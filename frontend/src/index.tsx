@@ -11,7 +11,6 @@
  *     Obeo - initial API and implementation
  *******************************************************************************/
 import { ApolloProvider } from '@apollo/client';
-import { DiagramWebSocketContainer, httpOrigin } from '@eclipse-sirius/sirius-components';
 import {
   Representation,
   RepresentationComponent,
@@ -19,11 +18,13 @@ import {
   ServerContext,
   theme,
 } from '@eclipse-sirius/sirius-components-core';
+import { DiagramRepresentation } from '@eclipse-sirius/sirius-components-diagrams';
 import { FormDescriptionEditorRepresentation } from '@eclipse-sirius/sirius-components-formdescriptioneditors';
 import { FormRepresentation } from '@eclipse-sirius/sirius-components-forms';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { ApolloGraphQLClient } from 'ApolloGraphQLClient';
+import { httpOrigin } from 'core/URL';
 import { Main } from 'main/Main';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
@@ -102,7 +103,7 @@ const registry = {
     const params = new URLSearchParams(query);
     const type = params.get('type');
     if (type === 'Diagram') {
-      return DiagramWebSocketContainer;
+      return DiagramRepresentation;
     } else if (type === 'Form') {
       return FormRepresentation;
     } else if (type === 'FormDescriptionEditor') {

@@ -10,7 +10,9 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-import { ContextMenu, Delete, Edit, Entry, httpOrigin, Separator, TOP_START } from '@eclipse-sirius/sirius-components';
+import { ContextMenu, Delete, Edit, Entry, Separator, TOP_START } from '@eclipse-sirius/sirius-components';
+import { ServerContext } from '@eclipse-sirius/sirius-components-core';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { EditProjectNavbarContextMenuProps } from 'views/edit-project/EditProjectNavbar/EditProjectNavbarContextMenu.types';
 
@@ -24,6 +26,8 @@ export const EditProjectNavbarContextMenu = ({
   onDelete,
   onClose,
 }: EditProjectNavbarContextMenuProps) => {
+  const { httpOrigin } = useContext(ServerContext);
+
   return (
     <ContextMenu caretPosition={TOP_START} x={x} y={y} onClose={onClose} data-testid="navbar-contextmenu">
       <Entry label="New model" onClick={onCreateDocument} data-testid="new-document" />

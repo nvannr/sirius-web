@@ -14,9 +14,9 @@ import {
   DeleteProjectModal,
   NewDocumentModal,
   RenameProjectModal,
-  ServerContext,
   UploadDocumentModal,
 } from '@eclipse-sirius/sirius-components';
+import { ServerContext } from '@eclipse-sirius/sirius-components-core';
 import {
   emphasize,
   IconButton,

@@ -11,7 +11,8 @@
  *     Obeo - initial API and implementation
  *******************************************************************************/
 import { gql, useQuery } from '@apollo/client';
-import { DeleteProjectModal, httpOrigin, RenameProjectModal } from '@eclipse-sirius/sirius-components';
+import { DeleteProjectModal, RenameProjectModal } from '@eclipse-sirius/sirius-components';
+import { ServerContext } from '@eclipse-sirius/sirius-components-core';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
@@ -40,7 +41,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useMachine } from '@xstate/react';
 import { Footer } from 'footer/Footer';
 import { NavigationBar } from 'navigationBar/NavigationBar';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   GQLGetProjectsQueryData,
@@ -320,6 +321,8 @@ const ProjectsTable = ({ projects, onMore }: ProjectsTableProps) => {
 };
 
 const ProjectContextMenu = ({ menuAnchor, project, onClose, onRename, onDelete }: ProjectContextMenuProps) => {
+  const { httpOrigin } = useContext(ServerContext);
+
   return (
     <Menu
       data-testid="modeler-actions-contextmenu"

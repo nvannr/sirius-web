@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021 Obeo.
+ * Copyright (c) 2021, 2022 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,12 +10,12 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-import { Link, IconButton } from '@material-ui/core';
+import { IconButton, Link } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
-import { makeStyles, emphasize } from '@material-ui/core/styles';
+import { emphasize, makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
-import { SiriusIcon } from '@eclipse-sirius/sirius-components';
+import { SiriusIcon } from 'core/SiriusIcon';
 import { Link as RouterLink } from 'react-router-dom';
 import { Help } from './Help';
 import { NavigationBarProps } from './NavigationBar.types';
