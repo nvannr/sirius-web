@@ -161,8 +161,7 @@ export const EditProjectView = () => {
           initialRepresentationSelected={representation}
           onRepresentationSelected={onRepresentationSelected}
           mainAreaComponent={OnboardArea}
-          readOnly={false}
-        >
+          readOnly={false}>
           <WorkbenchViewContribution side="left" title="Explorer" icon={<AccountTreeIcon />} component={ExplorerView} />
           <WorkbenchViewContribution side="left" title="Validation" icon={<WarningIcon />} component={ValidationView} />
           <WorkbenchViewContribution side="right" title="Details" icon={<MenuIcon />} component={DetailsView} />
@@ -218,8 +217,7 @@ export const EditProjectView = () => {
             size="small"
             aria-label="close"
             color="inherit"
-            onClick={() => dispatch({ type: 'HIDE_TOAST' } as HideToastEvent)}
-          >
+            onClick={() => dispatch({ type: 'HIDE_TOAST' } as HideToastEvent)}>
             <CloseIcon fontSize="small" />
           </IconButton>
         }

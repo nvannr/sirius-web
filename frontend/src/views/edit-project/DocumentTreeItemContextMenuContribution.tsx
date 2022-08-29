@@ -56,8 +56,7 @@ export const DocumentTreeItemContextMenuContribution = forwardRef(
           onClick={() => setModal('CreateNewRootObject')}
           ref={ref}
           disabled={readOnly}
-          aria-disabled
-        >
+          aria-disabled>
           <ListItemIcon>
             <AddIcon fontSize="small" />
           </ListItemIcon>
@@ -71,8 +70,7 @@ export const DocumentTreeItemContextMenuContribution = forwardRef(
           href={`${httpOrigin}/api/editingcontexts/${editingContextId}/documents/${item.id}`}
           type="application/octet-stream"
           data-testid="download"
-          aria-disabled
-        >
+          aria-disabled>
           <ListItemIcon>
             <GetAppIcon fontSize="small" />
           </ListItemIcon>

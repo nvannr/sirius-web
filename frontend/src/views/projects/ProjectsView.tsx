@@ -212,8 +212,7 @@ export const ProjectsView = () => {
                         component={RouterLink}
                         data-testid="create"
                         color="primary"
-                        variant="contained"
-                      >
+                        variant="contained">
                         New
                       </Button>
                       <Button
@@ -221,8 +220,7 @@ export const ProjectsView = () => {
                         component={RouterLink}
                         data-testid="upload"
                         color="primary"
-                        variant="outlined"
-                      >
+                        variant="outlined">
                         Upload
                       </Button>
                     </div>
@@ -249,8 +247,7 @@ export const ProjectsView = () => {
             size="small"
             aria-label="close"
             color="inherit"
-            onClick={() => dispatch({ type: 'HIDE_TOAST' } as HideToastEvent)}
-          >
+            onClick={() => dispatch({ type: 'HIDE_TOAST' } as HideToastEvent)}>
             <CloseIcon fontSize="small" />
           </IconButton>
         }
@@ -305,8 +302,7 @@ const ProjectsTable = ({ projects, onMore }: ProjectsTableProps) => {
                       aria-label="more"
                       onClick={(event) => onMore(event, project)}
                       size="small"
-                      data-testid="more"
-                    >
+                      data-testid="more">
                       <MoreHorizIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
@@ -330,8 +326,7 @@ const ProjectContextMenu = ({ menuAnchor, project, onClose, onRename, onDelete }
       anchorEl={menuAnchor}
       keepMounted
       open={true}
-      onClose={onClose}
-    >
+      onClose={onClose}>
       <MenuItem onClick={onRename} data-testid="rename">
         <ListItemIcon>
           <EditIcon />

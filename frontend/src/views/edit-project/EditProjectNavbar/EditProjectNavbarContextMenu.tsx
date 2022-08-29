@@ -38,8 +38,7 @@ export const EditProjectNavbarContextMenu = ({
         href={`${httpOrigin}/api/projects/${projectId}`}
         type="application/octet-stream"
         onClick={onClose}
-        data-testid="download-link"
-      >
+        data-testid="download-link">
         <Entry label="Download" data-testid="download" />
       </a>
       <Entry icon={<Delete title="" />} label="Delete" onClick={onDelete} data-testid="delete" />

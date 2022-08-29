@@ -119,8 +119,7 @@ export const UploadProjectView = () => {
                   type="submit"
                   color="primary"
                   disabled={uploadProjectView !== 'fileSelected'}
-                  data-testid="upload-project"
-                >
+                  data-testid="upload-project">
                   Upload
                 </Button>
               </div>

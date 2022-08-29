@@ -35,8 +35,7 @@ export const DiagramTreeItemContextMenuContribution = forwardRef(
           onClick={onClose}
           href={`${httpOrigin}/api/editingcontexts/${editingContextId}/representations/${item.id}`}
           type="application/octet-stream"
-          data-testid="exportSVG"
-        >
+          data-testid="exportSVG">
           <ListItemIcon>
             <GetAppIcon fontSize="small" />
           </ListItemIcon>

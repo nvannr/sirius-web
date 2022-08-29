@@ -63,8 +63,7 @@ export const ObjectTreeItemContextMenuContribution = forwardRef(
           data-testid="new-object"
           disabled={readOnly}
           ref={ref}
-          aria-disabled
-        >
+          aria-disabled>
           <ListItemIcon>
             <AddIcon fontSize="small" />
           </ListItemIcon>
@@ -75,8 +74,7 @@ export const ObjectTreeItemContextMenuContribution = forwardRef(
           onClick={() => setModal('CreateNewRepresentation')}
           data-testid="new-representation"
           disabled={readOnly}
-          aria-disabled
-        >
+          aria-disabled>
           <ListItemIcon>
             <AddIcon fontSize="small" />
           </ListItemIcon>
